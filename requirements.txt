@@ -4,6 +4,7 @@ click==6.7
 dash==0.21.1
 dash-core-components==0.22.1
 dash-html-components==0.10.1
+dash-renderer==0.12.1
 decorator==4.3.0
 Django==2.0.5
 Flask==1.0.2

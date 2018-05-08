@@ -35,13 +35,14 @@ def callback_a(dropdown_value):
     [dash.dependencies.Input('dropdown-a', 'value'),
      dash.dependencies.Input('dropdown-b', 'value')])
 def callback_b(dropdown_value,other_dd):
-    return 'You\'ve selected "{}"'.format(dropdown_value)
+    return 'You\'ve selected "{}" and "{}"'.format(dropdown_value,
+                                                   other_dd)
 
 a2 = DelayedDash("Ex2")
 a2.layout = html.Div([
     dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
-    ("BEER","Beer"),("WIne","wine"),]
-    ],value="Beer"),
+    ("O2","Oxygen"),("N2","Nitrogen"),]
+    ],value="Oxygen"),
     html.Div(id="output-one")
     ])
 
