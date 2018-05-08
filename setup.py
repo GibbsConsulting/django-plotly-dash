@@ -32,6 +32,7 @@ setup(
     project_urls = {
     'Source': "https://github.com/GibbsConsulting/django-plotly-dash",
     'Tracker': "https://github.com/GibbsConsulting/django-plotly-dash/issues",
+    'Documentation': 'http://django-plotly-dash.readthedocs.io/',
     },
     install_requires = ['plotly',
                         'dash',
@@ -40,6 +41,5 @@ setup(
                         'dash-renderer',
                         'Django',],
     python_requires=">=3",
-    
     )
 
