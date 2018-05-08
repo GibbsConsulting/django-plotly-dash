@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+source env/bin/activate
+python setup.py develop
+cd demo
+./manage.py migrate
+./manage.py runserver
