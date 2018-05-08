@@ -6,14 +6,19 @@
 Welcome to django-plotly-dash's documentation!
 ==============================================
 
+Contents
+--------
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   installation
+   simple_use
 
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
