@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+source env/bin/activate
+cd demo
+./manage.py migrate
+./manage.py runserver
