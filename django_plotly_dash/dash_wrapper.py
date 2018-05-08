@@ -37,7 +37,7 @@ class DelayedDash:
 
     def _form_repdash(self):
         rd = NotDash(name_root=self._uid,
-                     app_pathname="dexy:main")
+                     app_pathname="django_plotly_dash:main")
         rd.layout = self.layout
         for cb, func in self._callback_sets:
             rd.callback(**cb)(func)
