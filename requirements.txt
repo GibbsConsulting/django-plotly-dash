@@ -2,5 +2,4 @@ dash==0.21.1
 dash-core-components==0.22.1
 dash-html-components==0.10.1
 dash-renderer==0.12.1
-Django==2.0.5
 plotly==2.5.1
