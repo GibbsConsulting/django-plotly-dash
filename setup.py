@@ -41,6 +41,5 @@ setup(
                         'dash-renderer',
                         'Django',],
     python_requires=">=3",
-    
     )
 
