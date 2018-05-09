@@ -1,6 +1,5 @@
 from django.shortcuts import render
 
-import flask
 import json
 
 from .dash_wrapper import get_app_instance_by_id, get_or_form_app
@@ -26,13 +25,22 @@ def layout(request, id, **kwargs):
 
 def update(request, id, **kwargs):
     app = get_app_instance_by_id(id)
-    mFunc = app.locate_endpoint_function('dash-update-component')
-    # Fudge request object
     rb = json.loads(request.body.decode('utf-8'))
-    with app.test_request_context():
-        # inputs state and output needed in the json objects
-        flask.request._cached_json = (rb, flask.request._cached_json[True])
-        resp = mFunc()
+
+    if app.use_dash_dispatch():
+        # Force call through dash
+        mFunc = app.locate_endpoint_function('dash-update-component')
+
+        import flask
+        with app.test_request_context():
+            # Fudge request object
+            flask.request._cached_json = (rb, flask.request._cached_json[True])
+            resp = mFunc()
+    else:
+        # Use direct dispatch
+        argMap = {}
+        resp = app.dispatch_with_args(rb, argMap)
+
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
 

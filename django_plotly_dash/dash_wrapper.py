@@ -124,6 +124,11 @@ class NotDash(Dash):
         nd_apps[self._uid] = self
 
         self._adjust_id = False
+        self._dash_dispatch = False
+
+    def use_dash_dispatch(self):
+        # TODO make this be a function of using kwargs in callbacks
+        return self._dash_dispatch
 
     def flask_app(self):
         return self._flask_app
@@ -180,4 +185,33 @@ class NotDash(Dash):
                                              [self._fix_callback_item(x) for x in inputs],
                                              [self._fix_callback_item(x) for x in state],
                                              [self._fix_callback_item(x) for x in events])
+
+    def dispatch(self):
+        import flask
+        body = flask.request.get_json()
+        return self. dispatch_with_args(body, argMap=dict())
+
+    def dispatch_with_args(self, body, argMap):
+        inputs = body.get('inputs', [])
+        state = body.get('state', [])
+        output = body['output']
+
+        target_id = '{}.{}'.format(output['id'], output['property'])
+        args = []
+        for component_registration in self.callback_map[target_id]['inputs']:
+            args.append([
+                c.get('value', None) for c in inputs if
+                c['property'] == component_registration['property'] and
+                c['id'] == component_registration['id']
+            ][0])
+
+        for component_registration in self.callback_map[target_id]['state']:
+            args.append([
+                c.get('value', None) for c in state if
+                c['property'] == component_registration['property'] and
+                c['id'] == component_registration['id']
+            ][0])
+
+        return self.callback_map[target_id]['callback'](*args,**argMap)
+
 
