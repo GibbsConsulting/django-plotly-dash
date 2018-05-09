@@ -18,35 +18,34 @@ Taking as an example a slightly modified variant of one of the `getting started 
 
   app.layout = html.Div([
       dcc.RadioItems(
-          id='dropdown-a',
-          options=[{'label': i, 'value': i} for i in ['Canada', 'USA', 'Mexico']],
-          value='Canada'
+          id='dropdown-color',
+          options=[{'label': c, 'value': c.lower()} for c in ['Red', 'Green', 'Blue']],
+          value='red'
       ),
-      html.Div(id='output-a'),
-
+      html.Div(id='output-color'),
       dcc.RadioItems(
-          id='dropdown-b',
-          options=[{'label': i, 'value': i} for i in ['MTL', 'NYC', 'SF']],
-          value='MTL'
+          id='dropdown-size',
+          options=[{'label': i,
+                    'value': j} for i, j in [('L','large'), ('M','medium'), ('S','small')]],
+          value='medium'
       ),
-      html.Div(id='output-b')
+      html.Div(id='output-size')
 
   ])
 
   @app.callback(
-      dash.dependencies.Output('output-a', 'children'),
-      [dash.dependencies.Input('dropdown-a', 'value')])
-  def callback_a(dropdown_value):
-      return 'You\'ve selected "{}"'.format(dropdown_value)
-
+      dash.dependencies.Output('output-color', 'children'),
+      [dash.dependencies.Input('dropdown-color', 'value')])
+  def callback_color(dropdown_value):
+      return "The selected color is %s." % dropdown_value
 
   @app.callback(
-      dash.dependencies.Output('output-b', 'children'),
-      [dash.dependencies.Input('dropdown-a', 'value'),
-       dash.dependencies.Input('dropdown-b', 'value')])
-  def callback_b(dropdown_value,other_dd):
-      return 'You\'ve selected "{}" and "{}"'.format(dropdown_value,
-                                                     other_dd)
+      dash.dependencies.Output('output-size', 'children'),
+      [dash.dependencies.Input('dropdown-color', 'value'),
+       dash.dependencies.Input('dropdown-size', 'value')])
+  def callback_size(dropdown_color, dropdown_size):
+      return "The chosen T-shirt is a %s %s one." %(dropdown_size,
+                                                    dropdown_color)
 
 Note that the ``DelayedDash`` constructor requires a name to be specified. This name is then used to identify the dash app in
 templates:::
