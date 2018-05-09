@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .views import routes, layout, dependencies, update, main_view
 
-app_name = "django_plotly_dash"
+from .app_name import app_name
 
 urlpatterns = [
     path('<slug:id>_dash-routes', routes, name="routes"),

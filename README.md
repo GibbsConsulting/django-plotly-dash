@@ -5,8 +5,13 @@ Expose [plotly dash](https://plot.ly/products/dash/) apps as django tags.
 See the source for this project here:
 <https://github.com/GibbsConsulting/django-plotly-dash>
 
-Online documentation can be found here:
+This README file provides a short guide to installing and using the package, and also
+outlines how to run the demonstration application.
+
+More detailed information
+can be found in the online documentation at
 <https://readthedocs.org/projects/django-plotly-dash>
+
 
 ## Installation
 

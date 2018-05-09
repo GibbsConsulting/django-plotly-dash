@@ -3,6 +3,8 @@ from flask import Flask
 
 from django.urls import reverse
 
+from .app_name import app_name
+
 uid_counter = 0
 
 usable_apps = {}
@@ -10,10 +12,34 @@ app_instances = {}
 nd_apps = {}
 
 def get_app_by_name(name):
+    '''
+    Locate a registered dash app by name, and return a DelayedDash instance encapsulating the app.
+    '''
     return usable_apps.get(name,None)
 
 def get_app_instance_by_id(id):
+    '''
+    Locate an instance of a dash app by identifier, or return None if one does not exist
+    '''
     return nd_apps.get(id,None)
+
+def get_or_form_app(id, name, **kwargs):
+    '''
+    Locate an instance of a dash app by identifier, loading or creating a new instance if needed
+    '''
+    app = get_app_instance_by_id(id)
+    if app:
+        return app
+    dd = get_app_by_name(name)
+    return dd.form_dash_instance()
+
+class Holder:
+    def __init__(self):
+        self.items = []
+    def append_css(self, stylesheet):
+        self.items.append(stylesheet)
+    def append_script(self, script):
+        self.items.append(script)
 
 class DelayedDash:
     def __init__(self, name=None, **kwargs):
@@ -24,27 +50,27 @@ class DelayedDash:
         else:
             self._uid = name
         self.layout = None
-        self._rep_dash = None
         self._callback_sets = []
+
+        self.css = Holder()
+        self.scripts = Holder()
 
         global usable_apps
         usable_apps[self._uid] = self
 
-    def _RepDash(self):
-        if self._rep_dash is None:
-            self._rep_dash = self._form_repdash()
-        return self._rep_dash
-
-    def _form_repdash(self):
+    def form_dash_instance(self):
         rd = NotDash(name_root=self._uid,
-                     app_pathname="django_plotly_dash:main")
+                     app_pathname="%s:main" % app_name)
         rd.layout = self.layout
+
         for cb, func in self._callback_sets:
             rd.callback(**cb)(func)
-        return rd
+        for s in self.css.items:
+            rd.css.append_css(s)
+        for s in self.scripts.items:
+            rd.scripts.append_script(s)
 
-    def base_url(self):
-        return self._RepDash().base_url()
+        return rd
 
     def callback(self, output, inputs=[], state=[], events=[]):
         callback_set = {'output':output,
@@ -92,12 +118,12 @@ class NotDash(Dash):
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
+
         super(NotDash, self).__init__(**kwargs)
         global nd_apps
         nd_apps[self._uid] = self
-        if False: # True for some debug info and a load of errors...
-            self.css.config.serve_locally = True
-            self.scripts.config.serve_locally = True
+
+        self._adjust_id = False
 
     def flask_app(self):
         return self._flask_app
@@ -123,10 +149,13 @@ class NotDash(Dash):
 
     @Dash.layout.setter
     def layout(self, value):
-        self._fix_component_id(value)
+
+        if self._adjust_id:
+            self._fix_component_id(value)
         return Dash.layout.fset(self, value)
 
     def _fix_component_id(self, component):
+
         theID = getattr(component,"id",None)
         if theID is not None:
             setattr(component,"id",self._fix_id(theID))
@@ -137,6 +166,8 @@ class NotDash(Dash):
             pass
 
     def _fix_id(self, name):
+        if not self._adjust_id:
+            return name
         return "%s_-_%s" %(self._uid,
                            name)
 

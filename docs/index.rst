@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to django-plotly-dash's documentation!
-==============================================
+django-plotly-dash
+==================
+
+`Plotly Dash <https://dash.plot.ly/>`_ applications served up in Django templates using tags.
 
 Contents
 --------
@@ -12,6 +14,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
+   introduction
    installation
    simple_use
 

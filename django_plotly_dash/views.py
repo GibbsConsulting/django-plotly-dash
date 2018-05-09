@@ -3,7 +3,7 @@ from django.shortcuts import render
 import flask
 import json
 
-from .dash_wrapper import get_app_instance_by_id
+from .dash_wrapper import get_app_instance_by_id, get_or_form_app
 from django.http import HttpResponse
 
 def routes(*args,**kwargs):
@@ -37,7 +37,7 @@ def update(request, id, **kwargs):
                         content_type=resp.mimetype)
 
 def main_view(request, id, **kwargs):
-    app = get_app_instance_by_id(id)
+    app = get_or_form_app(id, id)
     mFunc = app.locate_endpoint_function()
     resp = mFunc()
     return HttpResponse(resp)
