@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import DashApp, DashAppAdmin
+
+admin.site.register(DashApp, DashAppAdmin)
+

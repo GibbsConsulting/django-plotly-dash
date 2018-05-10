@@ -1,15 +1,15 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 import json
 
-from .dash_wrapper import get_app_instance_by_id, get_or_form_app
-from django.http import HttpResponse
+from .models import DashApp
 
 def routes(*args,**kwargs):
     pass
 
 def dependencies(request, id, **kwargs):
-    app = get_app_instance_by_id(id)
+    app = DashApp.get_app_instance(id)
     with app.app_context():
         mFunc = app.locate_endpoint_function('dash-dependencies')
         resp = mFunc()
@@ -17,13 +17,13 @@ def dependencies(request, id, **kwargs):
                             content_type=resp.mimetype)
 
 def layout(request, id, **kwargs):
-    app = get_app_instance_by_id(id)
+    app = DashApp.get_app_instance(id)
     mFunc = app.locate_endpoint_function('dash-layout')
     resp = mFunc()
     return app.augment_initial_layout(resp)
 
 def update(request, id, **kwargs):
-    app = get_app_instance_by_id(id)
+    app = DashApp.get_app_instance(id)
     rb = json.loads(request.body.decode('utf-8'))
 
     if app.use_dash_dispatch():
@@ -46,7 +46,7 @@ def update(request, id, **kwargs):
                         content_type=resp.mimetype)
 
 def main_view(request, id, **kwargs):
-    app = get_or_form_app(id, id)
+    app = DashApp.get_app_instance(id)
     mFunc = app.locate_endpoint_function()
     resp = mFunc()
     return HttpResponse(resp)

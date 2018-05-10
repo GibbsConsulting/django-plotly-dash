@@ -3,4 +3,5 @@
 source env/bin/activate
 cd demo
 ./manage.py migrate
+./manage.py shell < configdb.py # Add a superuser if needed
 ./manage.py runserver

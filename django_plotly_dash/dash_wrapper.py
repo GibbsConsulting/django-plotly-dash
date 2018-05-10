@@ -8,13 +8,20 @@ import json
 
 from plotly.utils import PlotlyJSONEncoder
 
-from .app_name import app_name
+from .app_name import app_name, main_view_label
 
 uid_counter = 0
 
 usable_apps = {}
-app_instances = {}
 nd_apps = {}
+
+def add_usable_app(name, app):
+    global usable_apps
+    usable_apps[name] = app
+
+def add_instance(id, instance):
+    global nd_apps
+    nd_apps[id] = instance
 
 def get_app_by_name(name):
     '''
@@ -27,6 +34,9 @@ def get_app_instance_by_id(id):
     Locate an instance of a dash app by identifier, or return None if one does not exist
     '''
     return nd_apps.get(id,None)
+
+def clear_app_instance(id):
+    del nd_apps[id]
 
 def get_or_form_app(id, name, **kwargs):
     '''
@@ -60,15 +70,17 @@ class DelayedDash:
         self.css = Holder()
         self.scripts = Holder()
 
-        global usable_apps
-        usable_apps[self._uid] = self
+        add_usable_app(self._uid,
+                       self)
 
         self._expanded_callbacks = False
 
-    def form_dash_instance(self):
+    def form_dash_instance(self, replacements=None, specific_identifier=None):
         rd = NotDash(name_root=self._uid,
-                     app_pathname="%s:main" % app_name,
-                     expanded_callbacks = self._expanded_callbacks)
+                     app_pathname="%s:%s" % (app_name, main_view_label),
+                     expanded_callbacks = self._expanded_callbacks,
+                     replacements = replacements,
+                     specific_identifier = specific_identifier)
         rd.layout = self.layout
 
         for cb, func in self._callback_sets:
@@ -112,17 +124,14 @@ class NotFlask:
         pass
 
 class NotDash(Dash):
-    def __init__(self, name_root, app_pathname=None, replacements = None, **kwargs):
+    def __init__(self, name_root, app_pathname=None, replacements = None, specific_identifier=None, expanded_callbacks=False, **kwargs):
 
-        global app_instances
-        current_instances = app_instances.get(name_root,None)
-
-        if current_instances is not None:
-            self._uid = "%s-%i" % (name_root,len(current_instances)+1)
-            current_instances.append(self)
+        if specific_identifier is not None:
+            self._uid = specific_identifier
         else:
             self._uid = name_root
-            app_instances[name_root] = [self,]
+
+        add_instance(self._uid, self)
 
         self._flask_app = Flask(self._uid)
         self._notflask = NotFlask()
@@ -132,11 +141,9 @@ class NotDash(Dash):
         kwargs['server'] = self._notflask
 
         super(NotDash, self).__init__(**kwargs)
-        global nd_apps
-        nd_apps[self._uid] = self
 
         self._adjust_id = False
-        self._dash_dispatch = not kwargs.get('expanded_callbacks',False)
+        self._dash_dispatch = not expanded_callbacks
         if replacements:
             self._replacements = replacements
         else:
@@ -164,6 +171,8 @@ class NotDash(Dash):
                             content_type=base_response.mimetype)
 
     def walk_tree_and_replace(self, data):
+        # Walk the tree. Rely on json decoding to insert instances of dict and list
+        # ie we use a dna test for anatine, rather than our eyes and ears...
         if isinstance(data,dict):
             response = {}
             replacements = {}
