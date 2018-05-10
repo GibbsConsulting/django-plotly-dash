@@ -58,9 +58,12 @@ class DelayedDash:
         global usable_apps
         usable_apps[self._uid] = self
 
+        self._expanded_callbacks = False
+
     def form_dash_instance(self):
         rd = NotDash(name_root=self._uid,
-                     app_pathname="%s:main" % app_name)
+                     app_pathname="%s:main" % app_name,
+                     expanded_callbacks = self._expanded_callbacks)
         rd.layout = self.layout
 
         for cb, func in self._callback_sets:
@@ -81,6 +84,10 @@ class DelayedDash:
             callback_sets.append((callback_set,func))
             return func
         return wrap_func
+
+    def expanded_callback(self, output, inputs=[], state=[], events=[]):
+        self._expanded_callbacks = True
+        return self.callback(output, inputs, state, events)
 
 class NotFlask:
     def __init__(self):
@@ -124,7 +131,7 @@ class NotDash(Dash):
         nd_apps[self._uid] = self
 
         self._adjust_id = False
-        self._dash_dispatch = False
+        self._dash_dispatch = not kwargs.get('expanded_callbacks',False)
 
     def use_dash_dispatch(self):
         # TODO make this be a function of using kwargs in callbacks

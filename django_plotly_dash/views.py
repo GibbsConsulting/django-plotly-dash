@@ -19,7 +19,7 @@ def dependencies(request, id, **kwargs):
 def layout(request, id, **kwargs):
     app = get_app_instance_by_id(id)
     mFunc = app.locate_endpoint_function('dash-layout')
-    resp = mFunc()
+    resp = mFunc() # bytes that is json encoded layout
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
 
@@ -37,8 +37,10 @@ def update(request, id, **kwargs):
             flask.request._cached_json = (rb, flask.request._cached_json[True])
             resp = mFunc()
     else:
-        # Use direct dispatch
-        argMap = {}
+        # Use direct dispatch with extra arguments in the argMap
+        argMap = {'id':id,
+                  'request':request,
+                  'session':request.session}
         resp = app.dispatch_with_args(rb, argMap)
 
     return HttpResponse(resp.data,
