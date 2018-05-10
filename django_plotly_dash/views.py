@@ -19,9 +19,8 @@ def dependencies(request, id, **kwargs):
 def layout(request, id, **kwargs):
     app = get_app_instance_by_id(id)
     mFunc = app.locate_endpoint_function('dash-layout')
-    resp = mFunc() # bytes that is json encoded layout
-    return HttpResponse(resp.data,
-                        content_type=resp.mimetype)
+    resp = mFunc()
+    return app.augment_initial_layout(resp)
 
 def update(request, id, **kwargs):
     app = get_app_instance_by_id(id)

@@ -2,6 +2,11 @@ from dash import Dash
 from flask import Flask
 
 from django.urls import reverse
+from django.http import HttpResponse
+
+import json
+
+from plotly.utils import PlotlyJSONEncoder
 
 from .app_name import app_name
 
@@ -107,7 +112,7 @@ class NotFlask:
         pass
 
 class NotDash(Dash):
-    def __init__(self, name_root, app_pathname, **kwargs):
+    def __init__(self, name_root, app_pathname=None, replacements = None, **kwargs):
 
         global app_instances
         current_instances = app_instances.get(name_root,None)
@@ -132,10 +137,51 @@ class NotDash(Dash):
 
         self._adjust_id = False
         self._dash_dispatch = not kwargs.get('expanded_callbacks',False)
+        if replacements:
+            self._replacements = replacements
+        else:
+            self._replacements = dict()
+        self._use_dash_layout = len(self._replacements) < 1
 
     def use_dash_dispatch(self):
-        # TODO make this be a function of using kwargs in callbacks
         return self._dash_dispatch
+
+    def use_dash_layout(self):
+        return self._use_dash_layout
+
+    def augment_initial_layout(self, base_response):
+        if self.use_dash_layout() and False:
+            return HttpResponse(base_response.data,
+                                content_type=base_response.mimetype)
+        # Adjust the base layout response
+        baseDataInBytes = base_response.data
+        baseData = json.loads(baseDataInBytes.decode('utf-8'))
+        # Walk tree. If at any point we have an element whose id matches, then replace any named values at this level
+        reworked_data = self.walk_tree_and_replace(baseData)
+        response_data = json.dumps(reworked_data,
+                                   cls=PlotlyJSONEncoder)
+        return HttpResponse(response_data,
+                            content_type=base_response.mimetype)
+
+    def walk_tree_and_replace(self, data):
+        if isinstance(data,dict):
+            response = {}
+            replacements = {}
+            # look for id entry
+            thisID = data.get('id',None)
+            if thisID is not None:
+                replacements = self._replacements.get(thisID,{})
+            # walk all keys and replace if needed
+            for k, v in data.items():
+                r = replacements.get(k,None)
+                if r is None:
+                    r = self.walk_tree_and_replace(v)
+                response[k] = r
+            return response
+        if isinstance(data,list):
+            # process each entry in turn and return
+            return [self.walk_tree_and_replace(x) for x in data]
+        return data
 
     def flask_app(self):
         return self._flask_app
