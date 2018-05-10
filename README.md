@@ -23,7 +23,7 @@ Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings
 
     INSTALLED_APPS = [
         ...
-        'django_plotly_dash',
+        'django_plotly_dash.apps.DjangoPlotlyDashConfig',
         ...
         ]
 
