@@ -36,7 +36,10 @@ def get_app_instance_by_id(id):
     return nd_apps.get(id,None)
 
 def clear_app_instance(id):
-    del nd_apps[id]
+    try:
+        del nd_apps[id]
+    except:
+        pass
 
 def get_or_form_app(id, name, **kwargs):
     '''
@@ -169,6 +172,22 @@ class NotDash(Dash):
                                    cls=PlotlyJSONEncoder)
         return HttpResponse(response_data,
                             content_type=base_response.mimetype)
+
+    def walk_tree_and_extract(self, data, target):
+        if isinstance(data, dict):
+            for key in ['children','props',]:
+                self.walk_tree_and_extract(data.get(key,None),target)
+            ident = data.get('id', None)
+            if ident is not None:
+                idVals = target.get(ident,{})
+                for key, value in data.items():
+                    if key not in ['props','options','children','id']:
+                        idVals[key] = value
+                if len(idVals) > 0:
+                    target[ident] = idVals
+        if isinstance(data, list):
+            for element in data:
+                self.walk_tree_and_extract(element, target)
 
     def walk_tree_and_replace(self, data):
         # Walk the tree. Rely on json decoding to insert instances of dict and list

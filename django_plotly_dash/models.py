@@ -57,7 +57,40 @@ class DashApp(models.Model):
         dd = get_app_by_name(id)
         return dd.form_dash_instance()
 
+    def _get_base_state(self):
+        '''
+        Get the base state of the object, as defined by the app.layout code, as a python dict
+        '''
+        # Get base layout response, from a base object
+        base_app_inst = get_app_instance_by_id(self.app_name)
+        if not base_app_inst:
+            base_app = get_app_by_name(self.app_name)
+            base_app_inst = base_app.form_dash_instance()
+
+        base_resp = base_app_inst.locate_endpoint_function('dash-layout')()
+
+        base_obj = json.loads(base_resp.data.decode('utf-8'))
+
+        # Walk the base layout and find all values; insert into base state map
+        obj = {}
+        base_app_inst.walk_tree_and_extract(base_obj, obj)
+        return obj
+
+    def populate_values(self):
+        '''
+        Add values from the underlying dash layout configuration
+        '''
+        obj = self._get_base_state()
+        self.base_state = json.dumps(obj)
+
 class DashAppAdmin(admin.ModelAdmin):
-    list_display = ['app_name','instance_name','slug','creation','update',]
+    list_display = ['instance_name','app_name','slug','creation','update',]
     list_filter = ['app_name','creation','update',]
 
+    def _populate_values(self, request, queryset):
+        for da in queryset:
+            da.populate_values()
+            da.save()
+    _populate_values.short_description = "Populate app"
+
+    actions = ['_populate_values',]
