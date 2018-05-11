@@ -4,7 +4,7 @@ Simple Usage
 ============
 
 To use existing dash applications, first register them using the ``DelayedDash`` class. This
-replaces the ``Dash`` class of `dash``
+replaces the ``Dash`` class from the ``dash`` package.
 
 Taking a simple example inspired by the excellent `getting started <https://dash.plot.ly/getting-started-part-2>`_ guide::
 

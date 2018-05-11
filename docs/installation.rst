@@ -22,7 +22,7 @@ the Django admin interface.
 
 Source code and demo
 --------------------
-2
+
 The source code repository contains a simple demo application.
 
 To install and run it::
