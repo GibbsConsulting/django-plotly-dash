@@ -37,13 +37,9 @@ def update(request, id, **kwargs):
             resp = mFunc()
     else:
         # Use direct dispatch with extra arguments in the argMap
-        print("Update args")
-        print(rb)
         argMap = {'id':id,
-                  'request':request,
                   'session':request.session}
         resp = app.dispatch_with_args(rb, argMap)
-        print(resp.data)
 
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
