@@ -40,9 +40,12 @@ def update(request, id, stateless=False, **kwargs):
             resp = mFunc()
     else:
         # Use direct dispatch with extra arguments in the argMap
-        argMap = {'id':id,
-                  'session':request.session}
+        app_state = request.session.get("django_plotly_dash",dict())
+        argMap = {'dash_app_id': id,
+                  'user': request.user,
+                  'session_state': app_state}
         resp = app.dispatch_with_args(rb, argMap)
+        request.session['django_plotly_dash'] = app_state
 
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
