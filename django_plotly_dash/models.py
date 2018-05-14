@@ -14,7 +14,7 @@ class DashApp(models.Model):
     app_name = models.CharField(max_length=100, blank=False, null=False, unique=False)
     instance_name = models.CharField(max_length=100, unique=True, blank=True, null=False)
     slug = models.SlugField(max_length=110, unique=True, blank=True)
-    base_state = models.TextField(null=False) # If mandating postgresql then this could be a JSONField
+    base_state = models.TextField(null=False, default="{}") # If mandating postgresql then this could be a JSONField
     creation = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
 
@@ -46,7 +46,7 @@ class DashApp(models.Model):
         '''
         Get the base state of the object, as defined by the app.layout code, as a python dict
         '''
-        base_app_inst = self._stateless_dash_app()
+        base_app_inst = self._stateless_dash_app().as_dash_instance()
 
         # Get base layout response, from a base object
         base_resp = base_app_inst.locate_endpoint_function('dash-layout')()
