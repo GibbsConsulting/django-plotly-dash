@@ -7,7 +7,7 @@ from django_plotly_dash.models import DashApp
 from django_plotly_dash.dash_wrapper import get_stateless_by_name
 
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
-def plotly_app(context, name=None, slug=None, ratio=0.1, use_frameborder=False):
+def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
 
     fbs = use_frameborder and '1' or '0'
 
@@ -28,11 +28,10 @@ def plotly_app(context, name=None, slug=None, ratio=0.1, use_frameborder=False):
 
     if name is not None:
         da = get_stateless_by_name(name)
-        app = da.form_dash_instance()
 
     if slug is not None:
         da = get_object_or_404(DashApp,slug=slug)
-        app = da.as_dash_instance()
 
+    app = da.form_dash_instance()
     return locals()
 
