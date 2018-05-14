@@ -3,6 +3,7 @@ from flask import Flask
 
 from django.urls import reverse
 from django.http import HttpResponse
+from django.utils.text import slugify
 
 import json
 
@@ -15,13 +16,16 @@ uid_counter = 0
 usable_apps = {}
 
 def add_usable_app(name, app):
+    name = slugify(name)
     global usable_apps
     usable_apps[name] = app
+    return name
 
 def get_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DelayedDash instance encapsulating the app.
     '''
+    name = slugify(name)
     # TODO wrap this in raising a 404 if not found
     return usable_apps[name]
 

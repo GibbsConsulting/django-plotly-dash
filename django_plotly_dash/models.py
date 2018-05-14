@@ -30,8 +30,10 @@ class DashApp(models.Model):
         super(DashApp, self).save(*args,**kwargs)
 
     def _stateless_dash_app(self):
-        # TODO make this a property of the object
-        dd = get_stateless_by_name(self.app_name)
+        dd = getattr(self,'_stateless_dash_app_instance',None)
+        if not dd:
+            dd = get_stateless_by_name(self.app_name)
+            setattr(self,'_stateless_dash_app_instance',dd)
         return dd
 
     def as_dash_instance(self):

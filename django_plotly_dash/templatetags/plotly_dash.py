@@ -32,6 +32,6 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
     if slug is not None:
         da = get_object_or_404(DashApp,slug=slug)
 
-    app = da.form_dash_instance()
+    app = da.as_dash_instance()
     return locals()
 
