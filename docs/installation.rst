@@ -11,11 +11,14 @@ Then, add ``django_plotly_dash`` to ``INSTALLED_APPS`` in the Django settings.py
 
     INSTALLED_APPS = [
         ...
-        'django_plotly_dash',
+        'django_plotly_dash.apps.DjangoPlotlyDashConfig',
         ...
         ]
 
-The plotly_item tag in the plotly_dash tag library can then be used to render any registered dash component. See :ref:`simple_use` for a simple example.
+The ``plotly_item`` tag in the ``plotly_dash`` tag library can then be used to render any registered dash component. See :ref:`simple_use` for a simple example.
+
+The project directory name ``django_plotly_dash`` can also be used on its own if preferred, but this will then skip the use of readable application names in
+the Django admin interface.
 
 Source code and demo
 --------------------
@@ -36,3 +39,4 @@ To install and run it::
                             #   using the Django debug server
                             #   at http://localhost:8000
 
+This will launch a simple Django application. A superuser account is also configured, with both username and password set to ``admin``.

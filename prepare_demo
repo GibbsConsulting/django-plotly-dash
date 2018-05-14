@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 source env/bin/activate
-python setup.py develop
 cd demo
 ./manage.py migrate
+./manage.py shell < configdb.py # Add a superuser if needed
 ./manage.py runserver

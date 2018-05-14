@@ -44,7 +44,7 @@ a2.layout = html.Div([
     html.Div(id="output-one")
     ])
 
-@a2.callback(
+@a2.expanded_callback(
     dash.dependencies.Output('output-one','children'),
     [dash.dependencies.Input('dropdown-one','value')]
     )

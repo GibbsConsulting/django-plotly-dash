@@ -10,7 +10,6 @@ dash-html-components==0.10.1
 dash-renderer==0.12.1
 decorator==4.3.0
 Django==2.0.5
--e git+https://github.com/delsim/django-plotly-dash.git@293b454ee8965422155a971d9e417878dc89ce82#egg=django_plotly_dash
 docopt==0.6.2
 docutils==0.14
 Flask==1.0.2
