@@ -52,7 +52,7 @@ templates:::
 
   {%load plotly_dash%}
 
-  {%plotly_item "SimpleExample"%}
+  {%plotly_item name="SimpleExample"%}
 
 The registration code needs to be in a location
 that will be imported into the Django process before any model or

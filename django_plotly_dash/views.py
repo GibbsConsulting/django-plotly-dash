@@ -1,29 +1,46 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 
 import json
 
 from .models import DashApp
+from .dash_wrapper import get_stateless_by_name
 
 def routes(*args,**kwargs):
-    pass
+    raise NotImplementedError
 
-def dependencies(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def dependencies(request, id, stateless=False, **kwargs):
+    if stateless:
+        da = get_stateless_by_name(id)
+    else:
+        da = get_object_or_404(DashApp,slug=id)
+
+    app = da.as_dash_instance()
+
     with app.app_context():
         mFunc = app.locate_endpoint_function('dash-dependencies')
         resp = mFunc()
         return HttpResponse(resp.data,
                             content_type=resp.mimetype)
 
-def layout(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def layout(request, id, stateless=False, **kwargs):
+    if stateless:
+        da = get_stateless_by_name(id)
+    else:
+        da = get_object_or_404(DashApp,slug=id)
+    app = da.as_dash_instance()
+
     mFunc = app.locate_endpoint_function('dash-layout')
     resp = mFunc()
     return app.augment_initial_layout(resp)
 
-def update(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def update(request, id, stateless=False, **kwargs):
+    if stateless:
+        da = get_stateless_by_name(id)
+    else:
+        da = get_object_or_404(DashApp,slug=id)
+    app = da.as_dash_instance()
+
     rb = json.loads(request.body.decode('utf-8'))
 
     if app.use_dash_dispatch():
@@ -44,8 +61,13 @@ def update(request, id, **kwargs):
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
 
-def main_view(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def main_view(request, id, stateless=False, **kwargs):
+    if stateless:
+        da = get_stateless_by_name(id)
+    else:
+        da = get_object_or_404(DashApp,slug=id)
+    app = da.as_dash_instance()
+
     mFunc = app.locate_endpoint_function()
     resp = mFunc()
     return HttpResponse(resp)
