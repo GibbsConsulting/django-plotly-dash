@@ -4,18 +4,12 @@ from django.http import HttpResponse
 import json
 
 from .models import DashApp
-from .dash_wrapper import get_stateless_by_name
 
 def routes(*args,**kwargs):
     raise NotImplementedError
 
 def dependencies(request, id, stateless=False, **kwargs):
-    if stateless:
-        da = get_stateless_by_name(id)
-    else:
-        da = get_object_or_404(DashApp,slug=id)
-
-    app = da.as_dash_instance()
+    da, app = DashApp.locate_item(id, stateless)
 
     with app.app_context():
         mFunc = app.locate_endpoint_function('dash-dependencies')
@@ -24,22 +18,14 @@ def dependencies(request, id, stateless=False, **kwargs):
                             content_type=resp.mimetype)
 
 def layout(request, id, stateless=False, **kwargs):
-    if stateless:
-        da = get_stateless_by_name(id)
-    else:
-        da = get_object_or_404(DashApp,slug=id)
-    app = da.as_dash_instance()
+    da, app = DashApp.locate_item(id, stateless)
 
     mFunc = app.locate_endpoint_function('dash-layout')
     resp = mFunc()
     return app.augment_initial_layout(resp)
 
 def update(request, id, stateless=False, **kwargs):
-    if stateless:
-        da = get_stateless_by_name(id)
-    else:
-        da = get_object_or_404(DashApp,slug=id)
-    app = da.as_dash_instance()
+    da, app = DashApp.locate_item(id, stateless)
 
     rb = json.loads(request.body.decode('utf-8'))
 
@@ -62,11 +48,7 @@ def update(request, id, stateless=False, **kwargs):
                         content_type=resp.mimetype)
 
 def main_view(request, id, stateless=False, **kwargs):
-    if stateless:
-        da = get_stateless_by_name(id)
-    else:
-        da = get_object_or_404(DashApp,slug=id)
-    app = da.as_dash_instance()
+    da, app = DashApp.locate_item(id, stateless)
 
     mFunc = app.locate_endpoint_function()
     resp = mFunc()

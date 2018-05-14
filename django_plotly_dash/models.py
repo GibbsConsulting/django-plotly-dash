@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib import admin
 from django.utils.text import slugify
+from django.shortcuts import get_object_or_404
 
 from .dash_wrapper import get_stateless_by_name
 
@@ -61,6 +62,16 @@ class DashApp(models.Model):
         '''
         obj = self._get_base_state()
         self.base_state = json.dumps(obj)
+
+    @staticmethod
+    def locate_item(id, stateless=False):
+        if stateless:
+            da = get_stateless_by_name(id)
+        else:
+            da = get_object_or_404(DashApp,slug=id)
+
+        app = da.as_dash_instance()
+        return da, app
 
 class DashAppAdmin(admin.ModelAdmin):
     list_display = ['instance_name','app_name','slug','creation','update',]
