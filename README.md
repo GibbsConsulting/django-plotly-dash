@@ -46,7 +46,7 @@ cd django-plotly-dash
 ## Usage
 
 To use existing dash applications, first register them using the `DelayedDash` class. This
-replaces the `dash.Dash` class of `plotly.py.`
+replaces the `Dash` class of the `dash` package.
 
 Taking a very simple example inspired by the excellent [getting started](https://dash.plot.ly/) documentation:
 

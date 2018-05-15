@@ -49,5 +49,6 @@ a2.layout = html.Div([
     [dash.dependencies.Input('dropdown-one','value')]
     )
 def callback_c(*args,**kwargs):
+    da = kwargs['dash_app']
     return "Args are %s and kwargs are %s" %("".join(*args),str(kwargs))
 

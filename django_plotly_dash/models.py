@@ -17,6 +17,7 @@ class DashApp(models.Model):
     base_state = models.TextField(null=False, default="{}") # If mandating postgresql then this could be a JSONField
     creation = models.DateTimeField(auto_now_add=True)
     update = models.DateTimeField(auto_now=True)
+    save_on_change = models.BooleanField(null=False,default=False)
 
     def __str__(self):
         return self.instance_name
@@ -36,9 +37,48 @@ class DashApp(models.Model):
             setattr(self,'_stateless_dash_app_instance',dd)
         return dd
 
+    def handle_current_state(self):
+        '''
+        Check to see if the current hydrated state and the saved state are different.
+
+        If they are, then persist the current state in the database by saving the model instance.
+        '''
+        if getattr(self,'_current_state_hydrated_changed',False) and self.save_on_change:
+            new_base_state = json.dumps(getattr(self,'_current_state_hydrated',{}))
+            if new_base_state != self.base_state:
+                self.base_state = new_base_state
+                self.save()
+
+    def have_current_state_entry(self, wid, key):
+        cscoll = self.current_state()
+        cs = cscoll.get(wid,{})
+        return key in cs
+
+    def update_current_state(self, wid, key, value):
+        '''
+        Update current state with a (possibly new) value associated with key
+
+        If the key does not represent an existing entry, then ignore it
+        '''
+        cscoll = self.current_state()
+        cs = cscoll.get(wid,{})
+        if key in cs:
+            current_value = cs.get(key,None)
+            if current_value != value:
+                cs[key] = value
+                setattr(self,'_current_state_hydrated_changed',True)
+
+    def current_state(self):
+        cs = getattr(self,'_current_state_hydrated',None)
+        if not cs:
+            cs = json.loads(self.base_state)
+            setattr(self,'_current_state_hydrated',cs)
+            setattr(self,'_current_state_hydrated_changed',False)
+        return cs
+
     def as_dash_instance(self):
         dd = self._stateless_dash_app()
-        base = json.loads(self.base_state)
+        base = self.current_state()
         return dd.form_dash_instance(replacements=base,
                                      specific_identifier=self.slug)
 
@@ -76,8 +116,8 @@ class DashApp(models.Model):
         return da, app
 
 class DashAppAdmin(admin.ModelAdmin):
-    list_display = ['instance_name','app_name','slug','creation','update',]
-    list_filter = ['app_name','creation','update',]
+    list_display = ['instance_name','app_name','slug','creation','update','save_on_change',]
+    list_filter = ['creation','update','save_on_change','app_name',]
 
     def _populate_values(self, request, queryset):
         for da in queryset:

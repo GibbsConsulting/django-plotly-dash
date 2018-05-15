@@ -62,6 +62,16 @@ class DelayedDash:
         '''
         return self.form_dash_instance()
 
+    def handle_current_state(self):
+        'Do nothing impl - only matters if state present'
+        pass
+    def update_current_state(self, wid, key, value):
+        'Do nothing impl - only matters if state present'
+        pass
+    def have_current_state_entry(self, wid, key):
+        'Do nothing impl - only matters if state present'
+        pass
+
     def form_dash_instance(self, replacements=None, specific_identifier=None):
         if not specific_identifier:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
@@ -266,19 +276,27 @@ class NotDash(Dash):
 
         target_id = '{}.{}'.format(output['id'], output['property'])
         args = []
+
+        da = argMap.get('dash_app', None)
+
         for component_registration in self.callback_map[target_id]['inputs']:
-            args.append([
-                c.get('value', None) for c in inputs if
-                c['property'] == component_registration['property'] and
-                c['id'] == component_registration['id']
-            ][0])
+            for c in inputs:
+                if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
+                    v = c.get('value',None)
+                    args.append(v)
+                    if da: da.update_current_state(c['id'],c['property'],v)
 
         for component_registration in self.callback_map[target_id]['state']:
-            args.append([
-                c.get('value', None) for c in state if
-                c['property'] == component_registration['property'] and
-                c['id'] == component_registration['id']
-            ][0])
+            for c in state:
+                if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
+                    v = c.get('value',None)
+                    args.append(v)
+                    if da: da.update_current_state(c['id'],c['property'],v)
 
-        return self.callback_map[target_id]['callback'](*args,**argMap)
+        res = self.callback_map[target_id]['callback'](*args,**argMap)
+        if da and da.have_current_state_entry(output['id'], output['property']):
+            response = json.loads(res.data.decode('utf-8'))
+            value = response.get('response',{}).get('props',{}).get(output['property'],None)
+            da.update_current_state(output['id'], output['property'], value)
 
+        return res
