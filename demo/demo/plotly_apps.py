@@ -39,7 +39,7 @@ def callback_size(dropdown_color, dropdown_size):
 a2 = DjangoDash("Ex2")
 a2.layout = html.Div([
     dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
-    ("O2","Oxygen"),("N2","Nitrogen"),]
+    ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
     ],value="Oxygen"),
     html.Div(id="output-one")
     ])
@@ -50,5 +50,5 @@ a2.layout = html.Div([
     )
 def callback_c(*args,**kwargs):
     da = kwargs['dash_app']
-    return "Args are %s and kwargs are %s" %("".join(*args),str(kwargs))
+    return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
 

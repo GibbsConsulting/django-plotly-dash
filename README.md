@@ -1,12 +1,16 @@
 # django-plotly-dash
 
-Expose [plotly dash](https://plot.ly/products/dash/) apps as django tags.
+Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https:://www.djangoproject.com/) tags. Multiple Dash apps can
+then be embedded into a single web page, persist and share internal state, and also have access to the
+current user and session variables.
 
 See the source for this project here:
 <https://github.com/GibbsConsulting/django-plotly-dash>
 
 This README file provides a short guide to installing and using the package, and also
 outlines how to run the demonstration application.
+
+
 
 More detailed information
 can be found in the online documentation at

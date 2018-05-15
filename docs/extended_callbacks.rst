@@ -4,3 +4,47 @@ Extended callback syntax
 ========================
 
 The ``DjangoDash`` class allows callbacks to request extra arguments when registered.
+
+To do this, simply replace ``callback`` with ``expanded_callback`` when registering any callback. This will cause all of the callbacks
+registered with this application
+to receive extra ``kwargs`` in addition to the callback parameters.
+
+For example, the ``plotly_apps.py`` example contains this dash application::
+
+  a2 = DjangoDash("Ex2")
+
+  a2.layout = html.Div([
+      dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
+      ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
+      ],value="Oxygen"),
+      html.Div(id="output-one")
+      ])
+
+  @a2.expanded_callback(
+      dash.dependencies.Output('output-one','children'),
+      [dash.dependencies.Input('dropdown-one','value')]
+      )
+
+  def callback_c(*args,**kwargs):
+      da = kwargs['dash_app']
+      return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
+
+The additional arguments, which are reported as the ``kwargs`` content in this example, include
+
+:dash_app: For stateful applications, the ``DashApp`` model instance
+:dash_app_id: The application identifier. For stateless applications, this is the (slugified) name given to the ``DjangoDash`` constructor.
+              For stateful applications, it is the (slugified) unique identifier for the associated model instance.
+:session_state: A dictionary of information, unique to this user session. Any changes made to its content during the
+                callback are persisted as part of the Django session framework.
+:user: The Django User instance.
+
+The ``DashApp`` model instance can also be configured to persist itself on any change. This is discussed
+in the :ref:`models_and_state` section.
+
+
+.. _using_session_state:
+Using session state
+------------------
+
+Changes to the session state and other server-side objects are not automatically propagated to an application. Something in the front-end UI has to invoke a callaback; at this point the latest version of these objects will be provided to the callback. The same considerations as in other Dash `live updates <https://dash.plot.ly/live-updates>`_ apply.
+
