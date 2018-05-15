@@ -23,7 +23,7 @@ def add_usable_app(name, app):
 
 def get_stateless_by_name(name):
     '''
-    Locate a registered dash app by name, and return a DelayedDash instance encapsulating the app.
+    Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
     name = slugify(name)
     # TODO wrap this in raising a 404 if not found
@@ -37,7 +37,7 @@ class Holder:
     def append_script(self, script):
         self.items.append(script)
 
-class DelayedDash:
+class DjangoDash:
     def __init__(self, name=None, **kwargs):
         if name is None:
             global uid_counter

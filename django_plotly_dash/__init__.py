@@ -2,5 +2,5 @@
 
 __version__ = "0.0.4"
 
-from .dash_wrapper import DelayedDash
+from .dash_wrapper import DjangoDash
 

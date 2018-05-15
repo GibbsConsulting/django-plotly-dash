@@ -45,7 +45,7 @@ cd django-plotly-dash
 
 ## Usage
 
-To use existing dash applications, first register them using the `DelayedDash` class. This
+To use existing dash applications, first register them using the `DjangoDash` class. This
 replaces the `Dash` class of the `dash` package.
 
 Taking a very simple example inspired by the excellent [getting started](https://dash.plot.ly/) documentation:
@@ -55,9 +55,9 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from django_plotly_dash import DelayedDash
+from django_plotly_dash import DjangoDash
 
-app = DelayedDash('SimpleExample')
+app = DjangoDash('SimpleExample')
 
 app.layout = html.Div([
     dcc.RadioItems(
@@ -90,7 +90,7 @@ def callback_size(dropdown_color, dropdown_size):
                                                   dropdown_color)
 ```
 
-Note that the `DelayedDash` constructor requires a name to be specified. This name is then used to identify the dash app in
+Note that the `DjangoDash` constructor requires a name to be specified. This name is then used to identify the dash app in
 templates:
 
 ```jinja2

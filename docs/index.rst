@@ -17,6 +17,9 @@ Contents
    introduction
    installation
    simple_use
+   extended_callbacks
+   template_tags
+   models_and_state
 
 
 Indices and tables
