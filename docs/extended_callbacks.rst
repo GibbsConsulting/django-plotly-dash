@@ -9,7 +9,15 @@ To do this, simply replace ``callback`` with ``expanded_callback`` when register
 registered with this application
 to receive extra ``kwargs`` in addition to the callback parameters.
 
-For example, the ``plotly_apps.py`` example contains this dash application::
+For example, the ``plotly_apps.py`` example contains this dash application:
+
+.. code-block:: python
+
+  import dash
+  import dash_core_components as dcc
+  import dash_html_components as html
+
+  from django_plotly_dash import DjangoDash
 
   a2 = DjangoDash("Ex2")
 

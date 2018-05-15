@@ -69,6 +69,11 @@ class DashApp(models.Model):
                 setattr(self,'_current_state_hydrated_changed',True)
 
     def current_state(self):
+        '''
+        Return the current internal state of the model instance.
+
+        This is not necessarily the same as the persisted state stored in the self.base_state variable.
+        '''
         cs = getattr(self,'_current_state_hydrated',None)
         if not cs:
             cs = json.loads(self.base_state)

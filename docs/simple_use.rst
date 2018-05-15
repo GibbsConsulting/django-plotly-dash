@@ -6,7 +6,9 @@ Simple usage
 To use existing dash applications, first register them using the ``DjangoDash`` class. This
 replaces the ``Dash`` class from the ``dash`` package.
 
-Taking a simple example inspired by the excellent `getting started <https://dash.plot.ly/getting-started-part-2>`_ guide::
+Taking a simple example inspired by the excellent `getting started <https://dash.plot.ly/getting-started-part-2>`_ guide:
+
+.. code-block:: python
 
   import dash
   import dash_core_components as dcc
