@@ -1,11 +1,13 @@
 from django import template
+from django.shortcuts import get_object_or_404
 
 register = template.Library()
 
 from django_plotly_dash.models import DashApp
+from django_plotly_dash.dash_wrapper import get_stateless_by_name
 
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
-def plotly_item(context, app_name, ratio=0.1, use_frameborder=False):
+def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
 
     fbs = use_frameborder and '1' or '0'
 
@@ -24,6 +26,12 @@ def plotly_item(context, app_name, ratio=0.1, use_frameborder=False):
     height: 100%;
     """
 
-    app = DashApp.get_app_instance(app_name)
+    if name is not None:
+        da = get_stateless_by_name(name)
 
+    if slug is not None:
+        da = get_object_or_404(DashApp,slug=slug)
+
+    app = da.as_dash_instance()
     return locals()
+

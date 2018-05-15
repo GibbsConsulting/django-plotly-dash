@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 
 import json
@@ -6,24 +6,27 @@ import json
 from .models import DashApp
 
 def routes(*args,**kwargs):
-    pass
+    raise NotImplementedError
 
-def dependencies(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def dependencies(request, id, stateless=False, **kwargs):
+    da, app = DashApp.locate_item(id, stateless)
+
     with app.app_context():
         mFunc = app.locate_endpoint_function('dash-dependencies')
         resp = mFunc()
         return HttpResponse(resp.data,
                             content_type=resp.mimetype)
 
-def layout(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def layout(request, id, stateless=False, **kwargs):
+    da, app = DashApp.locate_item(id, stateless)
+
     mFunc = app.locate_endpoint_function('dash-layout')
     resp = mFunc()
     return app.augment_initial_layout(resp)
 
-def update(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def update(request, id, stateless=False, **kwargs):
+    da, app = DashApp.locate_item(id, stateless)
+
     rb = json.loads(request.body.decode('utf-8'))
 
     if app.use_dash_dispatch():
@@ -37,15 +40,21 @@ def update(request, id, **kwargs):
             resp = mFunc()
     else:
         # Use direct dispatch with extra arguments in the argMap
-        argMap = {'id':id,
-                  'session':request.session}
+        app_state = request.session.get("django_plotly_dash",dict())
+        argMap = {'dash_app_id': id,
+                  'dash_app': da,
+                  'user': request.user,
+                  'session_state': app_state}
         resp = app.dispatch_with_args(rb, argMap)
+        request.session['django_plotly_dash'] = app_state
+        da.handle_current_state()
 
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
 
-def main_view(request, id, **kwargs):
-    app = DashApp.get_app_instance(id)
+def main_view(request, id, stateless=False, **kwargs):
+    da, app = DashApp.locate_item(id, stateless)
+
     mFunc = app.locate_endpoint_function()
     resp = mFunc()
     return HttpResponse(resp)

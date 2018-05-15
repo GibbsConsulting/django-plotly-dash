@@ -1,12 +1,16 @@
 # django-plotly-dash
 
-Expose [plotly dash](https://plot.ly/products/dash/) apps as django tags.
+Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https:://www.djangoproject.com/) tags. Multiple Dash apps can
+then be embedded into a single web page, persist and share internal state, and also have access to the
+current user and session variables.
 
 See the source for this project here:
 <https://github.com/GibbsConsulting/django-plotly-dash>
 
 This README file provides a short guide to installing and using the package, and also
 outlines how to run the demonstration application.
+
+
 
 More detailed information
 can be found in the online documentation at
@@ -45,8 +49,8 @@ cd django-plotly-dash
 
 ## Usage
 
-To use existing dash applications, first register them using the `DelayedDash` class. This
-replaces the `dash.Dash` class of `plotly.py.`
+To use existing dash applications, first register them using the `DjangoDash` class. This
+replaces the `Dash` class of the `dash` package.
 
 Taking a very simple example inspired by the excellent [getting started](https://dash.plot.ly/) documentation:
 
@@ -55,9 +59,9 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
-from django_plotly_dash import DelayedDash
+from django_plotly_dash import DjangoDash
 
-app = DelayedDash('SimpleExample')
+app = DjangoDash('SimpleExample')
 
 app.layout = html.Div([
     dcc.RadioItems(
@@ -88,30 +92,15 @@ def callback_color(dropdown_value):
 def callback_size(dropdown_color, dropdown_size):
     return "The chosen T-shirt is a %s %s one." %(dropdown_size,
                                                   dropdown_color)
-
-a2 = DelayedDash("Ex2")
-a2.layout = html.Div([
-    dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
-    ("O2","Oxygen"),("N2","Nitrogen"),]
-    ],value="Oxygen"),
-    html.Div(id="output-one")
-    ])
-
-@a2.callback(
-    dash.dependencies.Output('output-one','children'),
-    [dash.dependencies.Input('dropdown-one','value')]
-    )
-def callback_c(*args,**kwargs):
-    return "Args are %s and kwargs are %s" %("".join(*args),str(kwargs))
 ```
 
-Note that the `DelayedDash` constructor requires a name to be specified. This name is then used to identify the dash app in
+Note that the `DjangoDash` constructor requires a name to be specified. This name is then used to identify the dash app in
 templates:
 
 ```jinja2
 {% load plotly_dash %}
 
-{% plotly_item "SimpleExample" %}
+{% plotly_item name="SimpleExample" %}
 ```
 
 The registration code needs to be in a location

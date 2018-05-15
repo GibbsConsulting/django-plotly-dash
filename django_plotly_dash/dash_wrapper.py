@@ -3,6 +3,7 @@ from flask import Flask
 
 from django.urls import reverse
 from django.http import HttpResponse
+from django.utils.text import slugify
 
 import json
 
@@ -13,43 +14,20 @@ from .app_name import app_name, main_view_label
 uid_counter = 0
 
 usable_apps = {}
-nd_apps = {}
 
 def add_usable_app(name, app):
+    name = slugify(name)
     global usable_apps
     usable_apps[name] = app
+    return name
 
-def add_instance(id, instance):
-    global nd_apps
-    nd_apps[id] = instance
-
-def get_app_by_name(name):
+def get_stateless_by_name(name):
     '''
-    Locate a registered dash app by name, and return a DelayedDash instance encapsulating the app.
+    Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
-    return usable_apps.get(name,None)
-
-def get_app_instance_by_id(id):
-    '''
-    Locate an instance of a dash app by identifier, or return None if one does not exist
-    '''
-    return nd_apps.get(id,None)
-
-def clear_app_instance(id):
-    try:
-        del nd_apps[id]
-    except:
-        pass
-
-def get_or_form_app(id, name, **kwargs):
-    '''
-    Locate an instance of a dash app by identifier, loading or creating a new instance if needed
-    '''
-    app = get_app_instance_by_id(id)
-    if app:
-        return app
-    dd = get_app_by_name(name)
-    return dd.form_dash_instance()
+    name = slugify(name)
+    # TODO wrap this in raising a 404 if not found
+    return usable_apps[name]
 
 class Holder:
     def __init__(self):
@@ -59,7 +37,7 @@ class Holder:
     def append_script(self, script):
         self.items.append(script)
 
-class DelayedDash:
+class DjangoDash:
     def __init__(self, name=None, **kwargs):
         if name is None:
             global uid_counter
@@ -78,9 +56,30 @@ class DelayedDash:
 
         self._expanded_callbacks = False
 
+    def as_dash_instance(self):
+        '''
+        Form a dash instance, for stateless use of this app
+        '''
+        return self.form_dash_instance()
+
+    def handle_current_state(self):
+        'Do nothing impl - only matters if state present'
+        pass
+    def update_current_state(self, wid, key, value):
+        'Do nothing impl - only matters if state present'
+        pass
+    def have_current_state_entry(self, wid, key):
+        'Do nothing impl - only matters if state present'
+        pass
+
     def form_dash_instance(self, replacements=None, specific_identifier=None):
+        if not specific_identifier:
+            app_pathname = "%s:app-%s"% (app_name, main_view_label)
+        else:
+            app_pathname="%s:%s" % (app_name, main_view_label)
+
         rd = NotDash(name_root=self._uid,
-                     app_pathname="%s:%s" % (app_name, main_view_label),
+                     app_pathname=app_pathname,
                      expanded_callbacks = self._expanded_callbacks,
                      replacements = replacements,
                      specific_identifier = specific_identifier)
@@ -133,8 +132,6 @@ class NotDash(Dash):
             self._uid = specific_identifier
         else:
             self._uid = name_root
-
-        add_instance(self._uid, self)
 
         self._flask_app = Flask(self._uid)
         self._notflask = NotFlask()
@@ -279,20 +276,27 @@ class NotDash(Dash):
 
         target_id = '{}.{}'.format(output['id'], output['property'])
         args = []
+
+        da = argMap.get('dash_app', None)
+
         for component_registration in self.callback_map[target_id]['inputs']:
-            args.append([
-                c.get('value', None) for c in inputs if
-                c['property'] == component_registration['property'] and
-                c['id'] == component_registration['id']
-            ][0])
+            for c in inputs:
+                if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
+                    v = c.get('value',None)
+                    args.append(v)
+                    if da: da.update_current_state(c['id'],c['property'],v)
 
         for component_registration in self.callback_map[target_id]['state']:
-            args.append([
-                c.get('value', None) for c in state if
-                c['property'] == component_registration['property'] and
-                c['id'] == component_registration['id']
-            ][0])
+            for c in state:
+                if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
+                    v = c.get('value',None)
+                    args.append(v)
+                    if da: da.update_current_state(c['id'],c['property'],v)
 
-        return self.callback_map[target_id]['callback'](*args,**argMap)
+        res = self.callback_map[target_id]['callback'](*args,**argMap)
+        if da and da.have_current_state_entry(output['id'], output['property']):
+            response = json.loads(res.data.decode('utf-8'))
+            value = response.get('response',{}).get('props',{}).get(output['property'],None)
+            da.update_current_state(output['id'], output['property'], value)
 
-
+        return res
