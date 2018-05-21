@@ -72,17 +72,30 @@ class DjangoDash:
         'Do nothing impl - only matters if state present'
         pass
 
-    def form_dash_instance(self, replacements=None, specific_identifier=None):
+    def get_base_pathname(self, specific_identifier):
         if not specific_identifier:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
+            ndid = self._uid
         else:
             app_pathname="%s:%s" % (app_name, main_view_label)
+            ndid = specific_identifier
 
-        rd = NotDash(name_root=self._uid,
-                     app_pathname=app_pathname,
+        try:
+            full_url = reverse(app_pathname,kwargs={'id':ndid})
+        except:
+            full_url = "/%s/" %ndid
+
+        return ndid, full_url
+
+    def form_dash_instance(self, replacements=None, specific_identifier=None):
+
+        ndid, base_pathname = self.get_base_pathname(specific_identifier)
+
+        rd = NotDash(base_pathname=base_pathname,
                      expanded_callbacks = self._expanded_callbacks,
                      replacements = replacements,
-                     specific_identifier = specific_identifier)
+                     ndid = ndid)
+
         rd.layout = self.layout
 
         for cb, func in self._callback_sets:
@@ -126,21 +139,20 @@ class NotFlask:
         pass
 
 class NotDash(Dash):
-    def __init__(self, name_root, app_pathname=None, replacements = None, specific_identifier=None, expanded_callbacks=False, **kwargs):
+    def __init__(self, base_pathname=None, replacements = None, ndid=None, expanded_callbacks=False, **kwargs):
 
-        if specific_identifier is not None:
-            self._uid = specific_identifier
-        else:
-            self._uid = name_root
+        self._uid = ndid
 
         self._flask_app = Flask(self._uid)
         self._notflask = NotFlask()
-        self._base_pathname = reverse(app_pathname,kwargs={'id':self._uid})
+        self._base_pathname = base_pathname
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
 
         super(NotDash, self).__init__(**kwargs)
+
+        self.css.config.serve_locally = True
 
         self._adjust_id = False
         self._dash_dispatch = not expanded_callbacks
@@ -158,8 +170,7 @@ class NotDash(Dash):
 
     def augment_initial_layout(self, base_response):
         if self.use_dash_layout() and False:
-            return HttpResponse(base_response.data,
-                                content_type=base_response.mimetype)
+            return base_response.data, base_response.mimetype
         # Adjust the base layout response
         baseDataInBytes = base_response.data
         baseData = json.loads(baseDataInBytes.decode('utf-8'))
@@ -167,8 +178,8 @@ class NotDash(Dash):
         reworked_data = self.walk_tree_and_replace(baseData)
         response_data = json.dumps(reworked_data,
                                    cls=PlotlyJSONEncoder)
-        return HttpResponse(response_data,
-                            content_type=base_response.mimetype)
+
+        return response_data, base_response.mimetype
 
     def walk_tree_and_extract(self, data, target):
         if isinstance(data, dict):

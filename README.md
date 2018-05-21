@@ -10,8 +10,6 @@ See the source for this project here:
 This README file provides a short guide to installing and using the package, and also
 outlines how to run the demonstration application.
 
-
-
 More detailed information
 can be found in the online documentation at
 <https://readthedocs.org/projects/django-plotly-dash>
