@@ -22,9 +22,3 @@ Contents
    models_and_state
 
 
-Indices and tables
-------------------
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
