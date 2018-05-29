@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 import json
 
@@ -22,7 +22,9 @@ def layout(request, id, stateless=False, **kwargs):
 
     mFunc = app.locate_endpoint_function('dash-layout')
     resp = mFunc()
-    return app.augment_initial_layout(resp)
+    response_data, mimetype = app.augment_initial_layout(resp)
+    return HttpResponse(response_data,
+                        content_type=mimetype)
 
 def update(request, id, stateless=False, **kwargs):
     da, app = DashApp.locate_item(id, stateless)
@@ -59,3 +61,12 @@ def main_view(request, id, stateless=False, **kwargs):
     resp = mFunc()
     return HttpResponse(resp)
 
+def component_suites(request, resource=None, component=None, **kwargs):
+
+    eBig = request.GET.urlencode()
+    if len(eBig) > 0:
+        redone_url = "/static/dash/%s/%s?%s" %(component, resource, eBig)
+    else:
+        redone_url = "/static/dash/%s/%s" %(component, resource)
+
+    return HttpResponseRedirect(redirect_to=redone_url)
