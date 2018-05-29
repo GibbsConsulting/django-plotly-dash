@@ -120,3 +120,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+
+STATICFILES_DIRS = [
+    ]
+
+import dash_core_components as dcc
+_rname = os.path.join(os.path.dirname(dcc.__file__),'..')
+for dash_module_name in ['dash_core_components','dash_html_components','dash_renderer',]:
+    STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
+

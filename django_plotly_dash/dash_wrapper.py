@@ -153,6 +153,9 @@ class NotDash(Dash):
         super(NotDash, self).__init__(**kwargs)
 
         self.css.config.serve_locally = True
+        #self.css.config.serve_locally = False
+
+        self.scripts.config.serve_locally = self.css.config.serve_locally
 
         self._adjust_id = False
         self._dash_dispatch = not expanded_callbacks
