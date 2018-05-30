@@ -72,7 +72,7 @@ class DjangoDash:
         'Do nothing impl - only matters if state present'
         pass
 
-    def get_base_pathname(self, specific_identifier):
+    def get_base_pathname(self, specific_identifier, stub=None):
         if not specific_identifier:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
             ndid = self._uid
@@ -83,13 +83,16 @@ class DjangoDash:
         try:
             full_url = reverse(app_pathname,kwargs={'id':ndid})
         except:
-            full_url = "/%s/" %ndid
+            if stub:
+                full_url = "%s/%s/" %(stub,ndid)
+            else:
+                full_url = ndid
 
         return ndid, full_url
 
-    def form_dash_instance(self, replacements=None, specific_identifier=None):
+    def form_dash_instance(self, replacements=None, specific_identifier=None, stub=None):
 
-        ndid, base_pathname = self.get_base_pathname(specific_identifier)
+        ndid, base_pathname = self.get_base_pathname(specific_identifier, stub)
 
         rd = NotDash(base_pathname=base_pathname,
                      expanded_callbacks = self._expanded_callbacks,
@@ -153,7 +156,7 @@ class NotDash(Dash):
         super(NotDash, self).__init__(**kwargs)
 
         self.css.config.serve_locally = True
-        #self.css.config.serve_locally = False
+        self.css.config.serve_locally = False
 
         self.scripts.config.serve_locally = self.css.config.serve_locally
 
