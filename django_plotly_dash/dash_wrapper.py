@@ -94,10 +94,10 @@ class DjangoDash:
 
         ndid, base_pathname = self.get_base_pathname(specific_identifier, stub)
 
-        rd = NotDash(base_pathname=base_pathname,
-                     expanded_callbacks = self._expanded_callbacks,
-                     replacements = replacements,
-                     ndid = ndid)
+        rd = WrappedDash(base_pathname=base_pathname,
+                         expanded_callbacks = self._expanded_callbacks,
+                         replacements = replacements,
+                         ndid = ndid)
 
         rd.layout = self.layout
 
@@ -124,7 +124,7 @@ class DjangoDash:
         self._expanded_callbacks = True
         return self.callback(output, inputs, state, events)
 
-class NotFlask:
+class PseudoFlask:
     def __init__(self):
         self.config = {}
         self.endpoints = {}
@@ -141,19 +141,19 @@ class NotFlask:
     def run(self,*args,**kwargs):
         pass
 
-class NotDash(Dash):
+class WrappedDash(Dash):
     def __init__(self, base_pathname=None, replacements = None, ndid=None, expanded_callbacks=False, **kwargs):
 
         self._uid = ndid
 
         self._flask_app = Flask(self._uid)
-        self._notflask = NotFlask()
+        self._notflask = PseudoFlask()
         self._base_pathname = base_pathname
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
 
-        super(NotDash, self).__init__(**kwargs)
+        super(WrappedDash, self).__init__(**kwargs)
 
         self.css.config.serve_locally = True
         self.css.config.serve_locally = False
@@ -276,10 +276,10 @@ class NotDash(Dash):
         return item
 
     def callback(self, output, inputs=[], state=[], events=[]):
-        return super(NotDash, self).callback(self._fix_callback_item(output),
-                                             [self._fix_callback_item(x) for x in inputs],
-                                             [self._fix_callback_item(x) for x in state],
-                                             [self._fix_callback_item(x) for x in events])
+        return super(WrappedDash, self).callback(self._fix_callback_item(output),
+                                                 [self._fix_callback_item(x) for x in inputs],
+                                                 [self._fix_callback_item(x) for x in state],
+                                                 [self._fix_callback_item(x) for x in events])
 
     def dispatch(self):
         import flask
