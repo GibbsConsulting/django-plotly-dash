@@ -83,10 +83,10 @@ class DjangoDash:
         try:
             full_url = reverse(app_pathname,kwargs={'id':ndid})
         except:
-            if stub:
+            if stub is not None:
                 full_url = "%s/%s/" %(stub,ndid)
             else:
-                full_url = ndid
+                full_url = "/%s/"%ndid
 
         return ndid, full_url
 
