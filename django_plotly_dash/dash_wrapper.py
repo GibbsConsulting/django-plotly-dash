@@ -60,7 +60,7 @@ class DjangoDash:
         '''
         Form a dash instance, for stateless use of this app
         '''
-        return self.form_dash_instance()
+        return self.do_form_dash_instance()
 
     def handle_current_state(self):
         'Do nothing impl - only matters if state present'
@@ -72,7 +72,7 @@ class DjangoDash:
         'Do nothing impl - only matters if state present'
         pass
 
-    def get_base_pathname(self, specific_identifier, stub=None):
+    def get_base_pathname(self, specific_identifier):
         if not specific_identifier:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
             ndid = self._uid
@@ -80,19 +80,18 @@ class DjangoDash:
             app_pathname="%s:%s" % (app_name, main_view_label)
             ndid = specific_identifier
 
-        try:
-            full_url = reverse(app_pathname,kwargs={'id':ndid})
-        except:
-            if stub is not None:
-                full_url = "%s/%s/" %(stub,ndid)
-            else:
-                full_url = "/%s/"%ndid
-
+        full_url = reverse(app_pathname,kwargs={'id':ndid})
         return ndid, full_url
 
-    def form_dash_instance(self, replacements=None, specific_identifier=None, stub=None):
+    def do_form_dash_instance(self, replacements=None, specific_identifier=None):
 
-        ndid, base_pathname = self.get_base_pathname(specific_identifier, stub)
+        ndid, base_pathname = self.get_base_pathname(specific_identifier)
+        return self.form_dash_instance(replacements, ndid, base_pathname)
+
+    def form_dash_instance(self, replacements=None, ndid=None, base_pathname=None):
+
+        if ndid is None:
+            ndid = self._uid
 
         rd = WrappedDash(base_pathname=base_pathname,
                          expanded_callbacks = self._expanded_callbacks,
