@@ -62,15 +62,11 @@ def main_view(request, id, stateless=False, **kwargs):
     return HttpResponse(resp)
 
 def component_suites(request, resource=None, component=None, **kwargs):
-    print("Blagging component suites")
-    print(kwargs)
 
     eBig = request.GET.urlencode()
     if len(eBig) > 0:
-        redone_url = "/STATIC/%s/%s?%s" %(component, resource, eBig)
+        redone_url = "/static/dash/%s/%s?%s" %(component, resource, eBig)
     else:
-        redone_url = "/STATIC/%s/%s" %(component, resource)
+        redone_url = "/static/dash/%s/%s" %(component, resource)
 
-    print(redone_url)
-
-    return HttpResponseRedirect(redirect_to="/static/someth")
+    return HttpResponseRedirect(redirect_to=redone_url)

@@ -103,5 +103,5 @@ templates:
 
 The registration code needs to be in a location
 that will be imported into the Django process before any model or template tag attempts to use it. The example Django application
-in the demo subdirectory achieves this through an import in the main urls.py file; any views.py would also be sufficient.
+in the demo subdirectory achieves this through an import in the main `urls.py` file; any `views.py` would also be sufficient.
 

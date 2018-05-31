@@ -103,8 +103,8 @@ class DashApp(models.Model):
     def as_dash_instance(self):
         dd = self._stateless_dash_app()
         base = self.current_state()
-        return dd.form_dash_instance(replacements=base,
-                                     specific_identifier=self.slug)
+        return dd.do_form_dash_instance(replacements=base,
+                                        specific_identifier=self.slug)
 
     def _get_base_state(self):
         '''
