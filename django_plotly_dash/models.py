@@ -7,6 +7,25 @@ from .dash_wrapper import get_stateless_by_name
 
 import json
 
+class StatelessApp(models.Model):
+    '''
+    A stateless Dash app. An instance of this model represents a dash app witout any specific state
+    '''
+    app_name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+    slug = models.SlugField(max_length=110, unique=True, blank=True)
+
+    def __str__(self):
+        return self.app_name
+
+    def save(self, *args, **kwargs):
+        if not self.slug or len(self.slug) < 2:
+            self.slug = slugify(self.app_name)
+        return super(StatelessApp, self).save(*args,**kwargs)
+
+class StatelessAppAdmin(admin.ModelAdmin):
+    list_display = ['app_name','slug',]
+    list_filter = ['app_name','slug',]
+
 class DashApp(models.Model):
     '''
     An instance of this model represents a dash application and its internal state
