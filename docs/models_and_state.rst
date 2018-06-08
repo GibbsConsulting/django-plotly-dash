@@ -1,9 +1,43 @@
 .. _models_and_state:
 
 Django models and application state
-================
+===================================
 
-The ``django_plotly_dash`` application defines a ``DashApp`` model. This represents an instance of application state.
+The ``django_plotly_dash`` application defines ``DashApp`` and ``StatelessApp`` models.
+
+The ``StatelessApp`` model
+----------------------
+
+An instance of the ``StatelessApp`` model represents a single dash application. Every instantiation of
+a ``DjangoDash`` object is registered, and any object that is referenced through the ``DashApp`` model - this
+includes all template access as well as model instances themselves - causes a ``StatelessApp`` model instance to
+be created if one does not already exist.
+
+.. code-block:: python
+
+    class StatelessApp(models.Model):
+        '''
+        A stateless Dash app.
+
+        An instance of this model represents a dash app without any specific state
+        '''
+
+        app_name = models.CharField(max_length=100, blank=False, null=False, unique=True)
+        slug = models.SlugField(max_length=110, unique=True, blank=True)
+
+        def as_dash_app(self):
+            '''
+            Return a DjangoDash instance of the dash application
+            '''
+
+The main role of a ``StatelessApp`` instance is to manage access to the associated ``DjangoDash`` object, as
+expsosed through the ``as_dash_app`` member
+function.
+
+The ``DashApp`` model
+---------------------
+
+An instance of the ``DashApp`` model represents an instance of application state.
 
 .. code-block:: python
 
@@ -11,7 +45,8 @@ The ``django_plotly_dash`` application defines a ``DashApp`` model. This represe
         '''
         An instance of this model represents a Dash application and its internal state
         '''
-        app_name = models.CharField(max_length=100, blank=False, null=False, unique=False)
+        stateless_app = models.ForeignKey(StatelessApp, on_delete=models.PROTECT,
+                                          unique=False, null=False, blank=False)
         instance_name = models.CharField(max_length=100, unique=True, blank=True, null=False)
         slug = models.SlugField(max_length=110, unique=True, blank=True)
         base_state = models.TextField(null=False, default="{}")
@@ -36,7 +71,7 @@ The ``django_plotly_dash`` application defines a ``DashApp`` model. This represe
             Add values from the underlying dash layout configuration
             '''
 
-The ``app_name`` corresponds to an application registered through the instantiation of a ``DjangoDash`` object. The ``slug`` field provides a unique identifier
+The ``stateless_app`` references an instance of the ``StatelessApp`` model described above. The ``slug`` field provides a unique identifier
 that is used in URLs to identify the instance of an application, and also its associated server-side state.
 
 The persisted state of the instance is contained, serialised as JSON, in the ``base_state`` variable. This is an arbitrary subset of the internal state of the

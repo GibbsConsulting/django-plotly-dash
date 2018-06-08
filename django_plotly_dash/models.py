@@ -26,6 +26,9 @@ class StatelessApp(models.Model):
         return super(StatelessApp, self).save(*args,**kwargs)
 
     def as_dash_app(self):
+        '''
+        Return a DjangoDash instance of the dash application
+        '''
         dd = getattr(self,'_stateless_dash_app_instance',None)
         if not dd:
             dd = get_stateless_by_name(self.app_name)
