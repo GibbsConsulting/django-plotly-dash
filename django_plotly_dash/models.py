@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 
-from .dash_wrapper import get_stateless_by_name
+from .dash_wrapper import get_local_stateless_by_name
 
 import json
 
@@ -25,6 +25,9 @@ class StatelessApp(models.Model):
 class StatelessAppAdmin(admin.ModelAdmin):
     list_display = ['app_name','slug',]
     list_filter = ['app_name','slug',]
+
+def get_stateless_by_name(name):
+    return get_local_stateless_by_name(name)
 
 class DashApp(models.Model):
     '''

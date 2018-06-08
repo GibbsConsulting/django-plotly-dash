@@ -21,7 +21,7 @@ def add_usable_app(name, app):
     usable_apps[name] = app
     return name
 
-def get_stateless_by_name(name):
+def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
