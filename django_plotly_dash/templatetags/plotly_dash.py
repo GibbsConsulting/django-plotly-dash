@@ -3,8 +3,7 @@ from django.shortcuts import get_object_or_404
 
 register = template.Library()
 
-from django_plotly_dash.models import DashApp
-from django_plotly_dash.dash_wrapper import get_stateless_by_name
+from django_plotly_dash.models import DashApp, get_stateless_by_name
 
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
