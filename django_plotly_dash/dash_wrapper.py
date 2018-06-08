@@ -21,7 +21,7 @@ def add_usable_app(name, app):
     usable_apps[name] = app
     return name
 
-def get_stateless_by_name(name):
+def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
@@ -60,7 +60,7 @@ class DjangoDash:
         '''
         Form a dash instance, for stateless use of this app
         '''
-        return self.form_dash_instance()
+        return self.do_form_dash_instance()
 
     def handle_current_state(self):
         'Do nothing impl - only matters if state present'
@@ -80,21 +80,23 @@ class DjangoDash:
             app_pathname="%s:%s" % (app_name, main_view_label)
             ndid = specific_identifier
 
-        try:
-            full_url = reverse(app_pathname,kwargs={'id':ndid})
-        except:
-            full_url = "/%s/" %ndid
-
+        full_url = reverse(app_pathname,kwargs={'id':ndid})
         return ndid, full_url
 
-    def form_dash_instance(self, replacements=None, specific_identifier=None):
+    def do_form_dash_instance(self, replacements=None, specific_identifier=None):
 
         ndid, base_pathname = self.get_base_pathname(specific_identifier)
+        return self.form_dash_instance(replacements, ndid, base_pathname)
 
-        rd = NotDash(base_pathname=base_pathname,
-                     expanded_callbacks = self._expanded_callbacks,
-                     replacements = replacements,
-                     ndid = ndid)
+    def form_dash_instance(self, replacements=None, ndid=None, base_pathname=None):
+
+        if ndid is None:
+            ndid = self._uid
+
+        rd = WrappedDash(base_pathname=base_pathname,
+                         expanded_callbacks = self._expanded_callbacks,
+                         replacements = replacements,
+                         ndid = ndid)
 
         rd.layout = self.layout
 
@@ -121,7 +123,7 @@ class DjangoDash:
         self._expanded_callbacks = True
         return self.callback(output, inputs, state, events)
 
-class NotFlask:
+class PseudoFlask:
     def __init__(self):
         self.config = {}
         self.endpoints = {}
@@ -138,22 +140,22 @@ class NotFlask:
     def run(self,*args,**kwargs):
         pass
 
-class NotDash(Dash):
+class WrappedDash(Dash):
     def __init__(self, base_pathname=None, replacements = None, ndid=None, expanded_callbacks=False, **kwargs):
 
         self._uid = ndid
 
         self._flask_app = Flask(self._uid)
-        self._notflask = NotFlask()
+        self._notflask = PseudoFlask()
         self._base_pathname = base_pathname
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
 
-        super(NotDash, self).__init__(**kwargs)
+        super(WrappedDash, self).__init__(**kwargs)
 
         self.css.config.serve_locally = True
-        #self.css.config.serve_locally = False
+        self.css.config.serve_locally = False
 
         self.scripts.config.serve_locally = self.css.config.serve_locally
 
@@ -273,10 +275,10 @@ class NotDash(Dash):
         return item
 
     def callback(self, output, inputs=[], state=[], events=[]):
-        return super(NotDash, self).callback(self._fix_callback_item(output),
-                                             [self._fix_callback_item(x) for x in inputs],
-                                             [self._fix_callback_item(x) for x in state],
-                                             [self._fix_callback_item(x) for x in events])
+        return super(WrappedDash, self).callback(self._fix_callback_item(output),
+                                                 [self._fix_callback_item(x) for x in inputs],
+                                                 [self._fix_callback_item(x) for x in state],
+                                                 [self._fix_callback_item(x) for x in events])
 
     def dispatch(self):
         import flask

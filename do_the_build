@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+source env/bin/activate
+python setup.py sdist
+python setup.py bdist_wheel
+
+#twine upload dist/*
+#cd docs && sphinx-autobuild . _build/html
+#grip
+

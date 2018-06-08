@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 register = template.Library()
 
 from django_plotly_dash.models import DashApp
-from django_plotly_dash.dash_wrapper import get_stateless_by_name
 
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
@@ -26,12 +25,16 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
     height: 100%;
     """
 
+    app = None
+
     if name is not None:
-        da = get_stateless_by_name(name)
+        da, app = DashApp.locate_item(name, stateless=True)
 
     if slug is not None:
-        da = get_object_or_404(DashApp,slug=slug)
+        da, app = DashApp.locate_item(slug, stateless=False)
 
-    app = da.as_dash_instance()
+    if not app:
+        app = da.as_dash_instance()
+
     return locals()
 
