@@ -7,9 +7,12 @@ from .dash_wrapper import get_local_stateless_by_name
 
 import json
 
+def get_stateless_by_name(name):
+    return get_local_stateless_by_name(name)
+
 class StatelessApp(models.Model):
     '''
-    A stateless Dash app. An instance of this model represents a dash app witout any specific state
+    A stateless Dash app. An instance of this model represents a dash app without any specific state
     '''
     app_name = models.CharField(max_length=100, blank=False, null=False, unique=True)
     slug = models.SlugField(max_length=110, unique=True, blank=True)
@@ -22,18 +25,34 @@ class StatelessApp(models.Model):
             self.slug = slugify(self.app_name)
         return super(StatelessApp, self).save(*args,**kwargs)
 
+    def as_dash_app(self):
+        dd = getattr(self,'_stateless_dash_app_instance',None)
+        if not dd:
+            dd = get_stateless_by_name(self.app_name)
+            setattr(self,'_stateless_dash_app_instance',dd)
+        return dd
+
+def find_stateless_by_name(name):
+    try:
+        dsa = StatelessApp.objects.get(app_name=name)
+        return dsa.as_dash_app()
+    except:
+        pass
+
+    da = get_stateless_by_name(name)
+    dsa = StatelessApp(app_name=name)
+    dsa.save()
+    return da
+
 class StatelessAppAdmin(admin.ModelAdmin):
     list_display = ['app_name','slug',]
     list_filter = ['app_name','slug',]
-
-def get_stateless_by_name(name):
-    return get_local_stateless_by_name(name)
 
 class DashApp(models.Model):
     '''
     An instance of this model represents a dash application and its internal state
     '''
-    app_name = models.CharField(max_length=100, blank=False, null=False, unique=False)
+    stateless_app = models.ForeignKey(StatelessApp, on_delete=models.PROTECT, unique=False, null=False, blank=False)
     instance_name = models.CharField(max_length=100, unique=True, blank=True, null=False)
     slug = models.SlugField(max_length=110, unique=True, blank=True)
     base_state = models.TextField(null=False, default="{}") # If mandating postgresql then this could be a JSONField
@@ -46,18 +65,11 @@ class DashApp(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.instance_name:
-            existing_count = DashApp.objects.filter(app_name=self.app_name).count()
-            self.instance_name = "%s-%i" %(self.app_name, existing_count+1)
+            existing_count = DashApp.objects.all().count()
+            self.instance_name = "%s-%i" %(self.stateless_app.app_name, existing_count+1)
         if not self.slug or len(self.slug) < 2:
             self.slug = slugify(self.instance_name)
         super(DashApp, self).save(*args,**kwargs)
-
-    def _stateless_dash_app(self):
-        dd = getattr(self,'_stateless_dash_app_instance',None)
-        if not dd:
-            dd = get_stateless_by_name(self.app_name)
-            setattr(self,'_stateless_dash_app_instance',dd)
-        return dd
 
     def handle_current_state(self):
         '''
@@ -104,7 +116,7 @@ class DashApp(models.Model):
         return cs
 
     def as_dash_instance(self):
-        dd = self._stateless_dash_app()
+        dd = self.stateless_app.as_dash_app()
         base = self.current_state()
         return dd.do_form_dash_instance(replacements=base,
                                         specific_identifier=self.slug)
@@ -113,7 +125,7 @@ class DashApp(models.Model):
         '''
         Get the base state of the object, as defined by the app.layout code, as a python dict
         '''
-        base_app_inst = self._stateless_dash_app().as_dash_instance()
+        base_app_inst = self.stateless_app.as_dash_app().as_dash_instance()
 
         # Get base layout response, from a base object
         base_resp = base_app_inst.locate_endpoint_function('dash-layout')()
@@ -135,7 +147,7 @@ class DashApp(models.Model):
     @staticmethod
     def locate_item(id, stateless=False):
         if stateless:
-            da = get_stateless_by_name(id)
+            da = find_stateless_by_name(id)
         else:
             da = get_object_or_404(DashApp,slug=id)
 
@@ -143,13 +155,22 @@ class DashApp(models.Model):
         return da, app
 
 class DashAppAdmin(admin.ModelAdmin):
-    list_display = ['instance_name','app_name','slug','creation','update','save_on_change',]
-    list_filter = ['creation','update','save_on_change','app_name',]
+    list_display = ['instance_name','stateless_app','slug','creation','update','save_on_change',]
+    list_filter = ['creation','update','save_on_change','stateless_app',]
 
     def _populate_values(self, request, queryset):
         for da in queryset:
             da.populate_values()
             da.save()
-    _populate_values.short_description = "Populate app"
+    _populate_values.short_description = "Populate app instance"
 
-    actions = ['_populate_values',]
+    def _clone(self, request, queryset):
+        for da in queryset:
+            nda = DashApp(stateless_app=da.stateless_app,
+                          base_state=da.base_state,
+                          save_on_change=da.save_on_change)
+            nda.save()
+
+    _clone.short_description = "Clone app instance"
+
+    actions = ['_populate_values','_clone',]
