@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 {%load plotly_dash%}
-  <title>Simple stuff</title>
+<title>Simple stuff</title>
 <body>
   <div>
     Content here
@@ -15,5 +15,12 @@
     Content here
     {%plotly_app name="Ex2"%}
   </div>
-  </body>
+</body>
+<script>
+  var socket = new WebSocket("ws://"+window.location.host+"/ws/channel");
+  socket.onmessage = function(e) {
+    console.log("Got ws inbound message");
+    console.log(e);
+  };
+</script>
 </html>
