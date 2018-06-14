@@ -1,0 +1,11 @@
+{%load staticfiles%}
+<script src="{%static "channels/js/websocketbridge.js"%}"></script>
+<script>
+  const wsb = new channels.WebSocketBridge();
+  wsb.connect("{{url}}");
+  wsb.listen(function(action, stream) {
+    console.log("WSB inbound");
+    console.log(action);
+    console.log(stream);
+  });
+</script>

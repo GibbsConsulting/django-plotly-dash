@@ -1,6 +1,5 @@
 <!DOCTYPE HTML>
 <html>
-{%load staticfiles%}
 {%load plotly_dash%}
 <title>Simple stuff</title>
 <body>
@@ -17,14 +16,5 @@
     {%plotly_app name="Ex2"%}
   </div>
 </body>
-<script src="{%static "channels/js/websocketbridge.js"%}"></script>
-<script>
-  const wsb = new channels.WebSocketBridge();
-  wsb.connect("/ws/channel");
-  wsb.listen(function(action, stream) {
-    console.log("WSB inbound");
-    console.log(action);
-    console.log(stream);
-  });
-</script>
+{%plotly_message_pipe%}
 </html>
