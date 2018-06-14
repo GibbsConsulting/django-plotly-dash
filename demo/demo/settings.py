@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'channels',
+
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 ]
 
@@ -71,6 +73,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'demo.wsgi.application'
 
+ASGI_APPLICATION = 'demo.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
