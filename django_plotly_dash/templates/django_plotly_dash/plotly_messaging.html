@@ -1,11 +1,27 @@
 {%load staticfiles%}
 <script src="{%static "channels/js/websocketbridge.js"%}"></script>
 <script>
-  const wsb = new channels.WebSocketBridge();
-  wsb.connect("{{url}}");
-  wsb.listen(function(action, stream) {
-    console.log("WSB inbound");
-    console.log(action);
-    console.log(stream);
-  });
+  if( !window.dpd_wsb ) {
+    const wsb = new channels.WebSocketBridge();
+    wsb.connect("{{url}}");
+    var dpd_wsb = {
+      wsb: wsb,
+      callbacks: [],
+      add_callback: function(cb) { this.callbacks.push(cb); },
+      send:function(message) { this.wsb.send(message); }
+    };
+    wsb.listen(function(action, stream) {
+      for(var i in dpd_wsb.callbacks) {
+        dpd_wsb.callbacks[i](action, stream);
+      }
+    });
+    window.dpd_wsb = dpd_wsb;
+    var lcb = function(action, stream) {
+        console.log("WSB inbound YYYYY");
+        console.log(action);
+        console.log(stream);
+    };
+    dpd_wsb.add_callback(lcb);
+    dpd_wsb.add_callback(lcb);
+  }
 </script>
