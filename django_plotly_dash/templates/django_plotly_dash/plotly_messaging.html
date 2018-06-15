@@ -22,6 +22,9 @@
         console.log(stream);
     };
     dpd_wsb.add_callback(lcb);
-    dpd_wsb.add_callback(lcb);
+    if( window.dpd_wsb_pre ) {
+      for(var i in window.dpd_wsb_pre.callbacks ) dpd_wsb.add_callback(window.dpd_wsb_pre.callbacks[i]);
+      for(var j in window.dpd_wsb_pre.sender_targets ) window.dpd_wsb_pre.sender_targets[i].add_sender(dpd_wsb);
+    }
   }
 </script>
