@@ -1,8 +1,16 @@
 <!DOCTYPE HTML>
 <html>
-{%load plotly_dash%}
-<title>Simple stuff</title>
+  <head>
+    {%load plotly_dash%}
+    <title>Simple stuff</title>
+  </head>
 <body>
+  <div>
+    <p>Navigational links :
+      <a href="{%url "home"%}">Main Page</a>
+      <a href="{%url "second"%}">Second Page</a>
+    </p>
+  </div>
   <div>
     Content here
     {%plotly_app slug="simpleexample-1" ratio=0.2 %}
@@ -16,8 +24,12 @@
     {%plotly_app name="Ex2"%}
   </div>
   <div>
-    Content here
+    WS Content here
     {%plotly_app name="Connected"%}
+  </div>
+  <div>
+    WS Content here
+    {%plotly_app slug="connected-9"%}
   </div>
 </body>
 {%plotly_message_pipe%}

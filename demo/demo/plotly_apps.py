@@ -64,7 +64,7 @@ a3.layout = html.Div([
              uid="need_to_generate_this"),
     dpd.Pipe(id="also_dynamic",
              value="Alternator 456",
-             label="rotational energy",
+             label="momentum",
              channel_name="test_widget_channel",
              uid="and_this_one"),
     dpd.DPDirectComponent(id="direct"),
@@ -78,6 +78,8 @@ a3.layout = html.Div([
     dash.dependencies.Output('output-three','children'),
     [dash.dependencies.Input('dynamic','value'),
      dash.dependencies.Input('dynamic','label'),
+     dash.dependencies.Input('also_dynamic','value'),
+     dash.dependencies.Input('dropdown-one','value'),
      ])
 def callback_a3(*args, **kwargs):
     da = kwargs['dash_app']
