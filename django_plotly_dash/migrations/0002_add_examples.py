@@ -19,8 +19,32 @@ def addExamples(apps, schema_editor):
 
     da1.save()
 
+    sa2 = StatelessApp(app_name="Connected",
+                       slug="connected")
+
+    sa2.save()
+
+    da2 = DashApp(stateless_app=sa2,
+                  instance_name="Connected-2",
+                  slug="connected-2",
+                  base_state='''{"dynamic": {"value": "Dynamo 123",
+                                             "uid": "need_to_generate_this",
+                                             "channel_name": "test_widget_channel",
+                                             "label": "rotational energy"},
+                                 "dropdown-one": {"value": "Oxygen"},
+                                 "also_dynamic": {"value": "Alternator 456",
+                                                  "uid": "and_this_one",
+                                                  "channel_name": "test_widget_channel",
+                                                  "label": "momentum"}}''',
+                  save_on_change=True)
+
+    da2.save()
+
 
 def remExamples(apps, schema_editor):
+
+    DashApp = apps.get_model("django_plotly_dash","DashApp")
+    StatelessApp = apps.get_model("django_plotly_dash","StatelessApp")
 
     DashApp.objects.all().delete()
     StatelessApp.objects.all().delete()
