@@ -39,6 +39,7 @@ setup(
                         'dash-core-components',
                         'dash-html-components',
                         'dash-renderer',
+                        'dpd-components',
                         'Django',],
     python_requires=">=3",
     )
