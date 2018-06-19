@@ -31,7 +31,7 @@ be created if one does not already exist.
             '''
 
 The main role of a ``StatelessApp`` instance is to manage access to the associated ``DjangoDash`` object, as
-expsosed through the ``as_dash_app`` member
+exposed through the ``as_dash_app`` member
 function.
 
 The ``DashApp`` model

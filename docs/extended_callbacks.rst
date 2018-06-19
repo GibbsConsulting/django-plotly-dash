@@ -54,5 +54,8 @@ in the :ref:`models_and_state` section.
 Using session state
 ------------------
 
-Changes to the session state and other server-side objects are not automatically propagated to an application. Something in the front-end UI has to invoke a callaback; at this point the latest version of these objects will be provided to the callback. The same considerations as in other Dash `live updates <https://dash.plot.ly/live-updates>`_ apply.
+Changes to the session state and other server-side objects are not automatically
+propagated to an application. Something in the front-end UI has to invoke a callback; at this point the
+latest version of these objects will be provided to the callback. The same considerations
+as in other Dash `live updates <https://dash.plot.ly/live-updates>`_ apply.
 

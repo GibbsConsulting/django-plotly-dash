@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'channels',
+
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 ]
 
@@ -71,6 +73,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'demo.wsgi.application'
 
+ASGI_APPLICATION = 'demo.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
@@ -127,6 +130,10 @@ STATICFILES_DIRS = [
 
 import dash_core_components as dcc
 _rname = os.path.join(os.path.dirname(dcc.__file__),'..')
-for dash_module_name in ['dash_core_components','dash_html_components','dash_renderer',]:
+for dash_module_name in ['dash_core_components',
+                         'dash_html_components',
+                         'dash_renderer',]:
     STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
 
+# Fudge to work with channels in debug mode
+STATICFILES_DIRS.append(("dash/dpd_components","/home/mark/local/dpd-components/lib"))

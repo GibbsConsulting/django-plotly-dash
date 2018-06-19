@@ -22,7 +22,8 @@ from django.views.generic import TemplateView
 import demo.plotly_apps
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='index.html')),
+    path('', TemplateView.as_view(template_name='index.html'), name="home"),
+    path('second_page', TemplateView.as_view(template_name='second_page.html'), name="second"),
     path('admin/', admin.site.urls),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]

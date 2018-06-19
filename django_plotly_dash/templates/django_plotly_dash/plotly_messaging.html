@@ -1,0 +1,26 @@
+{%load staticfiles%}
+<script src="{%static "channels/js/websocketbridge.js"%}"></script>
+<script>
+  if( !window.dpd_wsb ) {
+    const wsb = new channels.WebSocketBridge();
+    wsb.connect("{{url}}");
+    var dpd_wsb = {
+      wsb: wsb,
+      callbacks: [],
+      add_callback: function(cb) { this.callbacks.push(cb); },
+      send:function(message) { this.wsb.send(message); }
+    };
+    wsb.listen(function(action, stream) {
+      for(var i in dpd_wsb.callbacks) {
+        dpd_wsb.callbacks[i](action, stream);
+      }
+    });
+    window.dpd_wsb = dpd_wsb;
+    if( window.dpd_wsb_pre ) {
+      for(var i in window.dpd_wsb_pre.callbacks ) dpd_wsb.add_callback(window.dpd_wsb_pre.callbacks[i]);
+      window.dpd_wsb_pre.callbacks = [];
+      for(var j in window.dpd_wsb_pre.sender_targets ) window.dpd_wsb_pre.sender_targets[i].add_sender(dpd_wsb);
+      window.dpd_wsb_pre.sender_targets = [];
+    }
+  }
+</script>

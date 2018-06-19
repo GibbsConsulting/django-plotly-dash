@@ -2,6 +2,8 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 
+import dpd_components as dpd
+
 from django_plotly_dash import DjangoDash
 
 app = DjangoDash('SimpleExample')
@@ -52,3 +54,33 @@ def callback_c(*args,**kwargs):
     da = kwargs['dash_app']
     return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
 
+a3 = DjangoDash("Connected")
+
+a3.layout = html.Div([
+    dpd.Pipe(id="dynamic",
+             value="Dynamo 123",
+             label="rotational energy",
+             channel_name="test_widget_channel",
+             uid="need_to_generate_this"),
+    dpd.Pipe(id="also_dynamic",
+             value="Alternator 456",
+             label="momentum",
+             channel_name="test_widget_channel",
+             uid="and_this_one"),
+    dpd.DPDirectComponent(id="direct"),
+    dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
+    ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
+    ],value="Oxygen"),
+    html.Div(id="output-three")
+    ])
+
+@a3.expanded_callback(
+    dash.dependencies.Output('output-three','children'),
+    [dash.dependencies.Input('dynamic','value'),
+     dash.dependencies.Input('dynamic','label'),
+     dash.dependencies.Input('also_dynamic','value'),
+     dash.dependencies.Input('dropdown-one','value'),
+     ])
+def callback_a3(*args, **kwargs):
+    da = kwargs['dash_app']
+    return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
