@@ -38,7 +38,7 @@ class Holder:
         self.items.append(script)
 
 class DjangoDash:
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name=None, serve_locally=False, expanded_callbacks=False, **kwargs):
         if name is None:
             global uid_counter
             uid_counter += 1
@@ -54,7 +54,8 @@ class DjangoDash:
         add_usable_app(self._uid,
                        self)
 
-        self._expanded_callbacks = False
+        self._expanded_callbacks = expanded_callbacks
+        self._serve_locally = serve_locally
 
     def as_dash_instance(self):
         '''
@@ -96,7 +97,8 @@ class DjangoDash:
         rd = WrappedDash(base_pathname=base_pathname,
                          expanded_callbacks = self._expanded_callbacks,
                          replacements = replacements,
-                         ndid = ndid)
+                         ndid = ndid,
+                         serve_locally = self._serve_locally)
 
         rd.layout = self.layout
 
@@ -141,7 +143,7 @@ class PseudoFlask:
         pass
 
 class WrappedDash(Dash):
-    def __init__(self, base_pathname=None, replacements = None, ndid=None, expanded_callbacks=False, **kwargs):
+    def __init__(self, base_pathname=None, replacements = None, ndid=None, expanded_callbacks=False, serve_locally=False, **kwargs):
 
         self._uid = ndid
 
@@ -154,10 +156,8 @@ class WrappedDash(Dash):
 
         super(WrappedDash, self).__init__(**kwargs)
 
-        self.css.config.serve_locally = True
-        #self.css.config.serve_locally = False
-
-        self.scripts.config.serve_locally = self.css.config.serve_locally
+        self.css.config.serve_locally = serve_locally
+        self.scripts.config.serve_locally = serve_locally
 
         self._adjust_id = False
         self._dash_dispatch = not expanded_callbacks
