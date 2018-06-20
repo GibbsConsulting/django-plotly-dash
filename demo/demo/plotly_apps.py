@@ -67,7 +67,6 @@ a3.layout = html.Div([
              label="momentum",
              channel_name="test_widget_channel",
              uid="and_this_one"),
-    dpd.DPDirectComponent(id="direct"),
     dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
     ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
     ],value="Oxygen"),
