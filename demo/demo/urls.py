@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include
 from django.conf.urls import url
 
 from django.views.generic import TemplateView
@@ -24,7 +24,8 @@ import demo.plotly_apps
 
 urlpatterns = [
     url('^$', TemplateView.as_view(template_name='index.html'), name="home"),
-    url('^second_page$', TemplateView.as_view(template_name='second_page.html'), name="second"),
+    url('^demo-one$', TemplateView.as_view(template_name='demo_one.html'), name="demo-one"),
+    url('^demo-two$', TemplateView.as_view(template_name='demo_two.html'), name="demo-two"),
     url('^admin/', admin.site.urls),
     url('^django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
