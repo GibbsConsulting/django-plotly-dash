@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 
 from django.views.generic import TemplateView
 
@@ -22,10 +23,10 @@ from django.views.generic import TemplateView
 import demo.plotly_apps
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='index.html'), name="home"),
-    path('second_page', TemplateView.as_view(template_name='second_page.html'), name="second"),
-    path('admin/', admin.site.urls),
-    path('django_plotly_dash/', include('django_plotly_dash.urls')),
+    url('^$', TemplateView.as_view(template_name='index.html'), name="home"),
+    url('^second_page$', TemplateView.as_view(template_name='second_page.html'), name="second"),
+    url('^admin/', admin.site.urls),
+    url('^django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
 
 # Add in static routes so daphne can serve files; these should be masked eg with nginx for production use
