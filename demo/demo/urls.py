@@ -27,3 +27,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
+
+# Add in static routes so daphne can serve files; these should be masked eg with nginx for production use
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
