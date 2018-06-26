@@ -1,23 +1,13 @@
-<!DOCTYPE HTML>
-<html>
- <head>
-    {%load plotly_dash%}
-    <title>More Examples</title>
- </head>
-<body>
- <div>
-   <p>Navigational links :
-     <a href="{%url "home"%}">Main Page</a>
-   </p>
- </div>
- <div>
-   WS Content here
-   {%plotly_app slug="connected-2"%}
- </div>
- <div>
-   WS Content here
-   {%plotly_app slug="simpleexample-1"%}
- </div>
-</body>
-{ % plotly_message_pipe % }
-</html>
+{%extends "base.html"%}
+{%load plotly_dash%}
+{%block title%}More Examples{%endblock%}
+{%block content%}
+<div>
+  WS Content here
+  {%plotly_app slug="connected-2"%}
+</div>
+<div>
+  WS Content here
+  {%plotly_app slug="simpleexample-1"%}
+</div>
+{%endblock%}

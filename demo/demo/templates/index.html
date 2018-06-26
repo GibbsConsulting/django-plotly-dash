@@ -1,37 +1,8 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    {%load plotly_dash%}
-    <title>Simple stuff</title>
-  </head>
-<body>
+{%extends "base.html"%}
+{%block title%} Index{%endblock%}
+{%load plotly_dash%}
+{%block content%}
   <div>
-    <p>Navigational links :
-      <a href="{%url "home"%}">Main Page</a>
-      <a href="{%url "demo-one"%}">Demo One</a>
-      <a href="{%url "demo-two"%}">Demo Two</a>
-    </p>
+    This is the django_plotly_dash demo application.
   </div>
-  <div>
-    Content here
-    {%plotly_app slug="simpleexample-1" ratio=0.2 %}
-  </div>
-  <div>
-    Content here
-    {%plotly_app name="SimpleExample"%}
-  </div>
-  <div>
-    Content here
-    {%plotly_app name="Ex2"%}
-  </div>
-  <div>
-    WS Content here
-    {%plotly_app name="Connected"%}
-  </div>
-  <div>
-    WS Content here
-    {%plotly_app slug="connected-2"%}
-  </div>
-</body>
-{%plotly_message_pipe%}
-</html>
+{%endblock%}

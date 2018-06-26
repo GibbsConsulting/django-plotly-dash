@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+    {%load plotly_dash%}
+    <title>Django Plotly Dash Examples - {%block title%}{%endblock%}</title>
+ </head>
+<body>
+ <div>
+   <p>Navigational links :
+     <a href="{%url "home"%}">Contents</a>
+     <a href="{%url "demo-one"%}">Demo Page One</a>
+     <a href="{%url "demo-two"%}">Demo Page Two</a>
+   </p>
+ </div>
+ <div>
+   {%block content%}{%endblock%}
+ </div>
+</body>
+{%block post_body%}{%endblock%}
+</html>

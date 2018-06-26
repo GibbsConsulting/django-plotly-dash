@@ -1,35 +1,27 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    {%load plotly_dash%}
-    <title>Simple stuff</title>
-  </head>
-<body>
-  <div>
-    <p>Navigational links :
-      <a href="{%url "home"%}">Main Page</a>
-    </p>
-  </div>
-  <div>
-    Content here
-    {%plotly_app slug="simpleexample-1" ratio=0.2 %}
-  </div>
-  <div>
-    Content here
-    {%plotly_app name="SimpleExample"%}
-  </div>
-  <div>
-    Content here
-    {%plotly_app name="Ex2"%}
-  </div>
-  <div>
-    WS Content here
-    {%plotly_app name="Connected"%}
-  </div>
-  <div>
-    WS Content here
-    {%plotly_app slug="connected-2"%}
-  </div>
-</body>
-{%plotly_message_pipe%}
-</html>
+{%extends "base.html"%}
+{%load plotly_dash%}
+{%block title%}Demo One{%endblock%}
+{%block post_body%}{%plotly_message_pipe%}{%endblock%}
+{%block content%}
+<div>
+  Content here
+  {%plotly_app slug="simpleexample-1" ratio=0.2 %}
+</div>
+<div>
+  Content here
+  {%plotly_app name="SimpleExample"%}
+</div>
+<div>
+  Content here
+  {%plotly_app name="Ex2"%}
+</div>
+<div>
+  WS Content here
+  {%plotly_app name="Connected"%}
+</div>
+<div>
+  WS Content here
+  {%plotly_app slug="connected-2"%}
+</div>
+{%endblock%}
+
