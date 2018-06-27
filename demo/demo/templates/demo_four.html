@@ -1,0 +1,18 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block post_body%}{%plotly_message_pipe%}{%endblock%}
+
+{%block title%}Demo Four - Live Updating{%endblock%}
+
+{%block content%}
+<h1>Live Updating</h1>
+<div>
+  WS Content here
+  {%plotly_app slug="connected-2"%}
+</div>
+<div>
+  WS Content here
+  {%plotly_app slug="connected-2"%}
+</div>
+{%endblock%}

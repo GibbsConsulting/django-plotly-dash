@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'channels',
+    'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 ]

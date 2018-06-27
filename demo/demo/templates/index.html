@@ -1,7 +1,15 @@
 {%extends "base.html"%}
 {%block title%} Index{%endblock%}
 {%block content%}
+<h1>django-plotly-dash demonstration application</h1>
   <div>
-    This is the django_plotly_dash demo application.
+    This is the django_plotly_dash demo application. It contains a number of separate pages that
+    exhibit different features of the integration of Plotly Dash into the Django framework.
   </div>
+  <ul class="btnspace">
+    <li><a class="btn btn-primary btnspace" href="{%url "demo-one"%}">Demo One</a> - direct insertion of one or more Dash applications into a Django template</li>
+    <li><a class="btn btn-primary btnspace" href="{%url "demo-two"%}">Demo Two</a> - storage of application initial state within Django</li>
+    <li><a class="btn btn-primary btnspace" href="{%url "demo-three"%}">Demo Three</a> - adding Django features with enhanced callbacks</li>
+    <li><a class="btn btn-primary btnspace" href="{%url "demo-four"%}">Demo Four</a> - live updating of apps by pushing from the Django server</li>
+  </ul>
 {%endblock%}

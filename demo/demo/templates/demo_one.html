@@ -1,29 +1,26 @@
 {%extends "base.html"%}
 {%load plotly_dash%}
+
 {%block title%}Demo One - Simple Embedding{%endblock%}
-{%block post_body%}{%plotly_message_pipe%}{%endblock%}
+
 {%block content%}
 <h1>Simple App Embedding</h1>
 <div>
-  This page demonstrates the simple embedding of plotly dash apps within a Django template.
+  This is a simple example of use of a dash application within a Django template. Use of
+  the plotly_app template tag with the name of a dash application represents the simplest use of
+  the django_plotly_dash framework.
 </div>
-<div>
-  {%plotly_app slug="simpleexample-1" ratio=0.2 %}
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p><span>{</span>% plotly_app name="SimpleExample" %}</p>
+  </div>
 </div>
-<div>
-  {%plotly_app name="SimpleExample"%}
-</div>
-<div>
-  Content here
-  {%plotly_app name="Ex2"%}
-</div>
-<div>
-  WS Content here
-  {%plotly_app name="Connected"%}
-</div>
-<div>
-  WS Content here
-  {%plotly_app slug="connected-2"%}
+<p></p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app name="SimpleExample"%}
+  </div>
 </div>
 {%endblock%}
 

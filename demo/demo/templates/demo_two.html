@@ -1,14 +1,25 @@
 {%extends "base.html"%}
 {%load plotly_dash%}
-{%block post_body%}{%plotly_message_pipe%}{%endblock%}
-{%block title%}More Examples{%endblock%}
+
+{%block title%}Demo Two - Initial State{%endblock%}
+
 {%block content%}
+<h1>Initial State</h1>
 <div>
-  WS Content here
-  {%plotly_app slug="connected-2"%}
+  Referring to an instance of a dash application, uniquely identified by a slug, will use the persisted
+  representation of that app along with its initial state.
 </div>
-<div>
-  WS Content here
-  {%plotly_app slug="simpleexample-1"%}
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p><span>{</span>% plotly_app slug="simpleexample-1" ratio=0.2 %}</p>
+  </div>
+</div>
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="simpleexample-1" ratio=0.2 %}
+  </div>
 </div>
 {%endblock%}
