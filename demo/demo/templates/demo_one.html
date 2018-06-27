@@ -1,14 +1,16 @@
 {%extends "base.html"%}
 {%load plotly_dash%}
-{%block title%}Demo One{%endblock%}
+{%block title%}Demo One - Simple Embedding{%endblock%}
 {%block post_body%}{%plotly_message_pipe%}{%endblock%}
 {%block content%}
+<h1>Simple App Embedding</h1>
 <div>
-  Content here
+  This page demonstrates the simple embedding of plotly dash apps within a Django template.
+</div>
+<div>
   {%plotly_app slug="simpleexample-1" ratio=0.2 %}
 </div>
 <div>
-  Content here
   {%plotly_app name="SimpleExample"%}
 </div>
 <div>
