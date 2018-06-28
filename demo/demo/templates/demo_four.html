@@ -7,12 +7,28 @@
 
 {%block content%}
 <h1>Live Updating</h1>
-<div>
-  WS Content here
-  {%plotly_app slug="connected-2"%}
+<p>
+  Live updating uses a websocket connection. The server pushes messages to the UI, and this is then translated into a
+  callback through a dash component.
+</p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p><span>{</span>% plotly_app slug="connected-2" %}</p>
+  </div>
 </div>
-<div>
-  WS Content here
-  {%plotly_app slug="connected-2"%}
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="connected-2"%}
+  </div>
+</div>
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="connected-2"%}
+  </div>
 </div>
 {%endblock%}

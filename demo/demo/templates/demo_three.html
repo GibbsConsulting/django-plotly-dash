@@ -1,21 +1,23 @@
 {%extends "base.html"%}
 {%load plotly_dash%}
 
-{%block post_body%}{%plotly_message_pipe%}{%endblock%}
-
 {%block title%}Demo Three - Additional Callback Functionality{%endblock%}
 
 {%block content%}
 <h1>Enhanced Callback Functionality</h1>
-<div>
-  {%plotly_app slug="connected-2"%}
+<p>
+</p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p><span>{</span>% plotly_app slug="connected-2" %}</p>
+  </div>
 </div>
-<div>
-  WS Content here
-  {%plotly_app name="Connected"%}
-</div>
-<div>
-  WS Content here
-  {%plotly_app slug="simpleexample-1"%}
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="connected-2"%}
+  </div>
 </div>
 {%endblock%}
