@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'channels',
+    'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 ]
@@ -126,14 +127,22 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'demo','static'),
     ]
 
-import dash_core_components as dcc
-_rname = os.path.join(os.path.dirname(dcc.__file__),'..')
-for dash_module_name in ['dash_core_components',
-                         'dash_html_components',
-                         'dash_renderer',]:
-    STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
+# In order to serve dash components locally - not recommended in general, but
+# can be useful for development especially if offline - we add in the root directory
+# of each module. This is a bit of fudge and only needed if serve_locally=True is
+# set on a DjangoDash instance.
 
-# Fudge to work with channels in debug mode
-STATICFILES_DIRS.append(("dash/dpd_components","/home/mark/local/dpd-components/lib"))
+if DEBUG:
+
+    import dash_core_components as dcc
+    _rname = os.path.join(os.path.dirname(dcc.__file__),'..')
+
+    for dash_module_name in ['dash_core_components',
+                             'dash_html_components',
+                             'dash_renderer',
+                             'dpd_components',]:
+        STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
+

@@ -10,6 +10,11 @@ class MessageConsumer(WebsocketConsumer):
         global ALL_CONSUMERS
         ALL_CONSUMERS.append(self)
 
+        print("Creating a MessageConsumer")
+        print(len(ALL_CONSUMERS))
+
+        self.callcount = 0
+
     def connect(self):
         self.accept()
 
@@ -20,6 +25,7 @@ class MessageConsumer(WebsocketConsumer):
             if c != self:
                 ac.append(c)
         ALL_CONSUMERS = ac
+        return super(MessageConsumer, self).disconnect(close_code)
 
     def send_to_widgets(self, channel_name, label, value):
         message = json.dumps({'channel_name':channel_name,
@@ -29,6 +35,16 @@ class MessageConsumer(WebsocketConsumer):
 
         for c in ALL_CONSUMERS:
             c.send(message)
+
+        self.callcount += 1
+        if self.callcount > 10:
+            import gc
+            print("Running collection")
+            gc.collect()
+            self.callcount = 0
+
+        import objgraph
+        objgraph.show_most_common_types()
 
     def receive(self, text_data):
         message = json.loads(text_data)

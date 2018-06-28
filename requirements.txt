@@ -1,5 +1,6 @@
-dash==0.21.1
-dash-core-components==0.22.1
-dash-html-components==0.10.1
-dash-renderer==0.12.1
-plotly==2.5.1
+dash
+dash-core-components
+dash-html-components
+dash-renderer
+plotly
+dpd-components

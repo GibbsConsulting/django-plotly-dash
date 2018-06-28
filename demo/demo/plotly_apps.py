@@ -52,6 +52,20 @@ a2.layout = html.Div([
     )
 def callback_c(*args,**kwargs):
     da = kwargs['dash_app']
+
+    session_state = kwargs['session_state']
+
+    calls_so_far = session_state.get('calls_so_far',0)
+    session_state['calls_so_far'] = calls_so_far + 1
+
+    user_counts = session_state.get('user_counts',None)
+    user_name = str(kwargs['user'])
+    if user_counts is None:
+        user_counts = {user_name:1}
+        session_state['user_counts'] = user_counts
+    else:
+        user_counts[user_name] = user_counts.get(user_name,0) + 1
+
     return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
 
 a3 = DjangoDash("Connected")
@@ -67,7 +81,6 @@ a3.layout = html.Div([
              label="momentum",
              channel_name="test_widget_channel",
              uid="and_this_one"),
-    dpd.DPDirectComponent(id="direct"),
     dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
     ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
     ],value="Oxygen"),

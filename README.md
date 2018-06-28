@@ -29,6 +29,8 @@ Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings
         ...
         ]
 
+Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
+
 ## Demonstration
 
 The source repository contains a demo application. To clone the repo and lauch the demo:

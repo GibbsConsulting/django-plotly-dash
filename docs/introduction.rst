@@ -29,3 +29,5 @@ above for stateless applications.
 
 Also, an enhanced version of the ``Dash`` callback is provided, giving the callback access to the current User, the current session, and also
 the model instance associated with the application's internal state.
+
+This package is compatible with version 2.0 onwards of Django, as it uses the new path registration functionality.

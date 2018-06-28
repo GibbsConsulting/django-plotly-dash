@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+   {%load plotly_dash%}
+   {%load staticfiles%}
+   {%load bootstrap4%}
+   {%bootstrap_css%}
+   {%bootstrap_javascript jquery="full"%}
+   <link rel="stylesheet" type="text/css" href="{%static "demo/demo.css"%}"></link>
+    <title>Django Plotly Dash Examples - {%block title%}{%endblock%}</title>
+ </head>
+ <body>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+     <div class="navbar-nav">
+       <a class="navbar-brand" href="#">
+         <img src="{%static "demo/logo.svg"%}" alt="Logo"/>
+       </a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "home"%}">Contents</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-one"%}">Demo One - Simple Use</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-two"%}">Demo Two - Initial State</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-three"%}">Demo Three - Enhanced Callbacks</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-four"%}">Demo Four - Live Updating</a>
+     </div>
+   </nav>
+ <div class="container">
+   {%block content%}{%endblock%}
+ </div>
+</body>
+{%block post_body%}{%endblock%}
+</html>

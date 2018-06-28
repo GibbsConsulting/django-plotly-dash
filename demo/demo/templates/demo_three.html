@@ -1,0 +1,42 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block title%}Demo Three - Additional Callback Functionality{%endblock%}
+
+{%block content%}
+<h1>Enhanced Callback Functionality</h1>
+<p>
+  If any callback is registered as an enhanced one, then all of the callbacks receive extra values
+  as kwargs. These include the Dash application instance, a per-session dictionary that can contain anything
+  suitable for inclusion in a standard Django session, and the Django User instance.
+  The session state is per user session at the Django level, so it is shared across all of the Dash applications.
+</p>
+<p>
+  Changes made to any values contained within the initial state can also be persisted when using enhanced callbacks. This is a
+  per-app-instance flag and, when set, the response of every callback is checked and persisted if it has changed. The second
+  of the two apps below is configured in this manner; any changes made on this page should reappear if one visits a different page and
+  then reloads this one. These changes can also be observed in the update timestamp or initial content json content of
+  the <a href="{%url "admin:django_plotly_dash_dashapp_changelist" %}">model</a>.
+</p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p><span>{</span>% plotly_app name="Ex2" ratio=0.15 %}</p>
+    <p><span>{</span>% plotly_app slug="ex2-3" ratio=0.15 %}</p>
+  </div>
+</div>
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app name="Ex2" ratio=0.15 %}
+  </div>
+</div>
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="ex2-3" ratio=0.15 %}
+  </div>
+</div>
+{%endblock%}

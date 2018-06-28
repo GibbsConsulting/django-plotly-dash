@@ -40,6 +40,19 @@ def addExamples(apps, schema_editor):
 
     da2.save()
 
+    sa3 = StatelessApp(app_name="Ex2",
+                       slug="ex2")
+
+    sa3.save()
+
+    da3 = DashApp(stateless_app=sa3,
+                  instance_name="Ex2-1",
+                  slug="ex2-3",
+                  base_state='{"dropdown-one":{"value":"Nitrogen"}}',
+                  save_on_change=True)
+
+    da3.save()
+
 
 def remExamples(apps, schema_editor):
 

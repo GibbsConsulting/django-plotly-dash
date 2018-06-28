@@ -1,0 +1,30 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block title%}Demo Two - Initial State{%endblock%}
+
+{%block content%}
+<h1>Initial State</h1>
+<p>
+  Referring to an instance of a dash application, uniquely identified by a slug, will use the persisted
+  representation of that app along with its initial state.
+</p>
+<p>
+  Each time this page is reloaded, the application will revert to its stored intial state. This initial
+  state is persisted in a standard
+  Django <a href="{%url "admin:django_plotly_dash_dashapp_changelist" %}">model</a>.
+</p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p><span>{</span>% plotly_app slug="simpleexample-1" ratio=0.2 %}</p>
+  </div>
+</div>
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="simpleexample-1" ratio=0.2 %}
+  </div>
+</div>
+{%endblock%}
