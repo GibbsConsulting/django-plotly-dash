@@ -10,14 +10,22 @@
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>
-    <p><span>{</span>% plotly_app slug="connected-2" %}</p>
+    <p><span>{</span>% plotly_app name="Ex2" ratio=0.15 %}</p>
+    <p><span>{</span>% plotly_app slug="ex2-3" ratio=0.15 %}</p>
   </div>
 </div>
 <p>
 </p>
 <div class="card border-dark">
   <div class="card-body">
-    {%plotly_app slug="connected-2"%}
+    {%plotly_app name="Ex2" ratio=0.15 %}
+  </div>
+</div>
+<p>
+</p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="ex2-3" ratio=0.15 %}
   </div>
 </div>
 {%endblock%}
