@@ -38,7 +38,8 @@ def callback_size(dropdown_color, dropdown_size):
     return "The chosen T-shirt is a %s %s one." %(dropdown_size,
                                                   dropdown_color)
 
-a2 = DjangoDash("Ex2")
+a2 = DjangoDash("Ex2",
+                serve_locally=True)
 a2.layout = html.Div([
     dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
     ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
@@ -68,19 +69,18 @@ def callback_c(*args,**kwargs):
 
     return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
 
-a3 = DjangoDash("Connected")
+a3 = DjangoDash("Connected",
+                serve_locally=True)
 
 a3.layout = html.Div([
     dpd.Pipe(id="dynamic",
              value="Dynamo 123",
              label="rotational energy",
-             channel_name="test_widget_channel",
-             uid="need_to_generate_this"),
+             channel_name="test_widget_channel",),
     dpd.Pipe(id="also_dynamic",
              value="Alternator 456",
              label="momentum",
-             channel_name="test_widget_channel",
-             uid="and_this_one"),
+             channel_name="test_widget_channel",),
     dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
     ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
     ],value="Oxygen"),
