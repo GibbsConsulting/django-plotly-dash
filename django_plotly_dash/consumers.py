@@ -75,10 +75,6 @@ class MessageConsumer(WebsocketConsumer):
 
                 self.update_pipe_channel(uid, channel_name, label)
 
-                send_to_pipe_channel(channel_name,
-                                     label,
-                                     uid)
-
             except:
                 # Ignore malformed message
                 # TODO enable logging of this sort of thing
@@ -100,16 +96,32 @@ class MessageConsumer(WebsocketConsumer):
 class PokePipeConsumer(AsyncHttpConsumer):
 
     async def handle(self, body):
-        print("Got a PipePoke")
-        incoming_message = json.loads(body.decode("utf-8"))
-        print(incoming_message)
-        # Get label value and channel_name out of the body
-        channel_name = incoming_message.get('channel_name','UNNAMED_CHANNEL')
-        value = incoming_message.get("value", None)
-        label = incoming_message.get("label","DEFAULT$LABEL")
 
-        await async_send_to_pipe_channel(channel_name,
-                                         label,
-                                         value)
+        user = self.scope.get('user',None)
+        as_utf = body.decode('utf-8')
+        try:
+            incoming_message = json.loads(as_utf)
 
-        await self.send_response(200,b"Response Bytes Here")
+            # Get label value and channel_name out of the body
+            channel_name = incoming_message.get('channel_name','UNNAMED_CHANNEL')
+            value = incoming_message.get("value", None)
+            label = incoming_message.get("label","DEFAULT$LABEL")
+
+            # TODO Use user info (and also csrf and other checks as desired) to prevent misuse
+            await async_send_to_pipe_channel(channel_name,
+                                             label,
+                                             value)
+
+            response = """PokePipeConsumer consumed message of %s for %s
+""" %(incoming_message,user)
+            response_code = 200
+
+        except:
+
+            response = """Unable to understand and forward on message of %s
+""" % as_utf
+            response_code = 500
+
+        await self.send_response(response_code,
+                                 response.encode('utf-8'))
+
