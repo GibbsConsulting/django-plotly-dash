@@ -1,11 +1,9 @@
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
+'''
+Set up asgi routing endpoints.
 
-from django.conf.urls import url
+The django_plotly_dash project contains a complete set of (non-http) routes that are sufficient
+for the demo.
+'''
 
-from django_plotly_dash.consumers import MessageConsumer
-from django_plotly_dash.util import pipe_ws_endpoint_name
+from django_plotly_dash.routing import application
 
-application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(URLRouter([url(pipe_ws_endpoint_name(), MessageConsumer),])),
-    })
