@@ -1,11 +1,14 @@
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
+from channels.http import AsgiHandler
 
 from django.conf.urls import url
 
-from .consumers import MessageConsumer
-from .util import pipe_ws_endpoint_name
+from .consumers import MessageConsumer, PokePipeConsumer
+from .util import pipe_ws_endpoint_name, http_endpoint
 
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(URLRouter([url(pipe_ws_endpoint_name(), MessageConsumer),])),
+    'http': URLRouter([url(http_endpoint("poke"), PokePipeConsumer),
+                       url("^", AsgiHandler),]), # AsgiHandler is 'the normal Django view handlers'
     })

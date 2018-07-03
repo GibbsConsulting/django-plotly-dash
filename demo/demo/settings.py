@@ -135,6 +135,17 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'demo','static'),
     ]
 
+# Channels config, to use channel layers
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379),],
+        },
+    },
+}
+
 # In order to serve dash components locally - not recommended in general, but
 # can be useful for development especially if offline - we add in the root directory
 # of each module. This is a bit of fudge and only needed if serve_locally=True is
