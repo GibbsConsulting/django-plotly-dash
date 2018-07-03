@@ -43,6 +43,5 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
 
 @register.inclusion_tag("django_plotly_dash/plotly_messaging.html", takes_context=True)
 def plotly_message_pipe(context, url=None):
-    global ws_default_url
     url = url and url or ws_default_url
     return locals()
