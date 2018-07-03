@@ -36,15 +36,16 @@ class MessageConsumer(WebsocketConsumer):
         for c in ALL_CONSUMERS:
             c.send(message)
 
-        self.callcount += 1
-        if self.callcount > 10:
-            import gc
-            print("Running collection")
-            gc.collect()
-            self.callcount = 0
+        if False:
+            self.callcount += 1
+            if self.callcount > 10:
+                import gc
+                print("Running collection")
+                gc.collect()
+                self.callcount = 0
 
-        import objgraph
-        objgraph.show_most_common_types()
+            import objgraph
+            objgraph.show_most_common_types()
 
     def receive(self, text_data):
         message = json.loads(text_data)
