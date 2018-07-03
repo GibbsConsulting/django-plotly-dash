@@ -4,15 +4,9 @@ from django.shortcuts import get_object_or_404
 register = template.Library()
 
 from django_plotly_dash.models import DashApp
+from django_plotly_dash.util import pipe_ws_endpoint_name
 
-from django.conf import settings
-
-try:
-    plotly_dash_settings = settings.PLOTLY_DASH
-except:
-    plotly_dash_settings = {}
-
-ws_default_url = "/%s" % plotly_dash_settings.get('ws_route','ws/channel')
+ws_default_url = "/%s" % pipe_ws_endpoint_name()
 
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
