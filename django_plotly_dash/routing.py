@@ -9,6 +9,6 @@ from .util import pipe_ws_endpoint_name, http_endpoint
 
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(URLRouter([url(pipe_ws_endpoint_name(), MessageConsumer),])),
-    'http': URLRouter([url(http_endpoint("poke"), PokePipeConsumer),
-                       url("^", AsgiHandler),]), # AsgiHandler is 'the normal Django view handlers'
+    'http': AuthMiddlewareStack(URLRouter([url(http_endpoint("poke"), PokePipeConsumer),
+                                           url("^", AsgiHandler),])), # AsgiHandler is 'the normal Django view handlers'
     })
