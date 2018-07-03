@@ -119,6 +119,11 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Plotly dash settings
+
+PLOTLY_DASH = {
+    "ws_route" : "ws/channel",
+    }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
@@ -143,6 +148,8 @@ if DEBUG:
     for dash_module_name in ['dash_core_components',
                              'dash_html_components',
                              'dash_renderer',
-                             'dpd_components',]:
+                             #'dpd_components',
+                             ]:
         STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
 
+    STATICFILES_DIRS.append(("dash/dpd_components","/home/mark/local/dpd-components/dpd_components"))

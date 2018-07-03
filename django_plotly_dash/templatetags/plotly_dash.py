@@ -5,6 +5,15 @@ register = template.Library()
 
 from django_plotly_dash.models import DashApp
 
+from django.conf import settings
+
+try:
+    plotly_dash_settings = settings.PLOTLY_DASH
+except:
+    plotly_dash_settings = {}
+
+ws_default_url = "/%s" % plotly_dash_settings.get('ws_route','ws/channel')
+
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
 
@@ -40,5 +49,6 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
 
 @register.inclusion_tag("django_plotly_dash/plotly_messaging.html", takes_context=True)
 def plotly_message_pipe(context, url=None):
-    url = url and url or '/ws/channel'
+    global ws_default_url
+    url = url and url or ws_default_url
     return locals()
