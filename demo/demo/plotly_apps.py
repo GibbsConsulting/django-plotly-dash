@@ -73,35 +73,6 @@ def callback_c(*args,**kwargs):
 
     return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
 
-a3 = DjangoDash("Connected",
-                serve_locally=True)
-
-a3.layout = html.Div([
-    dpd.Pipe(id="dynamic",
-             value="Dynamo 123",
-             label="rotational energy",
-             channel_name="test_widget_channel",),
-    dpd.Pipe(id="also_dynamic",
-             value="Alternator 456",
-             label="momentum",
-             channel_name="test_widget_channel",),
-    dcc.RadioItems(id="dropdown-one",options=[{'label':i,'value':j} for i,j in [
-    ("O2","Oxygen"),("N2","Nitrogen"),("CO2","Carbon Dioxide")]
-    ],value="Oxygen"),
-    html.Div(id="output-three")
-    ])
-
-@a3.expanded_callback(
-    dash.dependencies.Output('output-three','children'),
-    [dash.dependencies.Input('dynamic','value'),
-     dash.dependencies.Input('dynamic','label'),
-     dash.dependencies.Input('also_dynamic','value'),
-     dash.dependencies.Input('dropdown-one','value'),
-     ])
-def callback_a3(*args, **kwargs):
-    da = kwargs['dash_app']
-    return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
-
 liveIn = DjangoDash("LiveInput",
                     serve_locally=True)
 liveIn.layout = html.Div([

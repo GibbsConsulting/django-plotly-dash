@@ -19,21 +19,25 @@ def addExamples(apps, schema_editor):
 
     da1.save()
 
-    sa2 = StatelessApp(app_name="Connected",
-                       slug="connected")
+    sa2 = StatelessApp(app_name="LiveOutput",
+                       slug="liveoutput")
 
     sa2.save()
 
+    sa21 = StatelessApp(app_name="LiveInput",
+                       slug="liveinput")
+
+    sa21.save()
+
     da2 = DashApp(stateless_app=sa2,
-                  instance_name="Connected-2",
-                  slug="connected-2",
-                  base_state='''{"dynamic": {"value": "Dynamo 123",
-                                             "channel_name": "test_widget_channel",
-                                             "label": "rotational energy"},
-                                 "dropdown-one": {"value": "Oxygen"},
-                                 "also_dynamic": {"value": "Alternator 456",
-                                                  "channel_name": "test_widget_channel",
-                                                  "label": "momentum"}}''',
+                  instance_name="liveoutput-2",
+                  slug="liveoutput-2",
+                  base_state='''{"named_count_pipe": {
+                      "label": "named_counts",
+                      "channel_name": "live_button_counter",
+                      "value": null},
+ "state_uid": {"value": "635c89ae-c996-4488-84df-041c1153fdef"}}
+''',
                   save_on_change=True)
 
     da2.save()
