@@ -51,6 +51,10 @@ def update(request, id, stateless=False, **kwargs):
         request.session['django_plotly_dash'] = app_state
         da.handle_current_state()
 
+    # Special for ws-driven edge case
+    if str(resp) == 'EDGECASEEXIT':
+        return HttpResponse("")
+
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
 

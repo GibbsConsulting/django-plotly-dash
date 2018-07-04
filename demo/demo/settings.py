@@ -135,6 +135,19 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'demo','static'),
     ]
 
+# Caching - demo uses redis as this is present due to channels use
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "dpd-demo"
+    }
+}
+
 # Channels config, to use channel layers
 
 CHANNEL_LAYERS = {

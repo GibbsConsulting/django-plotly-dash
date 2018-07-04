@@ -111,11 +111,11 @@ class DjangoDash:
 
         return rd
 
-    def callback(self, output, inputs=[], state=[], events=[]):
+    def callback(self, output, inputs=None, state=None, events=None):
         callback_set = {'output':output,
-                        'inputs':inputs,
-                        'state':state,
-                        'events':events}
+                        'inputs':inputs and inputs or dict(),
+                        'state':state and state or dict(),
+                        'events':events and events or dict()}
         def wrap_func(func,callback_set=callback_set,callback_sets=self._callback_sets):
             callback_sets.append((callback_set,func))
             return func
@@ -308,6 +308,13 @@ class WrappedDash(Dash):
                     v = c.get('value',None)
                     args.append(v)
                     if da: da.update_current_state(c['id'],c['property'],v)
+
+        # Special: intercept case of insufficient arguments
+        # This happens when a propery has been updated with a pipe component
+        # TODO see if this can be attacked from the client end
+
+        if len(args) < len(self.callback_map[target_id]['inputs']):
+            return 'EDGECASEEXIT'
 
         res = self.callback_map[target_id]['callback'](*args,**argMap)
         if da and da.have_current_state_entry(output['id'], output['property']):
