@@ -1,3 +1,4 @@
+aioredis==1.1.0
 alabaster==0.7.10
 argh==0.26.2
 asgiref==2.3.2
@@ -8,6 +9,7 @@ Automat==0.6.0
 Babel==2.5.3
 certifi==2018.4.16
 channels==2.1.2
+channels-redis==2.2.1
 chardet==3.0.4
 click==6.7
 constantly==15.1.0
@@ -18,7 +20,8 @@ dash-html-components==0.10.1
 dash-renderer==0.12.1
 decorator==4.3.0
 Django==2.0.5
-django-bootstrap4
+django-bootstrap4==0.0.6
+django-redis==4.9.0
 docopt==0.6.2
 docutils==0.14
 dpd-components
@@ -26,6 +29,7 @@ Flask==1.0.2
 Flask-Compress==1.4.0
 graphviz==0.8.3
 grip==4.5.2
+hiredis==0.2.0
 hyperlink==18.0.0
 idna==2.6
 imagesize==1.0.0
@@ -38,6 +42,7 @@ jupyter-core==4.4.0
 livereload==2.5.2
 Markdown==2.6.11
 MarkupSafe==1.0
+msgpack==0.5.6
 nbformat==4.4.0
 objgraph==3.4.0
 packaging==17.1
@@ -50,6 +55,7 @@ Pygments==2.2.0
 pyparsing==2.2.0
 pytz==2018.4
 PyYAML==3.12
+redis==2.10.6
 requests==2.18.4
 requests-toolbelt==0.8.0
 six==1.11.0
