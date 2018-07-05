@@ -93,7 +93,7 @@ def callback_liveIn_button_press(n_clicks, *args, **kwargs):
                          label="named_counts",
                          value={'n_clicks':n_clicks,
                                 'user':str(kwargs.get('user','UNKNOWN'))})
-    return "Numnber of local clicks so far is %s" % n_clicks
+    return "Number of local clicks so far is %s" % n_clicks
 
 liveOut = DjangoDash("LiveOutput",
                      serve_locally=True)
@@ -133,13 +133,12 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
     if named_count is None:
         named_count = {}
 
-    user = named_count.get('user',"NONE")
-    uc = named_count.get('n_clicks',0)
+    user = named_count.get('user',None)
+    if user is not None:
+        uc = named_count.get('n_clicks',0)
 
-    if uc is None:
-        uc = 0
-
-    state[user] = uc + state.get(user,0)
+        if uc is not None:
+            state[user] = uc + state.get(user,0)
 
     cache.set(cache_key, state, 60)
 
