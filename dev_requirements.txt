@@ -6,6 +6,10 @@ django-bootstrap4
 django-redis
 grip
 pandas
+pylint
+pytest
+pytest-django
+pytest-cov
 pytz
 redis
 sphinx-autobuild
