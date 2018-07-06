@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+source env/bin/activate
+pushd demo
+pylint demo
+pytest demo --cov=demo --cov-report term-missing
+popd

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+source env/bin/activate
+#
+pylint django_plotly_dash
+pytest django_plotly_dash --cov=django_plotly_dash --cov-report term-missing

@@ -1,17 +1,21 @@
-from django import template
-from django.shortcuts import get_object_or_404
+'Template tags for exposing dash applications in Django templates'
 
-register = template.Library()
+# pylint: disable=invalid-name, too-many-arguments, unused-variable, unused-argument
+
+from django import template
 
 from django_plotly_dash.models import DashApp
 from django_plotly_dash.util import pipe_ws_endpoint_name
+
+register = template.Library()
 
 ws_default_url = "/%s" % pipe_ws_endpoint_name()
 
 @register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
+    'Insert a dash application using a html iframe'
 
-    fbs = use_frameborder and '1' or '0'
+    fbs = '1' if use_frameborder else '0'
 
     dstyle = """
     position: relative;
@@ -43,5 +47,6 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
 
 @register.inclusion_tag("django_plotly_dash/plotly_messaging.html", takes_context=True)
 def plotly_message_pipe(context, url=None):
-    url = url and url or ws_default_url
+    'Insert script for providing background websocket connection'
+    url = url if url else ws_default_url
     return locals()

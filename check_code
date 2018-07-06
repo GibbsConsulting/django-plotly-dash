@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 #
-source env/bin/activate
+./check_code_demo
+./check_code_dpd
 #
-pushd demo; pylint demo; popd
-pylint django_plotly_dash
-#
-for i in demo django_plotly_dash; do
-    pytest $i --cov=$i --cov-report term-missing
-done
 

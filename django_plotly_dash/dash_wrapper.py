@@ -1,3 +1,10 @@
+'''dash_wrapper
+
+This module provides a DjangoDash class that can be used to expose a Plotly Dasb application through a Django server
+'''
+
+# pylint: disable=invalid-name
+
 from dash import Dash
 from flask import Flask
 
@@ -78,10 +85,10 @@ class DjangoDash:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
             ndid = self._uid
         else:
-            app_pathname="%s:%s" % (app_name, main_view_label)
+            app_pathname = "%s:%s" % (app_name, main_view_label)
             ndid = specific_identifier
 
-        full_url = reverse(app_pathname,kwargs={'id':ndid})
+        full_url = reverse(app_pathname, kwargs={'id':ndid})
         return ndid, full_url
 
     def do_form_dash_instance(self, replacements=None, specific_identifier=None):
@@ -95,10 +102,10 @@ class DjangoDash:
             ndid = self._uid
 
         rd = WrappedDash(base_pathname=base_pathname,
-                         expanded_callbacks = self._expanded_callbacks,
-                         replacements = replacements,
-                         ndid = ndid,
-                         serve_locally = self._serve_locally)
+                         expanded_callbacks=self._expanded_callbacks,
+                         replacements=replacements,
+                         ndid=ndid,
+                         serve_locally=self._serve_locally)
 
         rd.layout = self.layout
 
@@ -116,8 +123,8 @@ class DjangoDash:
                         'inputs':inputs and inputs or dict(),
                         'state':state and state or dict(),
                         'events':events and events or dict()}
-        def wrap_func(func,callback_set=callback_set,callback_sets=self._callback_sets):
-            callback_sets.append((callback_set,func))
+        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets):
+            callback_sets.append((callback_set, func))
             return func
         return wrap_func
 
@@ -130,20 +137,22 @@ class PseudoFlask:
         self.config = {}
         self.endpoints = {}
 
-    def after_request(self,*args,**kwargs):
+    def after_request(self, *args, **kwargs):
         pass
-    def errorhandler(self,*args,**kwargs):
+    def errorhandler(self, *args, **kwargs):
         return args[0]
-    def add_url_rule(self,*args,**kwargs):
+    def add_url_rule(self, *args, **kwargs):
         route = kwargs['endpoint']
         self.endpoints[route] = kwargs
-    def before_first_request(self,*args,**kwargs):
+    def before_first_request(self, *args, **kwargs):
         pass
-    def run(self,*args,**kwargs):
+    def run(self, *args, **kwargs):
         pass
 
 class WrappedDash(Dash):
-    def __init__(self, base_pathname=None, replacements = None, ndid=None, expanded_callbacks=False, serve_locally=False, **kwargs):
+    def __init__(self,
+                 base_pathname=None, replacements=None, ndid=None,
+                 expanded_callbacks=False, serve_locally=False, **kwargs):
 
         self._uid = ndid
 
@@ -179,7 +188,8 @@ class WrappedDash(Dash):
         # Adjust the base layout response
         baseDataInBytes = base_response.data
         baseData = json.loads(baseDataInBytes.decode('utf-8'))
-        # Walk tree. If at any point we have an element whose id matches, then replace any named values at this level
+        # Walk tree. If at any point we have an element whose id
+        # matches, then replace any named values at this level
         reworked_data = self.walk_tree_and_replace(baseData)
         response_data = json.dumps(reworked_data,
                                    cls=PlotlyJSONEncoder)
@@ -189,12 +199,12 @@ class WrappedDash(Dash):
     def walk_tree_and_extract(self, data, target):
         if isinstance(data, dict):
             for key in ['children','props',]:
-                self.walk_tree_and_extract(data.get(key,None),target)
+                self.walk_tree_and_extract(data.get(key, None), target)
             ident = data.get('id', None)
             if ident is not None:
-                idVals = target.get(ident,{})
+                idVals = target.get(ident, {})
                 for key, value in data.items():
-                    if key not in ['props','options','children','id']:
+                    if key not in ['props', 'options', 'children', 'id']:
                         idVals[key] = value
                 if len(idVals) > 0:
                     target[ident] = idVals
@@ -205,21 +215,21 @@ class WrappedDash(Dash):
     def walk_tree_and_replace(self, data):
         # Walk the tree. Rely on json decoding to insert instances of dict and list
         # ie we use a dna test for anatine, rather than our eyes and ears...
-        if isinstance(data,dict):
+        if isinstance(data, dict):
             response = {}
             replacements = {}
             # look for id entry
-            thisID = data.get('id',None)
+            thisID = data.get('id', None)
             if thisID is not None:
-                replacements = self._replacements.get(thisID,{})
+                replacements = self._replacements.get(thisID, {})
             # walk all keys and replace if needed
             for k, v in data.items():
-                r = replacements.get(k,None)
+                r = replacements.get(k, None)
                 if r is None:
                     r = self.walk_tree_and_replace(v)
                 response[k] = r
             return response
-        if isinstance(data,list):
+        if isinstance(data, list):
             # process each entry in turn and return
             return [self.walk_tree_and_replace(x) for x in data]
         return data
@@ -255,9 +265,9 @@ class WrappedDash(Dash):
 
     def _fix_component_id(self, component):
 
-        theID = getattr(component,"id",None)
+        theID = getattr(component, "id", None)
         if theID is not None:
-            setattr(component,"id",self._fix_id(theID))
+            setattr(component,"id", self._fix_id(theID))
         try:
             for c in component.children:
                 self._fix_component_id(c)
@@ -298,16 +308,16 @@ class WrappedDash(Dash):
         for component_registration in self.callback_map[target_id]['inputs']:
             for c in inputs:
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
-                    v = c.get('value',None)
+                    v = c.get('value', None)
                     args.append(v)
-                    if da: da.update_current_state(c['id'],c['property'],v)
+                    if da: da.update_current_state(c['id'], c['property'], v)
 
         for component_registration in self.callback_map[target_id]['state']:
             for c in state:
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
-                    v = c.get('value',None)
+                    v = c.get('value', None)
                     args.append(v)
-                    if da: da.update_current_state(c['id'],c['property'],v)
+                    if da: da.update_current_state(c['id'], c['property'], v)
 
         # Special: intercept case of insufficient arguments
         # This happens when a propery has been updated with a pipe component
@@ -319,7 +329,7 @@ class WrappedDash(Dash):
         res = self.callback_map[target_id]['callback'](*args,**argMap)
         if da and da.have_current_state_entry(output['id'], output['property']):
             response = json.loads(res.data.decode('utf-8'))
-            value = response.get('response',{}).get('props',{}).get(output['property'],None)
+            value = response.get('response', {}).get('props', {}).get(output['property'], None)
             da.update_current_state(output['id'], output['property'], value)
 
         return res
