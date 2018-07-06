@@ -3,5 +3,5 @@
 source env/bin/activate
 pushd demo
 pylint demo
-pytest demo --cov=demo --cov-report term-missing
+pytest demo --cov=demo --cov=django_plotly_dash --cov-report term-missing
 popd

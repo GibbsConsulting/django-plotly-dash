@@ -1,3 +1,9 @@
-from django.test import TestCase
+'''
+Tests of django_plotly_dash.
 
-# Create your tests here.
+These tests can be directly used or imported into eg the tests of the demo app
+'''
+
+def test_something():
+    assert True
+
