@@ -166,14 +166,14 @@ CHANNEL_LAYERS = {
 
 if DEBUG:
 
-    import dash_core_components as dcc
-    _rname = os.path.join(os.path.dirname(dcc.__file__),'..')
+    import importlib
 
     for dash_module_name in ['dash_core_components',
                              'dash_html_components',
                              'dash_renderer',
-                             #'dpd_components',
+                             'dpd_components',
                              ]:
-        STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
 
-    STATICFILES_DIRS.append(("dash/dpd_components","/home/mark/local/dpd-components/dpd_components"))
+        module = importlib.import_module(dash_module_name)
+        STATICFILES_DIRS.append(("dash/%s"%dash_module_name, os.path.dirname(module.__file__)))
+
