@@ -1,10 +1,36 @@
-'Test dpd models'
+'''
+Test dpd demo
 
-def test_dash_app():
-    'Test the import and formation of the dash app orm wrappers'
+Most of these tests are simply the loading of the individual files that
+constitute the demo. A configuration failure would
+cause one or more of these to fail.
+'''
 
-    from django_plotly_dash.models import StatelessApp
-    sa = StatelessApp(app_name="Some name")
+def test_asgi_loading():
+    'Test loading of a module'
+    from ..asgi import application
+    assert application
 
-    assert sa
-    assert sa.app_name
+def test_wsgi_loading():
+    'Test loading of a module'
+    from ..wsgi import application
+    assert application
+
+def test_routing_loading():
+    'Test loading of a module'
+    from ..routing import application
+    assert application
+
+def test_url_loading():
+    'Test loading of a module'
+    from ..urls import urlpatterns
+    assert urlpatterns
+
+def test_demo_loading():
+    'Test the import and formation of a dash example app'
+
+    from ..plotly_apps import app
+
+    assert app._uid == 'SimpleExample' # pylint: disable=protected-access
+
+    assert app.layout
