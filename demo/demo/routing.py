@@ -5,5 +5,6 @@ The django_plotly_dash project contains a complete set of (non-http) routes that
 for the demo.
 '''
 
-from django_plotly_dash.routing import application
+# pylint: disable=unused-import
 
+from django_plotly_dash.routing import application

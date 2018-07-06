@@ -13,14 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+# pylint: disable=invalid-name, wrong-import-position,wrong-import-order
+
 from django.contrib import admin
 from django.urls import include
 from django.conf.urls import url
 
 from django.views.generic import TemplateView
 
-# Load demo plotly apps
-import demo.plotly_apps
+from django.conf import settings
+from django.conf.urls.static import static
+
+# Load demo plotly apps - this triggers their registration
+import demo.plotly_apps # pylint: disable=unused-import
 
 urlpatterns = [
     url('^$', TemplateView.as_view(template_name='index.html'), name="home"),
@@ -32,9 +38,7 @@ urlpatterns = [
     url('^django_plotly_dash/', include('django_plotly_dash.urls')),
 ]
 
-# Add in static routes so daphne can serve files; these should be masked eg with nginx for production use
-
-from django.conf import settings
-from django.conf.urls.static import static
+# Add in static routes so daphne can serve files; these should
+# be masked eg with nginx for production use
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

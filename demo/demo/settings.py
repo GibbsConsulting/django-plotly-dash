@@ -59,7 +59,7 @@ ROOT_URLCONF = 'demo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'demo','templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'demo', 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,10 +129,10 @@ PLOTLY_DASH = {
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'demo','static'),
+    os.path.join(BASE_DIR, 'demo', 'static'),
     ]
 
 # Caching - demo uses redis as this is present due to channels use
@@ -172,8 +172,7 @@ if DEBUG:
                              'dash_html_components',
                              'dash_renderer',
                              'dpd_components',
-                             ]:
+                            ]:
 
         module = importlib.import_module(dash_module_name)
         STATICFILES_DIRS.append(("dash/%s"%dash_module_name, os.path.dirname(module.__file__)))
-

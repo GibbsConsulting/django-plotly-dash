@@ -34,3 +34,15 @@ def test_demo_loading():
     assert app._uid == 'SimpleExample' # pylint: disable=protected-access
 
     assert app.layout
+
+def test_app_callbacks():
+    'Test the callbacks of the demo applications'
+
+    from ..plotly_apps import app, a2, liveIn, liveOut
+
+    assert app
+    assert a2
+    assert liveIn
+    assert liveOut
+
+    assert False # need to do something to trigger the callbacks
