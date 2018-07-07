@@ -1,5 +1,5 @@
 '''
-Test dpd demo
+Test demo appliction
 
 Most of these tests are simply the loading of the individual files that
 constitute the demo. A configuration failure would
@@ -45,4 +45,4 @@ def test_app_callbacks():
     assert liveIn
     assert liveOut
 
-    assert False # need to do something to trigger the callbacks
+    # TODO need something to trigger callbacks
