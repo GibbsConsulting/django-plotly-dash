@@ -8,6 +8,4 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "demo.settings")
 
 django.setup()
 
-# pylint: disable=invalid-name
-
 application = get_default_application()

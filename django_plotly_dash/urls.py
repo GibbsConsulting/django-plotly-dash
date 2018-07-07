@@ -1,6 +1,6 @@
 'url routes for serving dash applications'
 
-# pylint: disable = invalid-name, unused-import
+# pylint: disable = unused-import
 
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt

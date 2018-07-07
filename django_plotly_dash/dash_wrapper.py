@@ -4,8 +4,6 @@ This module provides a DjangoDash class that can be used to
 expose a Plotly Dasb application through a Django server
 '''
 
-# pylint: disable=invalid-name
-
 import json
 
 from dash import Dash
@@ -276,7 +274,7 @@ class WrappedDash(Dash):
         try:
             for c in component.children:
                 self._fix_component_id(c)
-        except:
+        except: #pylint: disable=bare-except
             pass
 
     def _fix_id(self, name):

@@ -48,7 +48,7 @@ def find_stateless_by_name(name):
     try:
         dsa_app = StatelessApp.objects.get(app_name=name) # pylint: disable=no-member
         return dsa_app.as_dash_app()
-    except:
+    except: # pylint: disable=bare-except
         pass
 
     dash_app = get_stateless_by_name(name)

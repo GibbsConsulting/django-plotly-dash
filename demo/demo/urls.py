@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-# pylint: disable=invalid-name, wrong-import-position,wrong-import-order
+# pylint: disable=wrong-import-position,wrong-import-order
 
 from django.contrib import admin
 from django.urls import include

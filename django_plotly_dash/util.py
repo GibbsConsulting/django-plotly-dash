@@ -2,7 +2,7 @@
 Utility functions
 '''
 
-# pylint: disable=invalid-name, bare-except
+# pylint: disable=bare-except
 
 from django.conf import settings
 

@@ -1,7 +1,5 @@
 'Routing for standard pipe connections'
 
-# pylint: disable=line-too-long, invalid-name
-
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from channels.http import AsgiHandler

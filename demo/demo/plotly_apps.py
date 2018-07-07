@@ -1,6 +1,6 @@
 'Dash apps for the demonstration of functionality'
 
-# pylint: disable=invalid-name, no-member
+# pylint: disable=no-member
 
 import uuid
 

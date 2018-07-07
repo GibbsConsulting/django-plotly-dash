@@ -1,6 +1,6 @@
 'Template tags for exposing dash applications in Django templates'
 
-# pylint: disable=invalid-name, too-many-arguments, unused-variable, unused-argument
+# pylint: disable=too-many-arguments, unused-variable, unused-argument
 
 from django import template
 
