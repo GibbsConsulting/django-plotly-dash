@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-./check_code_demo
 ./check_code_dpd
+./check_code_demo
 #
 
