@@ -21,6 +21,7 @@ uid_counter = 0
 usable_apps = {}
 
 def add_usable_app(name, app):
+    'Add app to local registry by name'
     name = slugify(name)
     global usable_apps # pylint: disable=global-statement
     usable_apps[name] = app
@@ -35,15 +36,23 @@ def get_local_stateless_by_name(name):
     return usable_apps[name]
 
 class Holder:
+    'Helper class for holding configuration options'
     def __init__(self):
         self.items = []
     def append_css(self, stylesheet):
+        'Add extra css file name to component package'
         self.items.append(stylesheet)
     def append_script(self, script):
+        'Add extra script file name to component package'
         self.items.append(script)
 
 class DjangoDash:
-    def __init__(self, name=None, serve_locally=False, expanded_callbacks=False, **kwargs):
+    '''
+    Wrapper class that provides Dash functionality in a form that can be served by Django
+
+    To use, construct an instance of DjangoDash() in place of a Dash() one.
+    '''
+    def __init__(self, name=None, serve_locally=False, expanded_callbacks=False, **kwargs): # pylint: disable=unused-argument
         if name is None:
             global uid_counter # pylint: disable=global-statement
             uid_counter += 1
@@ -79,6 +88,7 @@ class DjangoDash:
         pass
 
     def get_base_pathname(self, specific_identifier):
+        'Base path name of this instance, taking into account any state or statelessness'
         if not specific_identifier:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
             ndid = self._uid
@@ -90,11 +100,13 @@ class DjangoDash:
         return ndid, full_url
 
     def do_form_dash_instance(self, replacements=None, specific_identifier=None):
+        'Perform the act of constructing a Dash instance taking into account state'
 
         ndid, base_pathname = self.get_base_pathname(specific_identifier)
         return self.form_dash_instance(replacements, ndid, base_pathname)
 
     def form_dash_instance(self, replacements=None, ndid=None, base_pathname=None):
+        'Construct a Dash instance taking into account state'
 
         if ndid is None:
             ndid = self._uid
@@ -117,25 +129,33 @@ class DjangoDash:
         return rd
 
     def callback(self, output, inputs=None, state=None, events=None):
+        'Form a callback function by wrapping, in the same way as the underlying Dash application would'
         callback_set = {'output':output,
                         'inputs':inputs and inputs or dict(),
                         'state':state and state or dict(),
                         'events':events and events or dict()}
-        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value
+        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value, missing-docstring
             callback_sets.append((callback_set, func))
             return func
         return wrap_func
 
     def expanded_callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
+        '''
+        Form an expanded callback.
+
+        This function registers the callback function, and sets an internal flag that mandates that all
+        callbacks are passed the enhanced arguments.
+        '''
         self._expanded_callbacks = True
         return self.callback(output, inputs, state, events)
 
 class PseudoFlask:
+    'Dummy implementation of a Flask instance, providing stub functionality'
     def __init__(self):
         self.config = {}
         self.endpoints = {}
 
-    # pylint: disable=unused-argument
+    # pylint: disable=unused-argument, missing-docstring
 
     def after_request(self, *args, **kwargs):
         pass
@@ -179,12 +199,20 @@ class WrappedDash(Dash):
         self._use_dash_layout = len(self._replacements) < 1
 
     def use_dash_dispatch(self):
+        'Indicate if dispatch is using underlying dash code or the wrapped code'
         return self._dash_dispatch
 
     def use_dash_layout(self):
+        '''
+        Indicate if the underlying dash layout can be used.
+
+        If application state is in use, then the underlying dash layout functionality has to be
+        augmented with the state information and this function returns False
+        '''
         return self._use_dash_layout
 
     def augment_initial_layout(self, base_response):
+        'Add application state to initial values'
         if self.use_dash_layout() and False:
             return base_response.data, base_response.mimetype
         # Adjust the base layout response
@@ -199,6 +227,7 @@ class WrappedDash(Dash):
         return response_data, base_response.mimetype
 
     def walk_tree_and_extract(self, data, target):
+        'Walk tree of properties and extract identifiers and associated values'
         if isinstance(data, dict):
             for key in ['children', 'props',]:
                 self.walk_tree_and_extract(data.get(key, None), target)
@@ -215,8 +244,10 @@ class WrappedDash(Dash):
                 self.walk_tree_and_extract(element, target)
 
     def walk_tree_and_replace(self, data):
-        # Walk the tree. Rely on json decoding to insert instances of dict and list
-        # ie we use a dna test for anatine, rather than our eyes and ears...
+        '''
+        Walk the tree. Rely on json decoding to insert instances of dict and list
+        ie we use a dna test for anatine, rather than our eyes and ears...
+        '''
         if isinstance(data, dict):
             response = {}
             replacements = {}
@@ -237,20 +268,25 @@ class WrappedDash(Dash):
         return data
 
     def flask_app(self):
+        'Underlying flask application for stub implementation'
         return self._flask_app
 
     def base_url(self):
+        'Base url of this omponent'
         return self._base_pathname
 
     def app_context(self, *args, **kwargs):
+        'Extract application context from underlying flask application'
         return self._flask_app.app_context(*args,
                                            **kwargs)
 
     def test_request_context(self, *args, **kwargs):
+        'Request context for testing from underluying flask application'
         return self._flask_app.test_request_context(*args,
                                                     **kwargs)
 
     def locate_endpoint_function(self, name=None):
+        'Locate endpoint function given name of view'
         if name is not None:
             ep = "%s_%s" %(self._base_pathname,
                            name)
@@ -261,12 +297,14 @@ class WrappedDash(Dash):
     # pylint: disable=no-member
     @Dash.layout.setter
     def layout(self, value):
+        'Overloaded layoyt function to fix component names as needed'
 
         if self._adjust_id:
             self._fix_component_id(value)
         return Dash.layout.fset(self, value)
 
     def _fix_component_id(self, component):
+        'Fix name of component ad all of its children'
 
         theID = getattr(component, "id", None)
         if theID is not None:
@@ -278,27 +316,33 @@ class WrappedDash(Dash):
             pass
 
     def _fix_id(self, name):
+        'Adjust identifier to include component name'
         if not self._adjust_id:
             return name
         return "%s_-_%s" %(self._uid,
                            name)
 
     def _fix_callback_item(self, item):
+        'Update component identifier'
         item.component_id = self._fix_id(item.component_id)
         return item
 
     def callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
+        'Invoke callback, adjusting variable names as needed'
         return super(WrappedDash, self).callback(self._fix_callback_item(output),
                                                  [self._fix_callback_item(x) for x in inputs],
                                                  [self._fix_callback_item(x) for x in state],
                                                  [self._fix_callback_item(x) for x in events])
 
     def dispatch(self):
+        'Perform dispatch, using request embedded within flask global state'
         import flask
         body = flask.request.get_json()
         return self. dispatch_with_args(body, argMap=dict())
 
+    #pylint: disable=too-many-locals
     def dispatch_with_args(self, body, argMap):
+        'Perform callback dispatching, with enhanced arguments and recording of response'
         inputs = body.get('inputs', [])
         state = body.get('state', [])
         output = body['output']
