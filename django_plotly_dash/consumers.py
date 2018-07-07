@@ -1,23 +1,27 @@
+'Define pipe consumer and also http endpoint for direct injection of pipe messages'
+
+import json
+
 from channels.generic.websocket import WebsocketConsumer
 from channels.generic.http import AsyncHttpConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-import json
-
-def _form_pipe_channel_name( channel_name ):
+def _form_pipe_channel_name(channel_name):
     return "dpd_pipe_%s" % channel_name
 
-def send_to_pipe_channel( channel_name,
-                          label,
-                          value ):
+def send_to_pipe_channel(channel_name,
+                         label,
+                         value):
+    'Send message through pipe to client component'
     async_to_sync(async_send_to_pipe_channel)(channel_name=channel_name,
                                               label=label,
                                               value=value)
 
-async def async_send_to_pipe_channel( channel_name,
-                                      label,
-                                      value ):
+async def async_send_to_pipe_channel(channel_name,
+                                     label,
+                                     value):
+    'Send message asynchronously through pipe to client component'
     pcn = _form_pipe_channel_name(channel_name)
 
     channel_layer = get_channel_layer()
@@ -27,6 +31,7 @@ async def async_send_to_pipe_channel( channel_name,
                                     "value":value})
 
 class MessageConsumer(WebsocketConsumer):
+    'Websocket handler for pipe to dash component'
     def __init__(self, *args, **kwargs):
         super(MessageConsumer, self).__init__(*args, **kwargs)
 
@@ -35,18 +40,19 @@ class MessageConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
 
-    def disconnect(self, close_code):
+    def disconnect(self, reason):  # pylint: disable=arguments-differ
 
-        for k, v in self.channel_maps.items():
-            async_to_sync(self.channel_layer.group_discard)(v, self.channel_name)
+        for _, pipe_group_name in self.channel_maps.items():
+            async_to_sync(self.channel_layer.group_discard)(pipe_group_name, self.channel_name)
 
-        return super(MessageConsumer, self).disconnect(close_code)
+        return super(MessageConsumer, self).disconnect(reason)
 
     def pipe_value(self, message):
+        'Send a new value into the ws pipe'
         jmsg = json.dumps(message)
         self.send(jmsg)
 
-    def update_pipe_channel(self, uid, channel_name, label):
+    def update_pipe_channel(self, uid, channel_name, label): # pylint: disable=unused-argument
         '''
         Update this consumer to listen on channel_name for the js widget associated with uid
         '''
@@ -62,10 +68,10 @@ class MessageConsumer(WebsocketConsumer):
                 print("Attaching %s to channel: %s" % (uid, pipe_group_name))
                 async_to_sync(self.channel_layer.group_add)(pipe_group_name, self.channel_name)
 
-    def receive(self, text_data):
+    def receive(self, text_data): # pylint: disable=arguments-differ
         message = json.loads(text_data)
 
-        message_type = message.get('type','unknown_type')
+        message_type = message.get('type', 'unknown_type')
         if message_type == 'connection_triplet':
 
             try:
@@ -75,7 +81,7 @@ class MessageConsumer(WebsocketConsumer):
 
                 self.update_pipe_channel(uid, channel_name, label)
 
-            except:
+            except: # pylint: disable=bare-except
                 # Ignore malformed message
                 # TODO enable logging of this sort of thing
                 pass
@@ -85,27 +91,28 @@ class MessageConsumer(WebsocketConsumer):
             # For now, this is just pushing to all other pipe consumers indiscrimnately
             # TODO grab defaults from settings if present
 
-            channel_name = message.get('channel_name',"UNNAMED_CHANNEL")
-            value = message.get('value',None)
-            label = message.get('label','DEFAULT$LABEL')
+            channel_name = message.get('channel_name', "UNNAMED_CHANNEL")
+            value = message.get('value', None)
+            label = message.get('label', 'DEFAULT$LABEL')
 
             send_to_pipe_channel(channel_name=channel_name,
                                  label=label,
                                  value=value)
 
 class PokePipeConsumer(AsyncHttpConsumer):
+    'Async handling of http request inserting pipe message'
 
     async def handle(self, body):
 
-        user = self.scope.get('user',None)
+        user = self.scope.get('user', None)
         as_utf = body.decode('utf-8')
         try:
             incoming_message = json.loads(as_utf)
 
             # Get label value and channel_name out of the body
-            channel_name = incoming_message.get('channel_name','UNNAMED_CHANNEL')
+            channel_name = incoming_message.get('channel_name', 'UNNAMED_CHANNEL')
             value = incoming_message.get("value", None)
-            label = incoming_message.get("label","DEFAULT$LABEL")
+            label = incoming_message.get("label", "DEFAULT$LABEL")
 
             # TODO Use user info (and also csrf and other checks as desired) to prevent misuse
             await async_send_to_pipe_channel(channel_name,
@@ -113,10 +120,10 @@ class PokePipeConsumer(AsyncHttpConsumer):
                                              value)
 
             response = """PokePipeConsumer consumed message of %s for %s
-""" %(incoming_message,user)
+""" %(incoming_message, user)
             response_code = 200
 
-        except:
+        except: # pylint: disable=bare-except
 
             response = """Unable to understand and forward on message of %s
 """ % as_utf
@@ -124,4 +131,3 @@ class PokePipeConsumer(AsyncHttpConsumer):
 
         await self.send_response(response_code,
                                  response.encode('utf-8'))
-

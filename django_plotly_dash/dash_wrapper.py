@@ -1,18 +1,18 @@
 '''dash_wrapper
 
-This module provides a DjangoDash class that can be used to expose a Plotly Dasb application through a Django server
+This module provides a DjangoDash class that can be used to
+expose a Plotly Dasb application through a Django server
 '''
 
 # pylint: disable=invalid-name
+
+import json
 
 from dash import Dash
 from flask import Flask
 
 from django.urls import reverse
-from django.http import HttpResponse
 from django.utils.text import slugify
-
-import json
 
 from plotly.utils import PlotlyJSONEncoder
 
@@ -24,7 +24,7 @@ usable_apps = {}
 
 def add_usable_app(name, app):
     name = slugify(name)
-    global usable_apps
+    global usable_apps # pylint: disable=global-statement
     usable_apps[name] = app
     return name
 
@@ -47,7 +47,7 @@ class Holder:
 class DjangoDash:
     def __init__(self, name=None, serve_locally=False, expanded_callbacks=False, **kwargs):
         if name is None:
-            global uid_counter
+            global uid_counter # pylint: disable=global-statement
             uid_counter += 1
             self._uid = "djdash_%i" % uid_counter
         else:
@@ -88,7 +88,7 @@ class DjangoDash:
             app_pathname = "%s:%s" % (app_name, main_view_label)
             ndid = specific_identifier
 
-        full_url = reverse(app_pathname, kwargs={'id':ndid})
+        full_url = reverse(app_pathname, kwargs={'ident':ndid})
         return ndid, full_url
 
     def do_form_dash_instance(self, replacements=None, specific_identifier=None):
@@ -123,12 +123,12 @@ class DjangoDash:
                         'inputs':inputs and inputs or dict(),
                         'state':state and state or dict(),
                         'events':events and events or dict()}
-        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets):
+        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value
             callback_sets.append((callback_set, func))
             return func
         return wrap_func
 
-    def expanded_callback(self, output, inputs=[], state=[], events=[]):
+    def expanded_callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
         self._expanded_callbacks = True
         return self.callback(output, inputs, state, events)
 
@@ -137,9 +137,11 @@ class PseudoFlask:
         self.config = {}
         self.endpoints = {}
 
+    # pylint: disable=unused-argument
+
     def after_request(self, *args, **kwargs):
         pass
-    def errorhandler(self, *args, **kwargs):
+    def errorhandler(self, *args, **kwargs): # pylint: disable=no-self-use
         return args[0]
     def add_url_rule(self, *args, **kwargs):
         route = kwargs['endpoint']
@@ -150,6 +152,8 @@ class PseudoFlask:
         pass
 
 class WrappedDash(Dash):
+    'Wrapper around the Plotly Dash application instance'
+    # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
                  base_pathname=None, replacements=None, ndid=None,
                  expanded_callbacks=False, serve_locally=False, **kwargs):
@@ -198,7 +202,7 @@ class WrappedDash(Dash):
 
     def walk_tree_and_extract(self, data, target):
         if isinstance(data, dict):
-            for key in ['children','props',]:
+            for key in ['children', 'props',]:
                 self.walk_tree_and_extract(data.get(key, None), target)
             ident = data.get('id', None)
             if ident is not None:
@@ -206,7 +210,7 @@ class WrappedDash(Dash):
                 for key, value in data.items():
                     if key not in ['props', 'options', 'children', 'id']:
                         idVals[key] = value
-                if len(idVals) > 0:
+                if idVals:
                     target[ident] = idVals
         if isinstance(data, list):
             for element in data:
@@ -256,6 +260,7 @@ class WrappedDash(Dash):
             ep = self._base_pathname
         return self._notflask.endpoints[ep]['view_func']
 
+    # pylint: disable=no-member
     @Dash.layout.setter
     def layout(self, value):
 
@@ -267,7 +272,7 @@ class WrappedDash(Dash):
 
         theID = getattr(component, "id", None)
         if theID is not None:
-            setattr(component,"id", self._fix_id(theID))
+            setattr(component, "id", self._fix_id(theID))
         try:
             for c in component.children:
                 self._fix_component_id(c)
@@ -284,7 +289,7 @@ class WrappedDash(Dash):
         item.component_id = self._fix_id(item.component_id)
         return item
 
-    def callback(self, output, inputs=[], state=[], events=[]):
+    def callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
         return super(WrappedDash, self).callback(self._fix_callback_item(output),
                                                  [self._fix_callback_item(x) for x in inputs],
                                                  [self._fix_callback_item(x) for x in state],
@@ -310,14 +315,16 @@ class WrappedDash(Dash):
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
                     v = c.get('value', None)
                     args.append(v)
-                    if da: da.update_current_state(c['id'], c['property'], v)
+                    if da:
+                        da.update_current_state(c['id'], c['property'], v)
 
         for component_registration in self.callback_map[target_id]['state']:
             for c in state:
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
                     v = c.get('value', None)
                     args.append(v)
-                    if da: da.update_current_state(c['id'], c['property'], v)
+                    if da:
+                        da.update_current_state(c['id'], c['property'], v)
 
         # Special: intercept case of insufficient arguments
         # This happens when a propery has been updated with a pipe component
@@ -326,7 +333,7 @@ class WrappedDash(Dash):
         if len(args) < len(self.callback_map[target_id]['inputs']):
             return 'EDGECASEEXIT'
 
-        res = self.callback_map[target_id]['callback'](*args,**argMap)
+        res = self.callback_map[target_id]['callback'](*args, **argMap)
         if da and da.have_current_state_entry(output['id'], output['property']):
             response = json.loads(res.data.decode('utf-8'))
             value = response.get('response', {}).get('props', {}).get(output['property'], None)
