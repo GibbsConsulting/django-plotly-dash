@@ -10,6 +10,11 @@ import dash_html_components as html
 
 import dpd_components as dpd
 
+from django_plotly_dash import DjangoDash
+from django_plotly_dash.consumers import send_to_pipe_channel
+
+import uuid
+
 from django.core.cache import cache
 
 from django_plotly_dash import DjangoDash, send_to_pipe_channel
