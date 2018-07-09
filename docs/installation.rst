@@ -40,8 +40,8 @@ The ``plotly_item`` tag in the ``plotly_dash`` tag library can then be used to r
 
 It is important to ensure that any applications are registered using the ``DjangoDash`` class. This means that any python module containing the registration code has to be known to Django and loaded at the appropriate time. An easy way to ensure this is to import these modules into a standard Django file loaded at registration time.
 
-Extra steps for live updating of state
---------------------------------------
+Extra steps for live state
+--------------------------
 
 The live updating of application state uses the Django `Channels <https://channels.readthedocs.io/en/latest/index.html>`_ project and a suitable
 message-passing backend. The included demonstration uses ``Redis``::
@@ -55,7 +55,7 @@ A standard installation of the Redis package is required. Assuming the use of ``
 
 The ``prepare_redis`` script in the root of the repository performs these steps.
 
-This will launch a container running on the localhost. Following the ``channels`` documentation, as
+This will launch a container running on the localhost. Following the channels documentation, as
 well as adding ``channels`` to the ``INSTALLED_APPS`` list, a ``CHANNEL_LAYERS`` entry in
 ``settings.py`` is also needed::
 
@@ -74,6 +74,8 @@ well as adding ``channels`` to the ``INSTALLED_APPS`` list, a ``CHANNEL_LAYERS``
             },
         },
     }
+
+The host and port entries in ``hosts`` should be adjusted to match the network location of the Redis instance.
 
 Further configuration options can be specified through the optional ``PLOTLY_DASH`` settings variable. The
 available options are detailed in the :ref:`configuration` section.

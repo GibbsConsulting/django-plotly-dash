@@ -19,6 +19,7 @@ def test_dash_app():
     assert str(stateless_a) == stateless_a.app_name
 
 def test_util_error_cases(settings):
+    'Test handling of missing settings'
 
     settings.PLOTLY_DASH = None
 
@@ -29,9 +30,10 @@ def test_util_error_cases(settings):
 
 @pytest.mark.django_db
 def test_direct_access(client):
+    'Check direct use of a stateless application'
 
     from django.urls import reverse
-    url = reverse('the_django_plotly_dash:layout',kwargs={'ident':'SimpleExample'})
+    url = reverse('the_django_plotly_dash:layout', kwargs={'ident':'SimpleExample'})
 
     response = client.get(url)
 
