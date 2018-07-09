@@ -20,5 +20,5 @@ Contents
    extended_callbacks
    template_tags
    models_and_state
-
+   configuration
 

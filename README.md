@@ -47,6 +47,10 @@ cd django-plotly-dash
 ./make_env                # sets up a virtual environment for development
                           #   with direct use of the source code for the package
 
+./prepare_redis           # downloads a redis docker container
+                          #   and launches it with default settings
+                          #   *THIS STEP IS OPTIONAL*
+
 ./prepare_demo            # prepares and launches the demo
                           #   using the Django debug server at http://localhost:8000
 ```
