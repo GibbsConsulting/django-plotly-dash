@@ -3,13 +3,13 @@
 FAQ
 ===
 
-* What versions are supported?
+* What environment versions are supported?
 
 At least v3.5 of Python, and v2.0 of Django, are needed.
 
-* Is a virtualenv mandatory?
+* Is a ``virtualenv`` mandatory?
 
-No, but it is strongly recommended for any Python work
+No, but it is strongly recommended for any Python work.
 
 * What about Windows?
 
