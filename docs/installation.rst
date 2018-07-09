@@ -4,9 +4,9 @@ Installation
 ============
 
 The package requires version 2.0 or greater of Django, essentially due to the use of the ``path`` function for
-registering routes. The minimum python version needed is 3.5.
+registering routes. The minimum Python version needed is 3.5.
 
-Use pip to install the package, preferably to a local virtualenv::
+Use ``pip`` to install the package, preferably to a local ``virtualenv``::
 
     pip install django_plotly_dash
 
@@ -78,7 +78,7 @@ well as adding ``channels`` to the ``INSTALLED_APPS`` list, a ``CHANNEL_LAYERS``
 The host and port entries in ``hosts`` should be adjusted to match the network location of the Redis instance.
 
 Further configuration options can be specified through the optional ``PLOTLY_DASH`` settings variable. The
-available options are detailed in the :ref:`configuration` section.
+available options are detailed in the :ref:`configuration <configuration>` section.
 
 Source code and demo
 --------------------
@@ -105,6 +105,9 @@ To install and run it::
 
 This will launch a simple Django application. A superuser account is also configured, with both username and password set to ``admin``. If
 the ``prepare_redis`` step is skipped then the fourth demo page, exhibiting live updating, will not work.
+
+More details on setting up a development environment, which is also sufficient for running
+the demo, can be found in the :ref:`development <development>` section.
 
 Note that the current demo, along with the codebase, is in a prerelease and very raw form.
 

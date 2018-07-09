@@ -21,6 +21,8 @@ Documentation
 
 blah
 
+
+.. _bug-reporting:
 Bug reports and other issues
 ----------------------------
 
@@ -28,4 +30,5 @@ The ideal bug report is a pull request containing the addition of a failing test
 to the test suite. However, this rarely happens in practice!
 
 The essential requirement of a bug report is that it contains enough information to characterise the issue, and ideally
-also provides some way of replicating it. 
+also provides some way of replicating it. Issues that cannot be replicated within a virtualenv are unlikely to
+get much attention, if any.
