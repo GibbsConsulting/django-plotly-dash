@@ -62,16 +62,6 @@ Note that it is not considered best practice to serve static content in producti
 Coding and testing
 ------------------
 
-blah
-
-Documentation
--------------
-
-blah
-
-Release builds
---------------
-
 checks::
 
   # Run pylint on django-plotly-dash module
@@ -83,12 +73,9 @@ checks::
   # Run all of the above checks in one command
   ./check_code
 
-release::
 
-  source env/bin/activate
-  python setup.py sdisy
-  python setup.py bdist_wheel
-  twine upload dist/*
+Documentation
+-------------
 
 Docs::
 
@@ -100,12 +87,43 @@ Readme::
   source env/bin/activate
   grip
 
-Other::
+
+Release builds
+--------------
+
+This section contains the recipe for building a release of the project.
+
+First, update the version number appropriately
+in ``django_plotly_dash/__init__.py``, and then
+ensure that the checks and tests have been run::
+
+  ./check_code
+
+Next, construct the ``pip`` packages and push them to `pypi <https://pypi.org/project/django-plotly-dash/>`_::
 
   source env/bin/activate
+
+  python setup.py sdisy
+  python setup.py bdist_wheel
+
+  twine upload dist/*
+
+Committing a new release to the main github repository will invoke a build of the online documentation, but
+first a snapshot of the development environment used for the build should be generated::
+
   pip freeze > frozen_dev.txt
 
+  git add frozen_dev.txt
+  git add django_plotly_dash/__init__.py
+
+  git commit -m" ... suitable commit message for this release ..."
+
+  # Create PR, merge into main repo, check content on PYPI and RTD
+
+This preserves the state used for building and testing for future reference.
+
 .. _bug-reporting:
+
 Bug reports and other issues
 ----------------------------
 
@@ -115,3 +133,4 @@ to the test suite. However, this rarely happens in practice!
 The essential requirement of a bug report is that it contains enough information to characterise the issue, and ideally
 also provides some way of replicating it. Issues that cannot be replicated within a virtualenv are unlikely to
 get much attention, if any.
+
