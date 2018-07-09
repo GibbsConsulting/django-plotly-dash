@@ -1,6 +1,6 @@
 # django-plotly-dash
 
-Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https:://www.djangoproject.com/) tags. Multiple Dash apps can
+Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https://www.djangoproject.com/) tags. Multiple Dash apps can
 then be embedded into a single web page, persist and share internal state, and also have access to the
 current user and session variables.
 
@@ -31,7 +31,8 @@ Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings
 
 Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
 
-The use of live updating of applications requires further
+Live updating of applications, to share application
+state, requires further
 configuration. See the [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/) for more details.
 
 ## Demonstration
