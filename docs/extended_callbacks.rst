@@ -5,7 +5,7 @@ Extended callback syntax
 
 The ``DjangoDash`` class allows callbacks to request extra arguments when registered.
 
-To do this, simply replace ``callback`` with ``expanded_callback`` when registering any callback. This will cause all of the callbacks
+To do this, simply replace ``callback`` with ``expanded_callback`` when registering any callback. This will cause **all** of the callbacks
 registered with this application
 to receive extra ``kwargs`` in addition to the callback parameters.
 

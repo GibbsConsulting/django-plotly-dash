@@ -41,6 +41,6 @@ setup(
                         'dash-renderer',
                         'dpd-components',
                         'Django>=2',],
-    python_requires=">=3",
+    python_requires=">=3.5",
     )
 

@@ -4,7 +4,7 @@ Installation
 ============
 
 The package requires version 2.0 or greater of Django, essentially due to the use of the ``path`` function for
-registering routes.
+registering routes. The minimum python version needed is 3.5.
 
 Use pip to install the package, preferably to a local virtualenv::
 
