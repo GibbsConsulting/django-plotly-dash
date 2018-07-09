@@ -16,6 +16,7 @@ def test_dash_app():
 
     assert stateless_a
     assert stateless_a.app_name
+    assert str(stateless_a) == stateless_a.app_name
 
 def test_util_error_cases(settings):
 

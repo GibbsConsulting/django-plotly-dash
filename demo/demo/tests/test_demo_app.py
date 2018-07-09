@@ -6,6 +6,9 @@ constitute the demo. A configuration failure would
 cause one or more of these to fail.
 '''
 
+# pylint: disable=protected-access, no-member
+import pytest
+
 def test_asgi_loading():
     'Test loading of a module'
     from ..asgi import application
@@ -34,6 +37,23 @@ def test_demo_loading():
     assert app._uid == 'SimpleExample' # pylint: disable=protected-access
 
     assert app.layout
+
+@pytest.mark.django_db
+def test_app_lookup():
+    'Test looking up an existing application'
+    from ..plotly_apps import app
+
+    from django_plotly_dash.models import get_stateless_by_name, StatelessApp
+
+    app2 = get_stateless_by_name(app._uid)
+
+    assert app2
+    assert app._uid == app2._uid
+
+    app3 = StatelessApp.objects.get(app_name=app._uid)
+
+    assert app3
+    assert app3.app_name == app2._uid
 
 def test_app_callbacks():
     'Test the callbacks of the demo applications'
