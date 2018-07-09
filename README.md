@@ -31,6 +31,9 @@ Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings
 
 Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
 
+The use of live updating of applications requires further
+configuration. See the [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/) for more details.
+
 ## Demonstration
 
 The source repository contains a demo application. To clone the repo and lauch the demo:
@@ -107,3 +110,8 @@ The registration code needs to be in a location
 that will be imported into the Django process before any model or template tag attempts to use it. The example Django application
 in the demo subdirectory achieves this through an import in the main `urls.py` file; any `views.py` would also be sufficient.
 
+## Development
+
+The `make_env` script sets up the development environment, and pulls in the packages
+specified in the `dev_requirements.txt` file. The `check_code` script invokes the test suite (using `pytest`) as well
+as invoking `pylint` on both the package and the associated demo.
