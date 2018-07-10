@@ -17,9 +17,10 @@ Contents
    introduction
    installation
    simple_use
-   extended_callbacks
-   template_tags
    models_and_state
+   extended_callbacks
+   updating
+   template_tags
    configuration
    development
    faq
