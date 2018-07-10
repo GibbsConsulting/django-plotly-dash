@@ -23,10 +23,11 @@ def test_util_error_cases(settings):
 
     settings.PLOTLY_DASH = None
 
-    from django_plotly_dash.util import pipe_ws_endpoint_name
+    from django_plotly_dash.util import pipe_ws_endpoint_name, dpd_http_endpoint_root, http_endpoint
 
-    # TODO provide a separate function that has settings as an argument
-    assert pipe_ws_endpoint_name() == 'ws/channel'
+    assert pipe_ws_endpoint_name() == 'dpd/ws/channel'
+    assert dpd_http_endpoint_root() == "dpd/views"
+    assert http_endpoint("fred") == '^dpd/views/fred/$'
 
 @pytest.mark.django_db
 def test_direct_access(client):
@@ -38,5 +39,6 @@ def test_direct_access(client):
     response = client.get(url)
 
     assert response.content
+    assert response.content == 'fghg'
     # TODO add more tests here
     assert False
