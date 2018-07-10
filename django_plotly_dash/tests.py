@@ -23,11 +23,19 @@ def test_util_error_cases(settings):
 
     settings.PLOTLY_DASH = None
 
-    from django_plotly_dash.util import pipe_ws_endpoint_name, dpd_http_endpoint_root, http_endpoint
+    from django_plotly_dash.util import pipe_ws_endpoint_name, dpd_http_endpoint_root, http_endpoint, insert_demo_migrations
 
     assert pipe_ws_endpoint_name() == 'dpd/ws/channel'
     assert dpd_http_endpoint_root() == "dpd/views"
     assert http_endpoint("fred") == '^dpd/views/fred/$'
+    assert not insert_demo_migrations()
+
+def test_demo_routing():
+    'Test configuration options for the demo'
+
+    from django_plotly_dash.util import pipe_ws_endpoint_name, insert_demo_migrations
+    assert pipe_ws_endpoint_name() == 'ws/channel'
+    assert insert_demo_migrations()
 
 @pytest.mark.django_db
 def test_direct_access(client):
