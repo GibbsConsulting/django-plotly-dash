@@ -123,6 +123,8 @@ USE_TZ = True
 
 PLOTLY_DASH = {
     "ws_route" : "ws/channel",
+
+    "insert_demo_migrations" : True,  # Insert model instances used by the demo
     }
 
 # Static files (CSS, JavaScript, Images)

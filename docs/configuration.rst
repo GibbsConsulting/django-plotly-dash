@@ -15,6 +15,9 @@ below.
 
       # Route used for direct http insertion of pipe messages
       "http_route" : "dpd/views",
+
+      # Insert data for the demo when migrating
+      "insert_demo_migrations" : False,
   }
 
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in

@@ -19,3 +19,8 @@ def dpd_http_endpoint_root():
 def http_endpoint(stem):
     'Form the http endpoint for a specific stem'
     return "^%s/%s/$" % (dpd_http_endpoint_root(), stem)
+
+def insert_demo_migrations():
+    'Check settings and report if objects for demo purposes should be inserted during migration'
+
+    return _get_settings().get('insert_demo_migrations', False)

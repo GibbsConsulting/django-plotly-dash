@@ -3,8 +3,12 @@
 # pylint: skip-file
 
 from django.db import migrations
+from ..util import insert_demo_migrations
 
 def addExamples(apps, schema_editor):
+
+    if not insert_demo_migrations():
+        return
 
     DashApp = apps.get_model("django_plotly_dash","DashApp")
     StatelessApp = apps.get_model("django_plotly_dash","StatelessApp")
