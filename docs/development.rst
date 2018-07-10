@@ -3,7 +3,8 @@
 Development
 ===========
 
-The application and demo are developed and tested in a virtualenv enviroment on Linux. The resultant package should work on any Python installation
+The application and demo are developed, built and tested in a virtualenv enviroment, supported by
+a number of ``bash`` shell scripts. The resultant package should work on any Python installation
 that meets the requirements.
 
 Environment setup
@@ -62,7 +63,15 @@ Note that it is not considered best practice to serve static content in producti
 Coding and testing
 ------------------
 
-checks::
+The ``pylint`` and ``pytest`` packages are important tools in the development process. The global configuration
+used for ``pylint`` is in the ``pylintrc`` file in the root directory of the codebase.
+
+Tests of the package are
+contained within the ``django_plotly_dash/tests.py`` file, and are invoked using the Django
+settings for the demo. Running the tests from the perspective of the demo also enables
+code coverage for both the application and the demo to be measured together, simplifying the bookkeeping.
+
+Two helper scripts are provided for running the linter and test code::
 
   # Run pylint on django-plotly-dash module
   ./check_code_dpd
@@ -70,23 +79,33 @@ checks::
   # Run pylint on the demo code, and then execute the test suite
   ./check_code_demo
 
-  # Run all of the above checks in one command
+It is also possible to run all of these actions together::
+
+  # Run all of the checks
   ./check_code
 
+The goal is for complete code coverage within the test suite and for maximal ('ten out of ten') marks from the
+linter. Perfection is however very hard and expensive to achieve, so the working requirement is for every release to
+keep the linter score above 9.5, and ideally improve it, and for the level of code coverage of the tests to increase.
 
 Documentation
 -------------
 
-Docs::
+Documentation lives in the ``docs`` subdirectory as reStructuredText and is built using
+the ``sphinx`` toolchain.
+
+Automatic local building of the documentation is possible with the development environment::
 
   source env/bin/activate
   cd docs && sphinx-autobuild . _build/html
 
-Readme::
+In addition, the ``grip`` tool can be used to serve a rendered version of the ``README`` file::
 
   source env/bin/activate
   grip
 
+The online documentation is automatically built by the ``readthedocs`` infrastructure when a release is
+formed in the main ``github`` repository.
 
 Release builds
 --------------
