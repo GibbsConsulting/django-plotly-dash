@@ -59,7 +59,7 @@ in :ref:`templates <template_tags>`:
   {%plotly_item name="SimpleExample"%}
 
 Direct use in this manner, without any application state or
-use of live updating, is directly equivalent to inserting an ``iframe`` containing the
+use of live updating, is equivalent to inserting an ``iframe`` containing the
 URL of a ``Dash`` application.
 
 The registration code needs to be in a location

@@ -50,7 +50,7 @@ This template tag has to be inserted on every page that uses live updating:
   {%plotly_message_pipe%}
 
 The tag inserts javascript needed for the :ref:`Pipe <pipe_component>` component to operate. It can be inserted anywhere
-on the page, and its ordering relative to the ``Dash`` instances using them is not important, so placing it in
+on the page, and its ordering relative to the ``Dash`` instances using updating is not important, so placing it in
 the page footer - to avoid delaying the main page load - along
 with other scripts is generally advisable.
 

@@ -153,3 +153,5 @@ The essential requirement of a bug report is that it contains enough information
 also provides some way of replicating it. Issues that cannot be replicated within a virtualenv are unlikely to
 get much attention, if any.
 
+To report a bug, create a `github issue <https://github.com/GibbsConsulting/django-plotly-dash/issues>`_.
+
