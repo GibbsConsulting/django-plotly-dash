@@ -21,6 +21,7 @@ Contents
    extended_callbacks
    updating
    template_tags
+   dash_components
    configuration
    development
    faq

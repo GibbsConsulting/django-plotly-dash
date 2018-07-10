@@ -1,6 +1,6 @@
 .. _updating:
 
-Live Updating
+Live updating
 =============
 
 Live updating blah.
@@ -10,10 +10,10 @@ Message channels
 
 Blah
 
-The Pipe component
-------------------
+Pipes
+-----
 
-Blah
+A :ref:`Pipe <pipe_component>` component is provided.
 
 
 

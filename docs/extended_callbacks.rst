@@ -59,5 +59,5 @@ propagated to an application. Something in the front-end UI has to invoke a call
 latest version of these objects will be provided to the callback. The same considerations
 as in other Dash `live updates <https://dash.plot.ly/live-updates>`_ apply.
 
-Alternatively, the :ref:`live updating <updating>` section discusses how ``django-plotly-dash`` provides
-an explicit pipe.
+The :ref:`live updating <updating>` section discusses how ``django-plotly-dash`` provides
+an explicit pipe that directly enables the updating of applications.
