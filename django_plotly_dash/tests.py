@@ -45,8 +45,8 @@ def test_direct_access(client):
     from .app_name import main_view_label
 
     for route_name in ['layout', 'dependencies', main_view_label]:
-        for prefix, arg_map in [('app-',{'ident':'SimpleExample'}),
-                                ('',{'ident':'simpleexample-1'}),]:
+        for prefix, arg_map in [('app-', {'ident':'SimpleExample'}),
+                                ('', {'ident':'simpleexample-1'}),]:
             url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
             response = client.get(url)
@@ -63,18 +63,18 @@ def test_updating(client):
 
     route_name = 'update-component'
 
-    for prefix, arg_map in [('app-',{'ident':'SimpleExample'}),
-                            ('',{'ident':'simpleexample-1'}),]:
+    for prefix, arg_map in [('app-', {'ident':'SimpleExample'}),
+                            ('', {'ident':'simpleexample-1'}),]:
         url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
-        response = client.post(url, json.dumps({'output':{'id':'output-size','property':'children'},
+        response = client.post(url, json.dumps({'output':{'id':'output-size', 'property':'children'},
                                                 'inputs':[{'id':'dropdown-color',
-                                                               'property':'value',
-                                                               'value':'blue'},
+                                                           'property':'value',
+                                                           'value':'blue'},
                                                           {'id':'dropdown-size',
-                                                               'property':'value',
-                                                               'value':'medium'},
-                                                          ]}), content_type="application/json")
+                                                           'property':'value',
+                                                           'value':'medium'},
+                                                         ]}), content_type="application/json")
 
         assert response.content == b'{"response": {"props": {"children": "The chosen T-shirt is a medium blue one."}}}'
         assert response.status_code == 200
