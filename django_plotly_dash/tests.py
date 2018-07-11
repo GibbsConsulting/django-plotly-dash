@@ -42,11 +42,15 @@ def test_direct_access(client):
     'Check direct use of a stateless application'
 
     from django.urls import reverse
-    url = reverse('the_django_plotly_dash:layout', kwargs={'ident':'SimpleExample'})
+    from .app_name import main_view_label
 
-    response = client.get(url)
+    for route_name in ['layout', 'dependencies', main_view_label]:
+        for prefix, arg_map in [('app-',{'ident':'SimpleExample'}),
+                                ('',{'ident':'simpleexample-1'}),]:
+            url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
-    assert response.content
-    assert response.content == 'fghg'
-    # TODO add more tests here
-    assert False
+            response = client.get(url)
+
+            assert response.content
+            assert response.status_code == 200
+

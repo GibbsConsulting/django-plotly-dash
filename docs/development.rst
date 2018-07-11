@@ -58,7 +58,7 @@ static files::
           module = importlib.import_module(dash_module_name)
           STATICFILES_DIRS.append(("dash/%s"%dash_module_name, os.path.dirname(module.__file__)))
 
-Note that it is not considered best practice to serve static content in production through Django.
+Note that it is not good practice to serve static content in production through Django.
 
 Coding and testing
 ------------------
