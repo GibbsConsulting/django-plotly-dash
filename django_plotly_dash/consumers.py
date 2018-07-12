@@ -65,7 +65,6 @@ class MessageConsumer(WebsocketConsumer):
                     async_to_sync(self.channel_layer.group_discard)(current, self.channel_name)
 
                 self.channel_maps[uid] = pipe_group_name
-                print("Attaching %s to channel: %s" % (uid, pipe_group_name))
                 async_to_sync(self.channel_layer.group_add)(pipe_group_name, self.channel_name)
 
     def receive(self, text_data): # pylint: disable=arguments-differ

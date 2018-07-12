@@ -52,7 +52,10 @@ class DjangoDash:
 
     To use, construct an instance of DjangoDash() in place of a Dash() one.
     '''
-    def __init__(self, name=None, serve_locally=False, expanded_callbacks=False, **kwargs): # pylint: disable=unused-argument
+    def __init__(self, name=None, serve_locally=False,
+                 expanded_callbacks=False,
+                 add_bootstrap_links=False,
+                 **kwargs): # pylint: disable=unused-argument
         if name is None:
             global uid_counter # pylint: disable=global-statement
             uid_counter += 1
@@ -70,6 +73,11 @@ class DjangoDash:
 
         self._expanded_callbacks = expanded_callbacks
         self._serve_locally = serve_locally
+
+        if add_bootstrap_links:
+            from bootstrap4.bootstrap import css_url
+            bootstrap_source = css_url()['href']
+            self.css.append_script({'external_url':[bootstrap_source,]})
 
     def as_dash_instance(self):
         '''

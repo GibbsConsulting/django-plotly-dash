@@ -86,27 +86,40 @@ def callback_c(*args, **kwargs):
     return "Args are [%s] and kwargs are %s" %(",".join(args), str(kwargs))
 
 liveIn = DjangoDash("LiveInput",
-                    serve_locally=True)
+                    serve_locally=True,
+                    add_bootstrap_links=True)
+
 liveIn.layout = html.Div([
     dpd.Pipe(id="button_count",
              value=0,
              label="button count",
              channel_name="live_button_counter"),
-    html.Button('Press me!', id="button"),
-    html.Div(id='button_local_counter', children="Press the button to get going"),
-    ])
+    html.Div([html.Button('Choose red. Press me!',
+                          id="red-button",
+                          className="btn btn-danger"),
+              html.Button('Blue is best. Pick me!',
+                          id="blue-button",
+                          className="btn btn-primary"),
+              ], className="btn-group"),
+    html.Div(id='button_local_counter', children="Press any button to start"),
+    ], className="")
 
 @liveIn.expanded_callback(
     dash.dependencies.Output('button_local_counter', 'children'),
-    [dash.dependencies.Input('button', 'n_clicks'),],
+    [dash.dependencies.Input('red-button', 'n_clicks'),
+     dash.dependencies.Input('blue-button', 'n_clicks'),
+     dash.dependencies.Input('red-button', 'n_clicks_timestamp'),
+     dash.dependencies.Input('blue-button', 'n_clicks_timestamp'),
+    ],
     )
-def callback_liveIn_button_press(n_clicks, *args, **kwargs): # pylint: disable=unused-argument
+def callback_liveIn_button_press(red_clicks, blue_clicks, *args, **kwargs): # pylint: disable=unused-argument
     'Input app button pressed, so do something interesting'
     send_to_pipe_channel(channel_name="live_button_counter",
                          label="named_counts",
-                         value={'n_clicks':n_clicks,
+                         value={'red_clicks':red_clicks,
+                                'blue_clicks':blue_clicks,
                                 'user':str(kwargs.get('user', 'UNKNOWN'))})
-    return "Number of local clicks so far is %s" % n_clicks
+    return "Number of local clicks so far is %s red and %s blue at %s" % (red_clicks, blue_clicks, str(args))
 
 liveOut = DjangoDash("LiveOutput",
                      serve_locally=True)
@@ -122,7 +135,7 @@ def generate_liveOut_layout():
                  children="Output goes here"),
         dcc.Input(value=str(uuid.uuid4()),
                   id="state_uid",
-                  #style={'display':'none'})
+                  style={'display':'none'},
                  )
         ])
 
@@ -150,10 +163,21 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
 
     user = named_count.get('user', None)
     if user is not None:
-        uc = named_count.get('n_clicks', 0)
+        ucr = named_count.get('red_clicks', 0)
+        ucb = named_count.get('blue_clicks', 0)
 
-        if uc is not None:
-            state[user] = uc + state.get(user, 0)
+        try:
+            cr, cb = state.get(user)
+        except:
+            cr = 0
+            cb = 0
+
+        if ucr is not None:
+            cr += ucr
+        if ucb is not None:
+            cb += ucb
+
+        state[user] = (cr, cb)
 
     cache.set(cache_key, state, 60)
 
