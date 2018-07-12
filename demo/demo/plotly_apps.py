@@ -100,7 +100,7 @@ liveIn.layout = html.Div([
               html.Button('Blue is best. Pick me!',
                           id="blue-button",
                           className="btn btn-primary"),
-              ], className="btn-group"),
+             ], className="btn-group"),
     html.Div(id='button_local_counter', children="Press any button to start"),
     ], className="")
 
@@ -166,6 +166,7 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
         ucr = named_count.get('red_clicks', 0)
         ucb = named_count.get('blue_clicks', 0)
 
+        #pylint: disable=bare-except
         try:
             cr, cb = state.get(user)
         except:
