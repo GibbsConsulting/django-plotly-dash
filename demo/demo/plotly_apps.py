@@ -143,10 +143,16 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, rc_timestamp, bc_times
         send_to_pipe_channel(channel_name="live_button_counter",
                              label="named_counts",
                              value=value)
-    return "Number of local clicks so far is %s red and %s blue; last change is %s at %s" % (red_clicks, blue_clicks, change_col, timestamp)
+    return "Number of local clicks so far is %s red and %s blue; last change is %s at %s" % (red_clicks,
+                                                                                             blue_clicks,
+                                                                                             change_col,
+                                                                                             datetime.fromtimestamp(0.001*timestamp))
 
 liveOut = DjangoDash("LiveOutput",
                      )#serve_locally=True)
+
+def _get_cache_key(state_uid):
+    return "demo-liveout-s4-%s" % state_uid
 
 def generate_liveOut_layout():
     'Generate the layout per-app, generating each tine a new uuid for the state_uid argument'
@@ -176,7 +182,7 @@ liveOut.layout = generate_liveOut_layout
 def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
     'Handle something changing the value of the input pipe or the associated state uid'
 
-    cache_key = "demo-liveout-s3-%s" % state_uid
+    cache_key = _get_cache_key(state_uid)
     state = cache.get(cache_key)
 
     # If nothing in cache, prepopulate
@@ -196,11 +202,11 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
         colour_set = state.get(click_colour,None)
 
         if not colour_set:
-            colour_set = [(None, 0, 0) for i in range(5)]
+            colour_set = [(None, 0, 100) for i in range(5)]
 
-        _, last_ts, _ = colour_set[-1]
+        _, last_ts, prev = colour_set[-1]
         if click_timestamp > last_ts:
-            colour_set.append((user, click_timestamp, random.lognormvariate(0.0,0.1)),)
+            colour_set.append((user, click_timestamp, prev * random.lognormvariate(0.0,0.1)),)
             colour_set = colour_set[-100:]
 
         state[click_colour] = colour_set
@@ -216,7 +222,7 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
 def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
     'Build a timeseries from the internal state'
 
-    cache_key = "demo-liveout-s3-%s" % state_uid
+    cache_key = _get_cache_key(state_uid)
     state = cache.get(cache_key)
 
     # If nothing in cache, prepopulate
@@ -231,10 +237,17 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
         levels = [level for _, ts, level in values if ts > 0]
         colour_series[colour] = pd.Series(levels, index=timestamps).groupby(level=0).first()
 
-    df = pd.DataFrame(colour_series).fillna(1.0).cumprod().reset_index()
+    df = pd.DataFrame(colour_series).fillna(method="ffill").reset_index()
+
+    colors = {'red':'#FF0000',
+              'blue':'#0000FF',
+              'green':'#00FF00',
+             }
 
     traces = [ go.Scatter(y=df[colour],
                           x=df['index'],
+                          name=colour,
+                          line=dict(color=colors[colour]),
                           ) for colour in colour_series.keys() ]
 
     return {'data':traces,
