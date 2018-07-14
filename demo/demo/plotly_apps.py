@@ -3,12 +3,19 @@
 # pylint: disable=no-member
 
 import uuid
+import random
+
+import pandas as pd
+
+from datetime import datetime
 
 from django.core.cache import cache
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+
+import plotly.graph_objs as go
 
 import dpd_components as dpd
 
@@ -90,10 +97,6 @@ liveIn = DjangoDash("LiveInput",
                     add_bootstrap_links=True)
 
 liveIn.layout = html.Div([
-    dpd.Pipe(id="button_count",
-             value=0,
-             label="button count",
-             channel_name="live_button_counter"),
     html.Div([html.Button('Choose red. Press me!',
                           id="red-button",
                           className="btn btn-danger"),
@@ -112,17 +115,38 @@ liveIn.layout = html.Div([
      dash.dependencies.Input('blue-button', 'n_clicks_timestamp'),
     ],
     )
-def callback_liveIn_button_press(red_clicks, blue_clicks, *args, **kwargs): # pylint: disable=unused-argument
+def callback_liveIn_button_press(red_clicks, blue_clicks, rc_timestamp, bc_timestamp, **kwargs): # pylint: disable=unused-argument
     'Input app button pressed, so do something interesting'
-    send_to_pipe_channel(channel_name="live_button_counter",
-                         label="named_counts",
-                         value={'red_clicks':red_clicks,
-                                'blue_clicks':blue_clicks,
-                                'user':str(kwargs.get('user', 'UNKNOWN'))})
-    return "Number of local clicks so far is %s red and %s blue at %s" % (red_clicks, blue_clicks, str(args))
+
+    if not rc_timestamp:
+        rc_timestamp = 0
+    if not bc_timestamp:
+        bc_timestamp = 0
+
+    if (rc_timestamp + bc_timestamp) < 1:
+        change_col = None
+        timestamp = 0
+    else:
+        if rc_timestamp > bc_timestamp:
+            change_col = "red"
+            timestamp = rc_timestamp
+        else:
+            change_col = "blue"
+            timestamp = bc_timestamp
+
+        value={'red_clicks':red_clicks,
+               'blue_clicks':blue_clicks,
+               'click_colour':change_col,
+               'click_timestamp':timestamp,
+               'user':str(kwargs.get('user', 'UNKNOWN'))}
+
+        send_to_pipe_channel(channel_name="live_button_counter",
+                             label="named_counts",
+                             value=value)
+    return "Number of local clicks so far is %s red and %s blue; last change is %s at %s" % (red_clicks, blue_clicks, change_col, timestamp)
 
 liveOut = DjangoDash("LiveOutput",
-                     serve_locally=True)
+                     )#serve_locally=True)
 
 def generate_liveOut_layout():
     'Generate the layout per-app, generating each tine a new uuid for the state_uid argument'
@@ -131,8 +155,10 @@ def generate_liveOut_layout():
                  value=None,
                  label="named_counts",
                  channel_name="live_button_counter"),
-        html.Div(id="local_output",
-                 children="Output goes here"),
+        html.Div(id="internal_state",
+                 children="No state has been computed yet",
+                 style={'display':'none'}),
+        dcc.Graph(id="timeseries_plot"),
         dcc.Input(value=str(uuid.uuid4()),
                   id="state_uid",
                   style={'display':'none'},
@@ -143,43 +169,75 @@ liveOut.layout = generate_liveOut_layout
 
 #@liveOut.expanded_callback(
 @liveOut.callback(
-    dash.dependencies.Output('local_output', 'children'),
+    dash.dependencies.Output('internal_state', 'children'),
     [dash.dependencies.Input('named_count_pipe', 'value'),
      dash.dependencies.Input('state_uid', 'value'),],
     )
 def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
     'Handle something changing the value of the input pipe or the associated state uid'
 
-    cache_key = "liveout-state-%s" % state_uid
+    cache_key = "demo-liveout-s3-%s" % state_uid
     state = cache.get(cache_key)
 
     # If nothing in cache, prepopulate
     if not state:
         state = {}
 
-    # First call for this widget has no named_count value
-    if named_count is None:
+    # Guard against missing input on startup
+    if not named_count:
         named_count = {}
 
+    # extract incoming info from the message and update the internal state
     user = named_count.get('user', None)
-    if user is not None:
-        ucr = named_count.get('red_clicks', 0)
-        ucb = named_count.get('blue_clicks', 0)
+    click_colour = named_count.get('click_colour',None)
+    click_timestamp = named_count.get('click_timestamp',0)
 
-        #pylint: disable=bare-except
-        try:
-            cr, cb = state.get(user)
-        except:
-            cr = 0
-            cb = 0
+    if click_colour:
+        colour_set = state.get(click_colour,None)
 
-        if ucr is not None:
-            cr += ucr
-        if ucb is not None:
-            cb += ucb
+        if not colour_set:
+            colour_set = [(None, 0, 0) for i in range(5)]
 
-        state[user] = (cr, cb)
+        _, last_ts, _ = colour_set[-1]
+        if click_timestamp > last_ts:
+            colour_set.append((user, click_timestamp, random.lognormvariate(0.0,0.1)),)
+            colour_set = colour_set[-100:]
 
-    cache.set(cache_key, state, 60)
+        state[click_colour] = colour_set
+        cache.set(cache_key, state, 3600)
 
-    return "Liveout got %s and state is %s for instance %s" %(str(kwargs), str(state), state_uid)
+    return "(%s,%s)" % (cache_key, click_timestamp)
+
+@liveOut.callback(
+    dash.dependencies.Output('timeseries_plot', 'figure'),
+    [dash.dependencies.Input('internal_state', 'children'),
+     dash.dependencies.Input('state_uid', 'value'),],
+    )
+def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
+    'Build a timeseries from the internal state'
+
+    cache_key = "demo-liveout-s3-%s" % state_uid
+    state = cache.get(cache_key)
+
+    # If nothing in cache, prepopulate
+    if not state:
+        state = {}
+
+    colour_series = {}
+
+    for colour, values in state.items():
+        timestamps = [datetime.fromtimestamp(int(0.001*ts)) for _, ts, _ in values if ts > 0]
+        users = [user for user, ts, _ in values if ts > 0]
+        levels = [level for _, ts, level in values if ts > 0]
+        colour_series[colour] = pd.Series(levels, index=timestamps).groupby(level=0).first()
+
+    df = pd.DataFrame(colour_series).fillna(1.0).cumprod().reset_index()
+
+    traces = [ go.Scatter(y=df[colour],
+                          x=df['index'],
+                          ) for colour in colour_series.keys() ]
+
+    return {'data':traces,
+            #'layout': go.Layout
+            }
+
