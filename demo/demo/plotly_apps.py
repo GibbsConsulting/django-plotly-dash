@@ -103,6 +103,9 @@ liveIn.layout = html.Div([
               html.Button('Blue is best. Pick me!',
                           id="blue-button",
                           className="btn btn-primary"),
+              html.Button('Time to go green!',
+                          id="green-button",
+                          className="btn btn-success"),
              ], className="btn-group"),
     html.Div(id='button_local_counter', children="Press any button to start"),
     ], className="")
@@ -113,17 +116,21 @@ liveIn.layout = html.Div([
      dash.dependencies.Input('blue-button', 'n_clicks'),
      dash.dependencies.Input('red-button', 'n_clicks_timestamp'),
      dash.dependencies.Input('blue-button', 'n_clicks_timestamp'),
+     dash.dependencies.Input('green-button', 'n_clicks_timestamp'),
     ],
     )
-def callback_liveIn_button_press(red_clicks, blue_clicks, rc_timestamp, bc_timestamp, **kwargs): # pylint: disable=unused-argument
+def callback_liveIn_button_press(red_clicks, blue_clicks,
+                                 rc_timestamp, bc_timestamp, gc_timestamp, **kwargs): # pylint: disable=unused-argument
     'Input app button pressed, so do something interesting'
 
     if not rc_timestamp:
         rc_timestamp = 0
     if not bc_timestamp:
         bc_timestamp = 0
+    if not gc_timestamp:
+        gc_timestamp = 0
 
-    if (rc_timestamp + bc_timestamp) < 1:
+    if (rc_timestamp + bc_timestamp + gc_timestamp) < 1:
         change_col = None
         timestamp = 0
     else:
@@ -133,6 +140,10 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, rc_timestamp, bc_times
         else:
             change_col = "blue"
             timestamp = bc_timestamp
+
+        if gc_timestamp > timestamp:
+            timestamp = gc_timestamp
+            change_col = "green"
 
         value={'red_clicks':red_clicks,
                'blue_clicks':blue_clicks,
