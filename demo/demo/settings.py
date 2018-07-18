@@ -59,7 +59,7 @@ ROOT_URLCONF = 'demo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'demo','templates'),],
+        'DIRS': [os.path.join(BASE_DIR, 'demo', 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,16 +119,47 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Plotly dash settings
+
+PLOTLY_DASH = {
+    "ws_route" : "ws/channel",
+
+    "insert_demo_migrations" : True,  # Insert model instances used by the demo
+    }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'demo','static'),
+    os.path.join(BASE_DIR, 'demo', 'static'),
     ]
+
+# Caching - demo uses redis as this is present due to channels use
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "dpd-demo"
+    }
+}
+
+# Channels config, to use channel layers
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379),],
+        },
+    },
+}
 
 # In order to serve dash components locally - not recommended in general, but
 # can be useful for development especially if offline - we add in the root directory
@@ -137,12 +168,13 @@ STATICFILES_DIRS = [
 
 if DEBUG:
 
-    import dash_core_components as dcc
-    _rname = os.path.join(os.path.dirname(dcc.__file__),'..')
+    import importlib
 
     for dash_module_name in ['dash_core_components',
                              'dash_html_components',
                              'dash_renderer',
-                             'dpd_components',]:
-        STATICFILES_DIRS.append( ("dash/%s"%dash_module_name, os.path.join(_rname,dash_module_name)) )
+                             'dpd_components',
+                            ]:
 
+        module = importlib.import_module(dash_module_name)
+        STATICFILES_DIRS.append(("dash/%s"%dash_module_name, os.path.dirname(module.__file__)))

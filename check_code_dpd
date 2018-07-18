@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#
+source env/bin/activate
+#
+pylint django_plotly_dash

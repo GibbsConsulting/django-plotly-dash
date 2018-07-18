@@ -50,11 +50,17 @@ Taking a simple example inspired by the excellent `getting started <https://dash
                                                     dropdown_color)
 
 Note that the ``DjangoDash`` constructor requires a name to be specified. This name is then used to identify the dash app
-in templates::
+in :ref:`templates <template_tags>`:
+
+.. code-block:: jinja
 
   {%load plotly_dash%}
 
   {%plotly_item name="SimpleExample"%}
+
+Direct use in this manner, without any application state or
+use of live updating, is equivalent to inserting an ``iframe`` containing the
+URL of a ``Dash`` application.
 
 The registration code needs to be in a location
 that will be imported into the Django process before any model or

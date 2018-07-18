@@ -1,6 +1,6 @@
 # django-plotly-dash
 
-Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https:://www.djangoproject.com/) tags. Multiple Dash apps can
+Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https://www.djangoproject.com/) tags. Multiple Dash apps can
 then be embedded into a single web page, persist and share internal state, and also have access to the
 current user and session variables.
 
@@ -31,6 +31,10 @@ Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings
 
 Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
 
+Live updating of applications, to share application
+state, requires further
+configuration. See the [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/) for more details.
+
 ## Demonstration
 
 The source repository contains a demo application. To clone the repo and lauch the demo:
@@ -42,6 +46,10 @@ cd django-plotly-dash
 
 ./make_env                # sets up a virtual environment for development
                           #   with direct use of the source code for the package
+
+./prepare_redis           # downloads a redis docker container
+                          #   and launches it with default settings
+                          #   *THIS STEP IS OPTIONAL*
 
 ./prepare_demo            # prepares and launches the demo
                           #   using the Django debug server at http://localhost:8000
@@ -107,3 +115,12 @@ The registration code needs to be in a location
 that will be imported into the Django process before any model or template tag attempts to use it. The example Django application
 in the demo subdirectory achieves this through an import in the main `urls.py` file; any `views.py` would also be sufficient.
 
+Whilst this example allows for the direct use of existing `Dash` applications, it does not provide for the sharing or updating of
+internal state. The [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/) provides details on using these
+and other additional features.
+
+## Development
+
+The `make_env` script sets up the development environment, and pulls in the packages
+specified in the `dev_requirements.txt` file. The `check_code` script invokes the test suite (using `pytest`) as well
+as invoking `pylint` on both the package and the associated demo.
