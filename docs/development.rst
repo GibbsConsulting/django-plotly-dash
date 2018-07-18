@@ -122,7 +122,7 @@ Next, construct the ``pip`` packages and push them to `pypi <https://pypi.org/pr
 
   source env/bin/activate
 
-  python setup.py sdisy
+  python setup.py sdist
   python setup.py bdist_wheel
 
   twine upload dist/*

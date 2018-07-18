@@ -21,7 +21,10 @@ setup(
     license='MIT',
     packages=[
     'django_plotly_dash',
+    'django_plotly_dash.migrations',
+    'django_plotly_dash.templatetags',
     ],
+    include_package_data=True,
     classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',

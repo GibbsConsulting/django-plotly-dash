@@ -1,0 +1,1 @@
+recursive-include django_plotly_dash/templates *.html
