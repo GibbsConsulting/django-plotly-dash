@@ -114,12 +114,13 @@ liveIn.layout = html.Div([
     dash.dependencies.Output('button_local_counter', 'children'),
     [dash.dependencies.Input('red-button', 'n_clicks'),
      dash.dependencies.Input('blue-button', 'n_clicks'),
+     dash.dependencies.Input('green-button', 'n_clicks'),
      dash.dependencies.Input('red-button', 'n_clicks_timestamp'),
      dash.dependencies.Input('blue-button', 'n_clicks_timestamp'),
      dash.dependencies.Input('green-button', 'n_clicks_timestamp'),
     ],
     )
-def callback_liveIn_button_press(red_clicks, blue_clicks,
+def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
                                  rc_timestamp, bc_timestamp, gc_timestamp, **kwargs): # pylint: disable=unused-argument
     'Input app button pressed, so do something interesting'
 
@@ -147,6 +148,7 @@ def callback_liveIn_button_press(red_clicks, blue_clicks,
 
         value={'red_clicks':red_clicks,
                'blue_clicks':blue_clicks,
+               'green_clicks':green_clicks,
                'click_colour':change_col,
                'click_timestamp':timestamp,
                'user':str(kwargs.get('user', 'UNKNOWN'))}
@@ -248,7 +250,7 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
         levels = [level for _, ts, level in values if ts > 0]
         colour_series[colour] = pd.Series(levels, index=timestamps).groupby(level=0).first()
 
-    df = pd.DataFrame(colour_series).fillna(method="ffill").reset_index()
+    df = pd.DataFrame(colour_series).fillna(method="ffill").reset_index()[-25:]
 
     colors = {'red':'#FF0000',
               'blue':'#0000FF',
