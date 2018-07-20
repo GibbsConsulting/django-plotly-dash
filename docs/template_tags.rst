@@ -36,6 +36,8 @@ At least one of ``da``, ``slug`` or ``name`` must be provided. An object identif
 identified by ``name`` will be. If either of these arguments are provided, they must resolve to valid objects even if
 not used. If neither are provided, then the model instance in ``da`` will be used.
 
+.. _plotly_message_pipe:
+
 The ``plotly_message_pipe`` template tag
 ----------------------------------------
 
