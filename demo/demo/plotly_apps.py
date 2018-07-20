@@ -134,6 +134,7 @@ liveIn.layout = html.Div([
     html.Div(id='button_local_counter', children="Press any button to start"),
     ], className="")
 
+#pylint: disable=too-many-arguments
 @liveIn.expanded_callback(
     dash.dependencies.Output('button_local_counter', 'children'),
     [dash.dependencies.Input('red-button', 'n_clicks'),
@@ -186,7 +187,7 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
                                                                                              datetime.fromtimestamp(0.001*timestamp))
 
 liveOut = DjangoDash("LiveOutput",
-                    )#serve_locally=True)
+                     serve_locally=True)
 
 def _get_cache_key(state_uid):
     return "demo-liveout-s4-%s" % state_uid
@@ -210,6 +211,7 @@ def generate_liveOut_layout():
 
 liveOut.layout = generate_liveOut_layout
 
+#pylint: disable=unused-argument
 #@liveOut.expanded_callback(
 @liveOut.callback(
     dash.dependencies.Output('internal_state', 'children'),
@@ -270,7 +272,7 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
 
     for colour, values in state.items():
         timestamps = [datetime.fromtimestamp(int(0.001*ts)) for _, ts, _ in values if ts > 0]
-        users = [user for user, ts, _ in values if ts > 0]
+        #users = [user for user, ts, _ in values if ts > 0]
         levels = [level for _, ts, level in values if ts > 0]
         colour_series[colour] = pd.Series(levels, index=timestamps).groupby(level=0).first()
 
