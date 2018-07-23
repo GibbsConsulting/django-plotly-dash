@@ -125,6 +125,8 @@ PLOTLY_DASH = {
     "ws_route" : "ws/channel",
 
     "insert_demo_migrations" : True,  # Insert model instances used by the demo
+
+    "http_poke_enabled" : True, # Flag controlling availability of direct-to-messaging http endpoint
     }
 
 # Static files (CSS, JavaScript, Images)

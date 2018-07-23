@@ -71,8 +71,9 @@ introduces another indeterminacy.
 HTTP Endpoint
 -------------
 
-There is an HTTP endpoint, configured with
-the ``http_route`` option, that allows direct insertion of messages into a message channel. It is a
+There is an HTTP endpoint, :ref:`configured <configuration>` with
+the ``http_route`` option, that allows direct insertion of messages into a message
+channel. It is a
 direct equivalent of calling the ``send_to_pipe_channel`` function, and
 expects the ``channel_name``, ``label`` and ``value`` arguments to be provided in a JSON-encoded
 dictionary.
@@ -93,6 +94,9 @@ be regarded as a starting point for a more complete implementation if exposing t
 other hand, if this endpoint is restricted so that it is only available from trusted sources such as the server
 itself, it does provide a mechanism for Django code running outside of the ASGI server, such as in a WSGI process or
 Celery worker, to push a message out to running applications.
+
+The ``http_poke_enabled`` flag controls the availability of the endpoint. If false, then it is not registered at all and
+all requests will receive a 404 HTTP error code.
 
 Deployment
 ----------

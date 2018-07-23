@@ -49,3 +49,7 @@ def insert_demo_migrations():
     'Check settings and report if objects for demo purposes should be inserted during migration'
 
     return _get_settings().get('insert_demo_migrations', False)
+
+def http_poke_endpoint_enabled():
+    'Return true if the http endpoint is enabled through the settings'
+    return _get_settings().get('http_poke_enabled', True)

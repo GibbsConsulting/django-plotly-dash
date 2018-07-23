@@ -303,7 +303,7 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
     traces = [go.Scatter(y=df[colour],
                          x=df['index'],
                          name=colour,
-                         line=dict(color=colors.get(colour,'#000000')),
+                         line=dict(color=colors.get(colour, '#000000')),
                         ) for colour in colour_series]
 
     return {'data':traces,
