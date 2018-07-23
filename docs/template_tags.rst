@@ -12,7 +12,7 @@ Template tags are provided in the ``plotly_dash`` library:
 The ``plotly_app`` template tag
 -------------------------------
 
-Importing the ``plotly_dash`` library provides the ``plotly_app`` template tag:
+Importing the ``plotly_dash`` library provides the ``plotly_item`` template tag:
 
 .. code-block:: jinja
 
