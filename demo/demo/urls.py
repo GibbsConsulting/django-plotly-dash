@@ -28,6 +28,8 @@ from django.conf.urls.static import static
 # Load demo plotly apps - this triggers their registration
 import demo.plotly_apps # pylint: disable=unused-import
 
+from django_plotly_dash.views import add_to_session
+
 urlpatterns = [
     url('^$', TemplateView.as_view(template_name='index.html'), name="home"),
     url('^demo-one$', TemplateView.as_view(template_name='demo_one.html'), name="demo-one"),
@@ -36,6 +38,8 @@ urlpatterns = [
     url('^demo-four$', TemplateView.as_view(template_name='demo_four.html'), name="demo-four"),
     url('^admin/', admin.site.urls),
     url('^django_plotly_dash/', include('django_plotly_dash.urls')),
+
+    url('^demo-session-var$', add_to_session, name="session-variable-example"),
 ]
 
 # Add in static routes so daphne can serve files; these should
