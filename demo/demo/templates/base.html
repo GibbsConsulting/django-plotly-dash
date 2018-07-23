@@ -13,25 +13,20 @@
    <title>Django Plotly Dash Examples - {%block title%}{%endblock%}</title>
  </head>
  <body>
-   <header>
-     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-       <div class="navbar-nav">
-         <a class="navbar-brand" href="#">
-           <img src="{%static "demo/logo.svg"%}" alt="Logo"/>
-         </a>
-         {%block demo_items%}
-         <a class="nav-item nav-link btn btn-lg" href="{%url "home"%}">Contents</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-one"%}">Demo One - Simple Use</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-two"%}">Demo Two - Initial State</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-three"%}">Demo Three - Enhanced Callbacks</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-four"%}">Demo Four - Live Updating</a>
-         {%endblock%}
-       </div>
-     </nav>
-   </header>
-   <main>
-     <div class="container">
-       {%block content%}{%endblock%}
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+     <div class="navbar-nav">
+       <a class="navbar-brand" href="#">
+         <img src="{%static "demo/logo.svg"%}" alt="Logo"/>
+       </a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "home"%}">Contents</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-one"%}">Demo One - Simple Use</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-two"%}">Demo Two - Initial State</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-three"%}">Demo Three - Enhanced Callbacks</a>
+       <a class="nav-item nav-link btn btn-lg" href="{%url "demo-four"%}">Demo Four - Live Updating</a>
+
+       <a class="nav-item nav-link btn btn-lg"
+          target="_blank"
+          href="https://django-plotly-dash.readthedocs.io/en/latest/">Online Documentation</a>
      </div>
    </main>
    {%block footer%}

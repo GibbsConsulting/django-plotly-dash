@@ -31,6 +31,8 @@ from .views import routes, layout, dependencies, update, main_view, component_su
 
 from .app_name import app_name, main_view_label
 
+from .views import add_to_session
+
 urlpatterns = [
     path('instance/<slug:ident>_dash-routes', routes, name="routes"),
     path('instance/<slug:ident>_dash-layout', layout, name="layout"),
@@ -50,4 +52,6 @@ urlpatterns = [
     path('app/<slug:ident>', main_view, {'stateless':True}, name='app-%s'%main_view_label),
     path('app/<slug:ident>_dash-component-suites/<slug:component>/<resource>',
          component_suites, {'stateless':True}, name='app-component-suites'),
+
+    path('session', add_to_session, name="session-variable-example"),
     ]

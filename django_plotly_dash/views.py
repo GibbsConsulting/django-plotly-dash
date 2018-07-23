@@ -106,3 +106,17 @@ def component_suites(request, resource=None, component=None, **kwargs):
         redone_url = "/static/dash/%s/%s" %(component, resource)
 
     return HttpResponseRedirect(redirect_to=redone_url)
+
+
+from django.template.response import TemplateResponse
+
+def add_to_session(request, template_name="index.html", **kwargs):
+    'Add some info to a session in a place that django-plotly-dash can pass to a callback'
+
+    django_plotly_dash = request.session.get("django_plotly_dash", dict())
+
+    session_add_count = django_plotly_dash.get('add_counter',0)
+    django_plotly_dash['add_counter'] = session_add_count + 1
+    request.session['django_plotly_dash'] = django_plotly_dash
+
+    return TemplateResponse(request, template_name, {})

@@ -12,6 +12,13 @@ The messages are constrained to be JSON serialisable, as that is how they are tr
 also be as small as possible given that they travel from the server, to each interested client, and then back to the
 server again as an argument to one or more callback functions.
 
+The round-trip of the message is a deliberate design choice, in order to enable the value within the message to be treated
+as much as possible like any other piece of data within a ``Dash`` application. This data is essentially stored
+on the client side of the client-server split, and passed to the server when each callback is invoked; note that this also
+encourages designs that keep the size of in-application data small. An
+alternative approach, such as directly invoking
+a callback in the server, would require the server to maintain its own copy of the application state.
+
 Live updating requires a server setup that is considerably more
 complex than the alternative, namely use of the built-in `Interval <https://dash.plot.ly/live-updates>`_ component. However, live
 updating can be used to reduce server load (as callbacks are only made when needed) and application latency (as callbacks are
@@ -64,10 +71,38 @@ introduces another indeterminacy.
 HTTP Endpoint
 -------------
 
-There is an HTTP endpoint that allows direct insertion of messages into a message channel.
+There is an HTTP endpoint, configured with
+the ``http_route`` option, that allows direct insertion of messages into a message channel. It is a
+direct equivalent of calling the ``send_to_pipe_channel`` function, and
+expects the ``channel_name``, ``label`` and ``value`` arguments to be provided in a JSON-encoded
+dictionary.
+
+.. code-block:: bash
+
+   curl -d '{"channel_name":"live_button_counter",
+             "label":"named_counts",
+             "value":{"click_colour":"cyan"}}'
+             http://localhost:8000/dpd/views/poke/
+
+This will cause the (JSON-encoded) ``value`` argument to be sent on the ``channel_name`` channel with
+the given ``label``.
+
+The provided endpoint skips any CSRF checks
+and does not perform any security checks such as authentication or authorisation, and should
+be regarded as a starting point for a more complete implementation if exposing this functionality is desired. On the
+other hand, if this endpoint is restricted so that it is only available from trusted sources such as the server
+itself, it does provide a mechanism for Django code running outside of the ASGI server, such as in a WSGI process or
+Celery worker, to push a message out to running applications.
 
 Deployment
 ----------
 
-Need redis and daphne.
+The live updating feature needs both Redis, as it is the only supported backend at present for v2.0 and up of
+Channels, and Daphne or any other ASGI server for production use. It is also good practise to place the server(s) behind
+a reverse proxy such as Nginx; this can then also be configured to serve Django's static files.
 
+A further consideration is the use of a WSGI server, such as Gunicorn, to serve the non-asynchronous subset of the http
+routes, albeit at the expense of having to separately manage ASGI and WSGI servers. This can be easily achieved through selective
+routing at the reverse proxy level, and is the driver behind the ``ws_route`` configuration option.
+
+In passing, note that the demo also uses Redis as the caching backend for Django.
