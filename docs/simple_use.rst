@@ -56,7 +56,7 @@ in :ref:`templates <template_tags>`:
 
   {%load plotly_dash%}
 
-  {%plotly_item name="SimpleExample"%}
+  {%plotly_app name="SimpleExample"%}
 
 Direct use in this manner, without any application state or
 use of live updating, is equivalent to inserting an ``iframe`` containing the

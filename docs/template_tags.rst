@@ -18,7 +18,7 @@ Importing the ``plotly_dash`` library provides the ``plotly_app`` template tag:
 
   {%load plotly_dash%}
 
-  {%plotly_item name="SimpleExample"%}
+  {%plotly_app name="SimpleExample"%}
 
 This tag inserts
 a ``DjangoDash`` app within a page as a responsive ``iframe`` element.
@@ -45,7 +45,7 @@ This template tag has to be inserted on every page that uses live updating:
 
   {%load plotly_dash%}
 
-  {%plotly_item ... DjangoDash instances using live updating ... %}
+  {%plotly_app ... DjangoDash instances using live updating ... %}
 
   {%plotly_message_pipe%}
 
