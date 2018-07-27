@@ -11,7 +11,7 @@ register = template.Library()
 
 ws_default_url = "/%s" % pipe_ws_endpoint_name()
 
-@register.inclusion_tag("django_plotly_dash/plotly_item.html", takes_context=True)
+@register.inclusion_tag("django_plotly_dash/plotly_app.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
     'Insert a dash application using a html iframe'
 

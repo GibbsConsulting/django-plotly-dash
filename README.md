@@ -108,7 +108,7 @@ templates:
 ```jinja2
 {% load plotly_dash %}
 
-{% plotly_item name="SimpleExample" %}
+{% plotly_app name="SimpleExample" %}
 ```
 
 The registration code needs to be in a location
