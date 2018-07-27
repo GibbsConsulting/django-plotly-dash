@@ -5,8 +5,10 @@ Utility functions
 from django.conf import settings
 
 def _get_settings():
-    pd_settings = settings.PLOTLY_DASH
-    return pd_settings if pd_settings else {}
+    try:
+        return settings.PLOTLY_DASH
+    except AttributeError:
+        return {}
 
 def pipe_ws_endpoint_name():
     'Return the endpoint for pipe websocket connections'
