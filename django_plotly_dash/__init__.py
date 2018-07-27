@@ -6,6 +6,6 @@ This module provides a wrapper around a Plotly Dash instance
 and enables it to be served as part of a Django application.
 '''
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 from .dash_wrapper import DjangoDash
