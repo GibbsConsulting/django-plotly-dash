@@ -6,6 +6,7 @@
    {%load bootstrap4%}
    {%bootstrap_css%}
    {%bootstrap_javascript jquery="full"%}
+   {%block extra_header%}{%endblock%}
    {%block app_header_css%}
    <link rel="stylesheet" type="text/css" href="{%static "demo/demo.css"%}"></link>
    {%endblock%}
@@ -33,9 +34,8 @@
        {%block content%}{%endblock%}
      </div>
    </main>
-   <footer>
-     {%block footer%}{%endblock%}
-   </footer>
+   {%block footer%}
+   {%endblock%}
 </body>
 {%block post_body%}{%endblock%}
 </html>
