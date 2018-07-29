@@ -6,9 +6,11 @@ from django.conf import settings
 
 def _get_settings():
     try:
-        return settings.PLOTLY_DASH
+        the_settings = settings.PLOTLY_DASH
     except AttributeError:
-        return {}
+        the_settings = None
+
+    return the_settings if the_settings else {}
 
 def pipe_ws_endpoint_name():
     'Return the endpoint for pipe websocket connections'

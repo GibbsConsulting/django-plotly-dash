@@ -5,9 +5,9 @@
 import uuid
 import random
 
-import pandas as pd
-
 from datetime import datetime
+
+import pandas as pd
 
 from django.core.cache import cache
 
@@ -21,6 +21,8 @@ import dpd_components as dpd
 
 from django_plotly_dash import DjangoDash
 from django_plotly_dash.consumers import send_to_pipe_channel
+
+#pylint: disable=too-many-arguments, unused-argument, unused-variable
 
 app = DjangoDash('SimpleExample')
 
@@ -146,12 +148,12 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
             timestamp = gc_timestamp
             change_col = "green"
 
-        value={'red_clicks':red_clicks,
-               'blue_clicks':blue_clicks,
-               'green_clicks':green_clicks,
-               'click_colour':change_col,
-               'click_timestamp':timestamp,
-               'user':str(kwargs.get('user', 'UNKNOWN'))}
+        value = {'red_clicks':red_clicks,
+                 'blue_clicks':blue_clicks,
+                 'green_clicks':green_clicks,
+                 'click_colour':change_col,
+                 'click_timestamp':timestamp,
+                 'user':str(kwargs.get('user', 'UNKNOWN'))}
 
         send_to_pipe_channel(channel_name="live_button_counter",
                              label="named_counts",
@@ -162,7 +164,7 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
                                                                                              datetime.fromtimestamp(0.001*timestamp))
 
 liveOut = DjangoDash("LiveOutput",
-                     )#serve_locally=True)
+                    )#serve_locally=True)
 
 def _get_cache_key(state_uid):
     return "demo-liveout-s4-%s" % state_uid
@@ -208,18 +210,18 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
 
     # extract incoming info from the message and update the internal state
     user = named_count.get('user', None)
-    click_colour = named_count.get('click_colour',None)
-    click_timestamp = named_count.get('click_timestamp',0)
+    click_colour = named_count.get('click_colour', None)
+    click_timestamp = named_count.get('click_timestamp', 0)
 
     if click_colour:
-        colour_set = state.get(click_colour,None)
+        colour_set = state.get(click_colour, None)
 
         if not colour_set:
             colour_set = [(None, 0, 100) for i in range(5)]
 
         _, last_ts, prev = colour_set[-1]
         if click_timestamp > last_ts:
-            colour_set.append((user, click_timestamp, prev * random.lognormvariate(0.0,0.1)),)
+            colour_set.append((user, click_timestamp, prev * random.lognormvariate(0.0, 0.1)),)
             colour_set = colour_set[-100:]
 
         state[click_colour] = colour_set
@@ -257,13 +259,12 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
               'green':'#00FF00',
              }
 
-    traces = [ go.Scatter(y=df[colour],
-                          x=df['index'],
-                          name=colour,
-                          line=dict(color=colors[colour]),
-                          ) for colour in colour_series.keys() ]
+    traces = [go.Scatter(y=df[colour],
+                         x=df['index'],
+                         name=colour,
+                         line=dict(color=colors[colour]),
+                        ) for colour in colour_series]
 
     return {'data':traces,
             #'layout': go.Layout
-            }
-
+           }
