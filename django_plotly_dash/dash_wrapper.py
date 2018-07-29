@@ -176,6 +176,8 @@ class PseudoFlask:
         pass
     def run(self, *args, **kwargs):
         pass
+    def register_blueprint(*args, **kwargs):
+        pass
 
 class WrappedDash(Dash):
     'Wrapper around the Plotly Dash application instance'
