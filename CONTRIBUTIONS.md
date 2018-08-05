@@ -7,11 +7,13 @@ the documentation for details on how to build, test and document contributions.
 
 Once ready, submit a pull request to the [main repository](https://github.com/GibbsConsulting/django-plotly-dash).
 
-Unless you request otherwise, you will be added to the list of contributors below.
+Unless you request otherwise, you will be added to the list of contributors below. If you're not on the list
+and think you should be, please send an email to <codebase@gibbsconsulting.ca>
 
 ## Contributors
 
-Thanks to the following people who have submitted pull requests that have made it into the codebase
+Thanks to the following people:
 
 [delsim](https://github.com/delsim)
+
 [weber-s](https://github.com/weber-s)

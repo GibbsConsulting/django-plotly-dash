@@ -1,3 +1,15 @@
+.. _license
+
+License
+=======
+
+The ``django-plotly-dash`` package is made available under the MIT license.
+
+The license text can be found in the LICENSE file in the root directory of the source code, along with
+a CONTRIBUTIONS.md file that includes a list of the contributors to the codebase.
+
+A copy of the license, correct at the time of writing of this documentation, follows:
+
 MIT License
 
 Copyright (c) 2018 Gibbs Consulting and others - see CONTRIBUTIONS.md
