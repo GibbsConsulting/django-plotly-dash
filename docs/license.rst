@@ -1,5 +1,16 @@
-'''
-Routing for standard pipe connections
+.. _license
+
+License
+=======
+
+The ``django-plotly-dash`` package is made available under the MIT license.
+
+The license text can be found in the LICENSE file in the root directory of the source code, along with
+a CONTRIBUTIONS.md file that includes a list of the contributors to the codebase.
+
+A copy of the license, correct at the time of writing of this documentation, follows:
+
+MIT License
 
 Copyright (c) 2018 Gibbs Consulting and others - see CONTRIBUTIONS.md
 
@@ -20,20 +31,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
-
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-from channels.http import AsgiHandler
-
-from django.conf.urls import url
-
-from .consumers import MessageConsumer, PokePipeConsumer
-from .util import pipe_ws_endpoint_name, http_endpoint
-
-# TODO document this and discuss embedding with other routes
-application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(URLRouter([url(pipe_ws_endpoint_name(), MessageConsumer),])),
-    'http': AuthMiddlewareStack(URLRouter([url(http_endpoint("poke"), PokePipeConsumer),
-                                           url("^", AsgiHandler),])), # AsgiHandler is 'the normal Django view handlers'
-    })
