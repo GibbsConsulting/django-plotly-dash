@@ -1,3 +1,3 @@
-<div style="{{dstyle}}">
+<div style="{{dstyle}}" {%autoescape off%}{{app.extra_html_properties}}{%endautoescape%}>
   <iframe src="{{app.base_url}}" style="{{istyle}}"frameborder="{{fbs}}"></iframe>
 </div>

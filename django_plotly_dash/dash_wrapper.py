@@ -302,7 +302,7 @@ class WrappedDash(Dash):
         return self._flask_app
 
     def base_url(self):
-        'Base url of this omponent'
+        'Base url of this component'
         return self._base_pathname
 
     def app_context(self, *args, **kwargs):
@@ -412,3 +412,12 @@ class WrappedDash(Dash):
             da.update_current_state(output['id'], output['property'], value)
 
         return res
+
+    def extra_html_properties(self):
+        '''
+        Return extra html properties to allow individual apps to be styled separately.
+
+        The content returned from this function is injected unescaped into templates.
+        '''
+
+        return 'class="django-plotly-dash django-plotly-dash-iframe"'
