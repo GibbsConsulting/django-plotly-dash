@@ -1,4 +1,5 @@
-'''dash_wrapper
+'''
+dash_wrapper
 
 This module provides a DjangoDash class that can be used to
 expose a Plotly Dasb application through a Django server
@@ -420,4 +421,7 @@ class WrappedDash(Dash):
         The content returned from this function is injected unescaped into templates.
         '''
 
-        return 'class="django-plotly-dash django-plotly-dash-iframe"'
+        pre_slugified_id = self._uid
+        slugified_id = slugify(pre_slugified_id)
+
+        return 'class="django-plotly-dash django-plotly-dash-iframe django-plotly-dash-app-%s"' % slugified_id
