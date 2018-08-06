@@ -25,3 +25,4 @@ Contents
    configuration
    development
    faq
+   license
