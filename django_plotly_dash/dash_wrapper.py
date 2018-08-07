@@ -1,4 +1,5 @@
-'''dash_wrapper
+'''
+dash_wrapper
 
 This module provides a DjangoDash class that can be used to
 expose a Plotly Dasb application through a Django server
@@ -196,7 +197,7 @@ class PseudoFlask:
         pass
     def run(self, *args, **kwargs):
         pass
-    def register_blueprint(*args, **kwargs):
+    def register_blueprint(self, *args, **kwargs):
         pass
 
 class WrappedDash(Dash):
@@ -302,7 +303,7 @@ class WrappedDash(Dash):
         return self._flask_app
 
     def base_url(self):
-        'Base url of this omponent'
+        'Base url of this component'
         return self._base_pathname
 
     def app_context(self, *args, **kwargs):
@@ -412,3 +413,28 @@ class WrappedDash(Dash):
             da.update_current_state(output['id'], output['property'], value)
 
         return res
+
+    def slugified_id(self):
+        'Return the app id in a slug-friendly form'
+        pre_slugified_id = self._uid
+        return slugify(pre_slugified_id)
+
+    def extra_html_properties(self, prefix=None, postfix=None, template_type=None):
+        '''
+        Return extra html properties to allow individual apps to be styled separately.
+
+        The content returned from this function is injected unescaped into templates.
+        '''
+
+        prefix = prefix if prefix else "django-plotly-dash"
+
+        post_part = "-%s" % postfix if postfix else ""
+        template_type = template_type if template_type else "iframe"
+
+        slugified_id = self.slugified_id()
+
+        return "%(prefix)s %(prefix)s-%(template_type)s %(prefix)s-app-%(slugified_id)s%(post_part)s" % {'slugified_id':slugified_id,
+                                                                                                         'post_part':post_part,
+                                                                                                         'template_type':template_type,
+                                                                                                         'prefix':prefix,
+                                                                                                        }
