@@ -16,6 +16,9 @@ below.
       # Route used for direct http insertion of pipe messages
       "http_route" : "dpd/views",
 
+      # Flag controlling existince of http poke endpoint
+      "http_poke_enabled" : True,
+
       # Insert data for the demo when migrating
       "insert_demo_migrations" : False,
   }

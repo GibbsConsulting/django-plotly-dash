@@ -134,6 +134,7 @@ liveIn.layout = html.Div([
     html.Div(id='button_local_counter', children="Press any button to start"),
     ], className="")
 
+#pylint: disable=too-many-arguments
 @liveIn.expanded_callback(
     dash.dependencies.Output('button_local_counter', 'children'),
     [dash.dependencies.Input('red-button', 'n_clicks'),
@@ -186,10 +187,10 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
                                                                                              datetime.fromtimestamp(0.001*timestamp))
 
 liveOut = DjangoDash("LiveOutput",
-                    )#serve_locally=True)
+                     )#serve_locally=True)
 
 def _get_cache_key(state_uid):
-    return "demo-liveout-s4-%s" % state_uid
+    return "demo-liveout-s6-%s" % state_uid
 
 def generate_liveOut_layout():
     'Generate the layout per-app, generating each tine a new uuid for the state_uid argument'
@@ -210,6 +211,7 @@ def generate_liveOut_layout():
 
 liveOut.layout = generate_liveOut_layout
 
+#pylint: disable=unused-argument
 #@liveOut.expanded_callback(
 @liveOut.callback(
     dash.dependencies.Output('internal_state', 'children'),
@@ -242,6 +244,18 @@ def callback_liveOut_pipe_in(named_count, state_uid, **kwargs):
             colour_set = [(None, 0, 100) for i in range(5)]
 
         _, last_ts, prev = colour_set[-1]
+
+        # Loop over all existing timestamps and find the latest one
+        if not click_timestamp or click_timestamp < 1:
+            click_timestamp = 0
+
+            for _, the_colour_set in state.items():
+                _, lts, _ = the_colour_set[-1]
+                if lts > click_timestamp:
+                    click_timestamp = lts
+
+            click_timestamp = click_timestamp + 1000
+
         if click_timestamp > last_ts:
             colour_set.append((user, click_timestamp, prev * random.lognormvariate(0.0, 0.1)),)
             colour_set = colour_set[-100:]
@@ -268,23 +282,28 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
 
     colour_series = {}
 
-    for colour, values in state.items():
-        timestamps = [datetime.fromtimestamp(int(0.001*ts)) for _, ts, _ in values if ts > 0]
-        users = [user for user, ts, _ in values if ts > 0]
-        levels = [level for _, ts, level in values if ts > 0]
-        colour_series[colour] = pd.Series(levels, index=timestamps).groupby(level=0).first()
-
-    df = pd.DataFrame(colour_series).fillna(method="ffill").reset_index()[-25:]
-
     colors = {'red':'#FF0000',
               'blue':'#0000FF',
               'green':'#00FF00',
+              'yellow': '#FFFF00',
+              'cyan': '#00FFFF',
+              'magenta': '#FF00FF',
+              'black' : '#000000',
              }
+
+    for colour, values in state.items():
+        timestamps = [datetime.fromtimestamp(int(0.001*ts)) for _, ts, _ in values if ts > 0]
+        #users = [user for user, ts, _ in values if ts > 0]
+        levels = [level for _, ts, level in values if ts > 0]
+        if colour in colors:
+            colour_series[colour] = pd.Series(levels, index=timestamps).groupby(level=0).first()
+
+    df = pd.DataFrame(colour_series).fillna(method="ffill").reset_index()[-25:]
 
     traces = [go.Scatter(y=df[colour],
                          x=df['index'],
                          name=colour,
-                         line=dict(color=colors[colour]),
+                         line=dict(color=colors.get(colour, '#000000')),
                         ) for colour in colour_series]
 
     return {'data':traces,

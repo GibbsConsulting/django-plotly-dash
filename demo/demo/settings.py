@@ -125,6 +125,8 @@ PLOTLY_DASH = {
     "ws_route" : "ws/channel",
 
     "insert_demo_migrations" : True,  # Insert model instances used by the demo
+
+    "http_poke_enabled" : True, # Flag controlling availability of direct-to-messaging http endpoint
     }
 
 # Static files (CSS, JavaScript, Images)
@@ -165,6 +167,10 @@ CHANNEL_LAYERS = {
 # can be useful for development especially if offline - we add in the root directory
 # of each module. This is a bit of fudge and only needed if serve_locally=True is
 # set on a DjangoDash instance.
+#
+# Note that this makes all of the python module (including .py and .pyc) files available
+# through the static route. This is not a big deal for development but at the same time
+# not particularly neat or tidy.
 
 if DEBUG:
 
