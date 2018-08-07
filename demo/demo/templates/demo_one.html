@@ -10,16 +10,25 @@
   the plotly_app template tag with the name of a dash application represents the simplest use of
   the django_plotly_dash framework.
 </p>
+<p>
+  The plotly_class tag is also used to wrap the application in css class names based on the
+  application (django-plotly-dash), the
+  type of the embedding (iframe), and the slugified version of the app name (simpleexample).
+</p>
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>
-    <p><span>{</span>% plotly_app name="SimpleExample" %}</p>
+    <p>&lt;div class="<span>{</span>% plotly_class name="SimpleExample"%}">
+    <p class="ml-3"><span>{</span>% plotly_app name="SimpleExample" %}</p>
+    <p>&lt;\div>
   </div>
 </div>
 <p></p>
 <div class="card border-dark">
   <div class="card-body">
-    {%plotly_app name="SimpleExample"%}
+    <div class="{%plotly_class name="SimpleExample"%}">
+      {%plotly_app name="SimpleExample"%}
+    </div>
   </div>
 </div>
 {%endblock%}
