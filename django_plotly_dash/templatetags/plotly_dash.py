@@ -75,6 +75,7 @@ def plotly_message_pipe(context, url=None):
 
 @register.simple_tag()
 def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
+    'Return a slug-friendly identifier'
     if name is not None:
         da, app = DashApp.locate_item(name, stateless=True)
 
@@ -92,6 +93,7 @@ def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
 
 @register.simple_tag()
 def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, template_type=None):
+    'Return a string of space-separated class names'
 
     if name is not None:
         da, app = DashApp.locate_item(name, stateless=True)

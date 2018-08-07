@@ -78,7 +78,9 @@ The tag arguments are:
 :da = None: An existing ``django_plotly_dash.models.DashApp`` model instance.
 :postfix = None: An optional string; if specified it is appended to the identifier with a hyphen.
 
-The validity rules for these arguments are the same as those for the ``plotly_app`` template tag.
+The validity rules for these arguments are the same as those for the ``plotly_app`` template tag. If
+supplied, the ``postfix`` argument
+should already be in a slug-friendly form, as no processing is performed on it.
 
 The ``plotly_class`` template tag
 -----------------------------------------
@@ -109,4 +111,6 @@ The tag inserts a string with three class names in it. One is just the ``prefix`
 has the ``template_type`` appended, and the final one has the app identifier (as generated
 by the ``plotly_app_identifier`` tag) and any ``postfix`` appended.
 
-The validity rules for these arguments are the same as those for the ``plotly_app`` template tag.
+The validity rules for these arguments are the same as those for the ``plotly_app``  and ``plotly_app_identifier`` template tags. Note
+that none of the ``prefix``, ``postfix`` and ``template_type`` arguments are modified and they should
+already be in a slug-friendly form, or otherwise fit for their intended purpose.

@@ -197,7 +197,7 @@ class PseudoFlask:
         pass
     def run(self, *args, **kwargs):
         pass
-    def register_blueprint(*args, **kwargs):
+    def register_blueprint(self, *args, **kwargs):
         pass
 
 class WrappedDash(Dash):
@@ -415,6 +415,7 @@ class WrappedDash(Dash):
         return res
 
     def slugified_id(self):
+        'Return the app id in a slug-friendly form'
         pre_slugified_id = self._uid
         return slugify(pre_slugified_id)
 
@@ -436,4 +437,4 @@ class WrappedDash(Dash):
                                                                                                          'post_part':post_part,
                                                                                                          'template_type':template_type,
                                                                                                          'prefix':prefix,
-                                                                                                         }
+                                                                                                        }
