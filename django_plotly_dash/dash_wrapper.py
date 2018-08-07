@@ -456,3 +456,9 @@ class WrappedDash(Dash):
                                                                                                          'template_type':template_type,
                                                                                                          'prefix':prefix,
                                                                                                         }
+
+    def interpolate_index(self, **kwargs):
+        resp = super(WrappedDash, self).interpolate_index(**kwargs)
+
+        #print(resp)
+        return resp
