@@ -72,3 +72,36 @@ def plotly_message_pipe(context, url=None):
     'Insert script for providing background websocket connection'
     url = url if url else ws_default_url
     return locals()
+
+@register.simple_tag()
+def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
+    if name is not None:
+        da, app = DashApp.locate_item(name, stateless=True)
+
+    if slug is not None:
+        da, app = DashApp.locate_item(slug, stateless=False)
+
+    if not app:
+        app = da.as_dash_instance()
+
+    slugified_id = app.slugified_id()
+
+    if postfix:
+        return "%s-%s" %(slugified_id, postfix)
+    return slugified_id
+
+@register.simple_tag()
+def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, template_type=None):
+
+    if name is not None:
+        da, app = DashApp.locate_item(name, stateless=True)
+
+    if slug is not None:
+        da, app = DashApp.locate_item(slug, stateless=False)
+
+    if not app:
+        app = da.as_dash_instance()
+
+    return app.extra_html_properties(prefix=prefix,
+                                     postfix=postfix,
+                                     template_type=template_type)

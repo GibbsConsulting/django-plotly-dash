@@ -414,14 +414,26 @@ class WrappedDash(Dash):
 
         return res
 
-    def extra_html_properties(self):
+    def slugified_id(self):
+        pre_slugified_id = self._uid
+        return slugify(pre_slugified_id)
+
+    def extra_html_properties(self, prefix=None, posfix=None, template_type=None):
         '''
         Return extra html properties to allow individual apps to be styled separately.
 
         The content returned from this function is injected unescaped into templates.
         '''
 
-        pre_slugified_id = self._uid
-        slugified_id = slugify(pre_slugified_id)
+        prefix = prefix if prefix else "django-plotly-dash"
 
-        return 'class="django-plotly-dash django-plotly-dash-iframe django-plotly-dash-app-%s"' % slugified_id
+        post_part = "-%s" % posfix if posfix else ""
+        template_type = template_type if template_type else "iframe"
+
+        slugified_id = self.slugified_id()
+
+        return "%(prefix)s %(prefix)s-%(template_type)s %(prefix)s-app-%(slugified_id)s%(post_part)s" % {'slugified_id':slugified_id,
+                                                                                                         'post_part':post_part,
+                                                                                                         'template_type':template_type,
+                                                                                                         'prefix':prefix,
+                                                                                                         }
