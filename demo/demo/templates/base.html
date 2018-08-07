@@ -10,6 +10,7 @@
    {%block app_header_css%}
    <link rel="stylesheet" type="text/css" href="{%static "demo/demo.css"%}"></link>
    {%endblock%}
+   {%plotly_header%}
    <title>Django Plotly Dash Examples - {%block title%}{%endblock%}</title>
  </head>
  <body>
@@ -39,6 +40,7 @@
    </main>
    {%block footer%}
    {%endblock%}
-</body>
-{%block post_body%}{%endblock%}
+ </body>
+ {%block post_body%}{%endblock%}
+ {%plotly_footer%}
 </html>
