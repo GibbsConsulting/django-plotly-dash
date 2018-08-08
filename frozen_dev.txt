@@ -18,17 +18,17 @@ constantly==15.1.0
 coverage==4.5.1
 daphne==2.2.0
 dash==0.21.1
-dash-core-components==0.22.1
-dash-html-components==0.10.1
+dash-core-components==0.24.1
+dash-html-components==0.11.0
 dash-renderer==0.12.1
 decorator==4.3.0
 Django==2.0.5
 django-bootstrap4==0.0.6
--e git+https://github.com/delsim/django-plotly-dash.git@348c9f646118453dc1c25ebbe4c3333de459d996#egg=django_plotly_dash
+-e git+https://github.com/delsim/django-plotly-dash.git@c2bdc189cb4c63c16374446f7aadeb79b1521a67#egg=django_plotly_dash
 django-redis==4.9.0
 docopt==0.6.2
 docutils==0.14
--e git+https://github.com/delsim/dpd-components.git@29e69181607613368f08e5367bd226170d44a184#egg=dpd_components
+-e git+https://delsim@github.com/delsim/dpd-components.git@57c261067c34d1d033c96a239384ae30b181ceeb#egg=dpd_components
 Flask==1.0.2
 Flask-Compress==1.4.0
 graphviz==0.8.3
