@@ -100,11 +100,11 @@ class DjangoDash:
             bootstrap_source = css_url()['href']
             self.css.append_script({'external_url':[bootstrap_source,]})
 
-    def as_dash_instance(self):
+    def as_dash_instance(self, cache_id=None):
         '''
         Form a dash instance, for stateless use of this app
         '''
-        return self.do_form_dash_instance()
+        return self.do_form_dash_instance(cache_id=cache_id)
 
     def handle_current_state(self):
         'Do nothing impl - only matters if state present'
@@ -116,7 +116,7 @@ class DjangoDash:
         'Do nothing impl - only matters if state present'
         pass
 
-    def get_base_pathname(self, specific_identifier):
+    def get_base_pathname(self, specific_identifier, cache_id):
         'Base path name of this instance, taking into account any state or statelessness'
         if not specific_identifier:
             app_pathname = "%s:app-%s"% (app_name, main_view_label)
@@ -125,13 +125,19 @@ class DjangoDash:
             app_pathname = "%s:%s" % (app_name, main_view_label)
             ndid = specific_identifier
 
-        full_url = reverse(app_pathname, kwargs={'ident':ndid})
+        kwargs = {'ident': ndid}
+
+        if cache_id:
+            kwargs['cache_id'] = cache_id
+            app_pathname = app_pathname + "--args"
+
+        full_url = reverse(app_pathname, kwargs=kwargs)
         return ndid, full_url
 
-    def do_form_dash_instance(self, replacements=None, specific_identifier=None):
+    def do_form_dash_instance(self, replacements=None, specific_identifier=None, cache_id=None):
         'Perform the act of constructing a Dash instance taking into account state'
 
-        ndid, base_pathname = self.get_base_pathname(specific_identifier)
+        ndid, base_pathname = self.get_base_pathname(specific_identifier, cache_id)
         return self.form_dash_instance(replacements, ndid, base_pathname)
 
     def form_dash_instance(self, replacements=None, ndid=None, base_pathname=None):
@@ -242,16 +248,24 @@ class WrappedDash(Dash):
         '''
         return self._use_dash_layout
 
-    def augment_initial_layout(self, base_response):
+    def augment_initial_layout(self, base_response, initial_arguments=None):
         'Add application state to initial values'
-        if self.use_dash_layout() and False:
+        if self.use_dash_layout() and not initial_arguments and False:
             return base_response.data, base_response.mimetype
+
         # Adjust the base layout response
         baseDataInBytes = base_response.data
         baseData = json.loads(baseDataInBytes.decode('utf-8'))
+
+        # Also add in any initial arguments
+        if initial_arguments:
+            if isinstance(initial_arguments, str):
+                initial_arguments = json.loads(initial_arguments)
+
         # Walk tree. If at any point we have an element whose id
         # matches, then replace any named values at this level
-        reworked_data = self.walk_tree_and_replace(baseData)
+        reworked_data = self.walk_tree_and_replace(baseData, initial_arguments)
+
         response_data = json.dumps(reworked_data,
                                    cls=PlotlyJSONEncoder)
 
@@ -274,7 +288,7 @@ class WrappedDash(Dash):
             for element in data:
                 self.walk_tree_and_extract(element, target)
 
-    def walk_tree_and_replace(self, data):
+    def walk_tree_and_replace(self, data, overrides):
         '''
         Walk the tree. Rely on json decoding to insert instances of dict and list
         ie we use a dna test for anatine, rather than our eyes and ears...
@@ -285,17 +299,19 @@ class WrappedDash(Dash):
             # look for id entry
             thisID = data.get('id', None)
             if thisID is not None:
-                replacements = self._replacements.get(thisID, {})
+                replacements = overrides.get(thisID, None) if overrides else None
+                if not replacements:
+                    replacements = self._replacements.get(thisID, {})
             # walk all keys and replace if needed
             for k, v in data.items():
                 r = replacements.get(k, None)
                 if r is None:
-                    r = self.walk_tree_and_replace(v)
+                    r = self.walk_tree_and_replace(v, overrides)
                 response[k] = r
             return response
         if isinstance(data, list):
             # process each entry in turn and return
-            return [self.walk_tree_and_replace(x) for x in data]
+            return [self.walk_tree_and_replace(x, overrides) for x in data]
         return data
 
     def flask_app(self):
@@ -328,7 +344,7 @@ class WrappedDash(Dash):
     # pylint: disable=no-member
     @Dash.layout.setter
     def layout(self, value):
-        'Overloaded layoyt function to fix component names as needed'
+        'Overloaded layout function to fix component names as needed'
 
         if self._adjust_id:
             self._fix_component_id(value)

@@ -27,6 +27,7 @@ SOFTWARE.
 import json
 
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.cache import cache
 
 from .models import DashApp
 
@@ -44,13 +45,19 @@ def dependencies(request, ident, stateless=False, **kwargs):
         return HttpResponse(resp.data,
                             content_type=resp.mimetype)
 
-def layout(request, ident, stateless=False, **kwargs):
+def layout(request, ident, stateless=False, cache_id=None, **kwargs):
     'Return the layout of the dash application'
     _, app = DashApp.locate_item(ident, stateless)
 
     view_func = app.locate_endpoint_function('dash-layout')
     resp = view_func()
-    response_data, mimetype = app.augment_initial_layout(resp)
+
+    if cache_id:
+        initial_arguments = cache.get(cache_id)
+    else:
+        initial_arguments = None
+
+    response_data, mimetype = app.augment_initial_layout(resp, initial_arguments)
     return HttpResponse(response_data,
                         content_type=mimetype)
 
@@ -88,9 +95,9 @@ def update(request, ident, stateless=False, **kwargs):
     return HttpResponse(resp.data,
                         content_type=resp.mimetype)
 
-def main_view(request, ident, stateless=False, **kwargs):
+def main_view(request, ident, stateless=False, cache_id=None, **kwargs):
     'Main view for a dash app'
-    _, app = DashApp.locate_item(ident, stateless)
+    _, app = DashApp.locate_item(ident, stateless, cache_id=cache_id)
 
     view_func = app.locate_endpoint_function()
     resp = view_func()
