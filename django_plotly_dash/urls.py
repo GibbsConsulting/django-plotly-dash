@@ -52,26 +52,3 @@ for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '
                                 view_function,
                                 args,
                                 name=route_name))
-
-urlpatterns = urlpatterns + [
-    #path('instance/<slug:ident>_dash-routes', routes, name="routes"),
-    #path('instance/<slug:ident>_dash-layout', layout, name="layout"),
-    #path('instance/<slug:ident>_dash-dependencies', dependencies, name="dependencies"),
-    #path('instance/<slug:ident>_dash-update-component',
-    #     csrf_exempt(update), name="update-component"),
-    #path('instance/<slug:ident>', main_view, name=main_view_label),
-    path('instance/<slug:ident>/initial/<slug:cache_id>/', main_view, name="%s-args" % main_view_label),
-    #path('instance/<slug:ident>_dash-component-suites/<slug:component>/<resource>',
-    #     component_suites, name='component-suites'),
-
-    #path('app/<slug:ident>_dash-routes', routes, {'stateless':True}, name="app-routes"),
-    #path('app/<slug:ident>_dash-layout', layout, {'stateless':True}, name="app-layout"),
-    #path('app/<slug:ident>_dash-dependencies',
-    #     dependencies, {'stateless':True}, name="app-dependencies"),
-    #path('app/<slug:ident>_dash-update-component',
-    #     csrf_exempt(update), {'stateless':True}, name="app-update-component"),
-    #path('app/<slug:ident>', main_view, {'stateless':True}, name='app-%s'%main_view_label),
-    path('app/<slug:ident>/initial/<slug:cache_id>/', main_view, {'stateless':True}, name='app-%s-args'%main_view_label),
-    #path('app/<slug:ident>_dash-component-suites/<slug:component>/<resource>',
-    #     component_suites, {'stateless':True}, name='app-component-suites'),
-    ]
