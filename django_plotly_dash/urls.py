@@ -48,7 +48,7 @@ for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '
                                                      ]:
 
         route_name = '%s%s%s' % (name_prefix, name, name_suffix)
-        urlpatterns.append(path('%s/<slug:ident>%s%s%s' % (base_type, url_ending, url_part, url_suffix),
+        urlpatterns.append(path('%s/<slug:ident>%s/%s%s' % (base_type, url_ending, url_part, url_suffix),
                                 view_function,
                                 args,
                                 name=route_name))

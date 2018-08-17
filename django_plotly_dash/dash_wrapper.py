@@ -132,6 +132,8 @@ class DjangoDash:
             app_pathname = app_pathname + "--args"
 
         full_url = reverse(app_pathname, kwargs=kwargs)
+        if full_url[-1] != '/':
+            full_url = full_url + '/'
         return ndid, full_url
 
     def do_form_dash_instance(self, replacements=None, specific_identifier=None, cache_id=None):

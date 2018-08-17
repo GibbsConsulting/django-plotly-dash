@@ -51,6 +51,13 @@ def test_util_error_cases(settings):
     assert http_endpoint("fred") == '^dpd/views/fred/$'
     assert not insert_demo_migrations()
 
+    del settings.PLOTLY_DASH
+
+    assert pipe_ws_endpoint_name() == 'dpd/ws/channel'
+    assert dpd_http_endpoint_root() == "dpd/views"
+    assert http_endpoint("fred") == '^dpd/views/fred/$'
+    assert not insert_demo_migrations()
+
 def test_demo_routing():
     'Test configuration options for the demo'
 
