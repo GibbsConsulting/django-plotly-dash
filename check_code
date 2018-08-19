@@ -2,5 +2,6 @@
 #
 ./check_code_dpd
 ./check_code_demo
+./check_code_demo_test
 #
 

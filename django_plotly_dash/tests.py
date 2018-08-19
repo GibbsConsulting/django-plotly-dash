@@ -82,6 +82,20 @@ def test_direct_access(client):
             assert response.content
             assert response.status_code == 200
 
+    for route_name in ['routes',]:
+        for prefix, arg_map in [('app-', {'ident':'SimpleExample'}),
+                                ('', {'ident':'simpleexample-1'}),]:
+            url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+            try:
+                response = client.get(url)
+                assert False
+            except:
+                assert True
+
+            #assert response.content
+            #assert response.status_code == 200
+
 @pytest.mark.django_db
 def test_updating(client):
     'Check updating of an app using demo test data'
