@@ -31,10 +31,16 @@ The tag arguments are:
 :ratio = 0.1: The ratio of height to width. The container will inherit its width as 100% of its parent, and then rely on
               this ratio to set its height.
 :use_frameborder = "0": HTML element property of the iframe containing the application.
+:initial_arguments = None: Initial arguments overriding app defaults and saved state.
 
 At least one of ``da``, ``slug`` or ``name`` must be provided. An object identified by ``slug`` will always be used, otherwise any
 identified by ``name`` will be. If either of these arguments are provided, they must resolve to valid objects even if
 not used. If neither are provided, then the model instance in ``da`` will be used.
+
+The ``initial_arguments`` are specified as a python dictionary. This can be the actual ``dict`` object, or
+a JSON-encoded string representation. Each entry in the dictionary has the ``id`` as key, and the corresponding
+value is a dictionary mapping property
+name keys to initial values.
 
 .. _plotly_message_pipe:
 
