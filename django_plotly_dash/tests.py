@@ -87,14 +87,13 @@ def test_direct_access(client):
                                 ('', {'ident':'simpleexample-1'}),]:
             url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
+            did_fail = False
             try:
                 response = client.get(url)
-                assert False
             except:
-                assert True
+                did_fail = True
 
-            #assert response.content
-            #assert response.status_code == 200
+            assert did_fail
 
 @pytest.mark.django_db
 def test_updating(client):
