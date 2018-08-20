@@ -187,7 +187,7 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
                                                                                              datetime.fromtimestamp(0.001*timestamp))
 
 liveOut = DjangoDash("LiveOutput",
-                     )#serve_locally=True)
+                    )#serve_locally=True)
 
 def _get_cache_key(state_uid):
     return "demo-liveout-s6-%s" % state_uid

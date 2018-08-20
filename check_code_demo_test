@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+source env/bin/activate
+pushd demo
+pytest demo --cov=demo --cov=django_plotly_dash --cov-report term-missing
+popd

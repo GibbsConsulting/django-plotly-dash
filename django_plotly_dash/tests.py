@@ -51,6 +51,13 @@ def test_util_error_cases(settings):
     assert http_endpoint("fred") == '^dpd/views/fred/$'
     assert not insert_demo_migrations()
 
+    del settings.PLOTLY_DASH
+
+    assert pipe_ws_endpoint_name() == 'dpd/ws/channel'
+    assert dpd_http_endpoint_root() == "dpd/views"
+    assert http_endpoint("fred") == '^dpd/views/fred/$'
+    assert not insert_demo_migrations()
+
 def test_demo_routing():
     'Test configuration options for the demo'
 
@@ -74,6 +81,19 @@ def test_direct_access(client):
 
             assert response.content
             assert response.status_code == 200
+
+    for route_name in ['routes',]:
+        for prefix, arg_map in [('app-', {'ident':'SimpleExample'}),
+                                ('', {'ident':'simpleexample-1'}),]:
+            url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+            did_fail = False
+            try:
+                response = client.get(url)
+            except:
+                did_fail = True
+
+            assert did_fail
 
 @pytest.mark.django_db
 def test_updating(client):

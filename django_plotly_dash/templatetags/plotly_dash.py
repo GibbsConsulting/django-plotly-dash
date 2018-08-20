@@ -24,7 +24,10 @@ SOFTWARE.
 
 # pylint: disable=too-many-arguments, unused-variable, unused-argument
 
+import uuid
+
 from django import template
+from django.core.cache import cache
 
 from django_plotly_dash.models import DashApp
 from django_plotly_dash.util import pipe_ws_endpoint_name
@@ -34,7 +37,7 @@ register = template.Library()
 ws_default_url = "/%s" % pipe_ws_endpoint_name()
 
 @register.inclusion_tag("django_plotly_dash/plotly_app.html", takes_context=True)
-def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False):
+def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False, initial_arguments=None):
     'Insert a dash application using a html iframe'
 
     fbs = '1' if use_frameborder else '0'
@@ -56,14 +59,22 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
 
     app = None
 
+    if initial_arguments:
+        # Generate a cache id
+        cache_id = "dpd-initial-args-%s" % str(uuid.uuid4()).replace('-', '')
+        # Store args in json form in cache
+        cache.set(cache_id, initial_arguments, 60)
+    else:
+        cache_id = None
+
     if name is not None:
-        da, app = DashApp.locate_item(name, stateless=True)
+        da, app = DashApp.locate_item(name, stateless=True, cache_id=cache_id)
 
     if slug is not None:
-        da, app = DashApp.locate_item(slug, stateless=False)
+        da, app = DashApp.locate_item(slug, stateless=False, cache_id=cache_id)
 
     if not app:
-        app = da.as_dash_instance()
+        app = da.as_dash_instance(cache_id=cache_id)
 
     return locals()
 

@@ -14,17 +14,29 @@
   state is persisted in a standard
   Django <a href="{%url "admin:django_plotly_dash_dashapp_changelist" %}">model</a>.
 </p>
+<p>
+  It is also possible to specify intial arguments in the template. These override the values specifed in
+  the code defining the app, and also take priority over any stored state.
+</p>
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>
-    <p><span>{</span>% plotly_app slug="simpleexample-1" ratio=0.2 %}</p>
+    <p><span>{</span>% plotly_app slug="simpleexample-1" ratio=0.1 %}</p>
+    <p><span>{</span>% plotly_app name="simpleexample-1" initial_arguments='{"dropdown-color": {"value": "green"}}' %}</p>
   </div>
 </div>
 <p>
 </p>
 <div class="card border-dark">
   <div class="card-body">
-    {%plotly_app slug="simpleexample-1" ratio=0.2 %}
+    {%plotly_app slug="simpleexample-1" ratio=0.1 %}
   </div>
 </div>
+<p></p>
+<div class="card border-dark">
+  <div class="card-body">
+    {%plotly_app slug="simpleexample-1" initial_arguments='{"dropdown-color": {"value": "green"}}' %}
+  </div>
+</div>
+<p></p>
 {%endblock%}
