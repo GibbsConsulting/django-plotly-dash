@@ -1,3 +1,9 @@
+dash==0.21.1
+dash-core-components==0.24.1
+dash-html-components==0.11.0
+dash-renderer==0.12.1
+plotly
+dpd-components
 channels>=2.0
 channels-redis
 daphne
@@ -14,3 +20,4 @@ pytz
 redis
 sphinx-autobuild
 twine
+numpy

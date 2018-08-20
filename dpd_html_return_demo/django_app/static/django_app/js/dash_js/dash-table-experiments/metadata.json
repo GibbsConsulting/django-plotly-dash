@@ -1,0 +1,630 @@
+{
+  "src/components/DataTable.react.js": {
+    "description": "",
+    "methods": [
+      {
+        "name": "propsToState",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "props",
+            "type": null
+          },
+          {
+            "name": "prevProps",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "updateProps",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "obj",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "onClearFilters",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
+        "name": "handleFilterChange",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "filter",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "handleGridSort",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "sortColumn",
+            "type": null
+          },
+          {
+            "name": "sortDirection",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "handleGridRowsUpdated",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "{fromRow, toRow, updated}",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "getSize",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
+        "name": "getRows",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
+        "name": "getMinHeight",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
+        "name": "onRowsSelected",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "rows",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "onRowsDeselected",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "rowSelections",
+            "type": null
+          }
+        ],
+        "returns": null
+      },
+      {
+        "name": "rowGetter",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "rowIdx",
+            "type": null
+          }
+        ],
+        "returns": null
+      }
+    ],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": ""
+      },
+      "editable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Are the cells in the table editable?\nIf `True`, you can listen to `rows` or `row_update` to\nget the updated data.",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "filterable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Should the filtering UI in the Table appear?\nIf `True`, you can listen to `rows` or `row_update` to\nget the updated data.",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "sortable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Is the table sortable? If `True`, click on the column headers\nto sort by that column.\nIf `True`, you can listen to `rows` or `row_update` to\nget the updated data.",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "resizable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Are the columns resizble?\nIf `True`, then the columns can be resized by clicking and\ndragging on the border on the edge of the column\nheader. If `False`, they cannot be resized.",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "column_widths": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "number"
+          }
+        },
+        "required": false,
+        "description": "Column widths (in pixels) of each column"
+      },
+      "columns": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
+        },
+        "required": false,
+        "description": "Order of columns. Note that the column names are specified in\n`rows` but without order. This attribute allows you to specify\na custom order for your columns."
+      },
+      "row_selectable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "selected_row_indices": {
+        "type": {
+          "name": "array"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "[]",
+          "computed": false
+        }
+      },
+      "enable_drag_and_drop": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": ""
+      },
+      "header_row_height": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "min_height": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "min_width": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "max_rows_in_viewport": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Maximum number of of rows to display in the viewport.\nIf `max_rows_in_viewport` is 10, then if there are 15 rows,\nonly 10 will be displayed in the viewport but if there are 5 rows,\nthen the viewport will shrink to only show those 5 rows.\nThis takes precedence over `min_height`."
+      },
+      "row_height": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "35",
+          "computed": false
+        }
+      },
+      "row_scroll_timeout": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "tab_index": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "filters": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "{}",
+          "computed": false
+        }
+      },
+      "rows": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "custom",
+            "raw": "PropTypes.shape"
+          }
+        },
+        "required": false,
+        "description": ""
+      },
+      "row_update": {
+        "type": {
+          "name": "shape",
+          "value": {
+            "from_row": {
+              "name": "number",
+              "required": false
+            },
+            "to_row": {
+              "name": "number",
+              "required": false
+            },
+            "updated": {
+              "name": "arrayOf",
+              "value": {
+                "name": "custom",
+                "raw": "PropTypes.shape"
+              },
+              "required": false
+            }
+          }
+        },
+        "required": false,
+        "description": ""
+      },
+      "sortColumn": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": ""
+      },
+      "sortDirection": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": ""
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": ""
+      }
+    }
+  },
+  "src/components/EditableTable.react.js": {
+    "description": "",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID of the component, used to identify the component\nin Dash callbacks"
+      },
+      "changed_data": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "{}",
+          "computed": false
+        }
+      },
+      "dataframe": {
+        "type": {
+          "name": "objectOf",
+          "value": {
+            "name": "custom",
+            "raw": "PropTypes.objectOf"
+          }
+        },
+        "required": false,
+        "description": "The data of this table, in the form of a Pandas DataFrame.to_dict()\nThe keys of the dict are the column names and the values are a\ndict that represents the column where the keys of the column are the\nvalues of the index and the values are the rows.\nFor example,\n{\n   \"Column 1\": {\"0\": \"Value A\", \"1\": \"Value B\"},\n   \"Column 2\": {\"0\": 3129, \"1\": 4931},\n}\n\nIf `editable=True`, then this `dataframe` will be updated when the\nuser changes values"
+      },
+      "column_order": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
+        },
+        "required": false,
+        "description": "Order of the columns"
+      },
+      "index_name": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The name of the index column.\nThis name is not included in the `dataframe` object",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "editable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not this table is editable",
+        "defaultValue": {
+          "value": "false",
+          "computed": false
+        }
+      },
+      "base_styles": {
+        "type": {
+          "name": "custom",
+          "raw": "STYLE_SHAPE"
+        },
+        "required": false,
+        "description": "CSS styles for all of the different elements in this table.\nThe `base_styles` have a default value. If you want to remove\nall default styles, set `base_styles` to `{}`.",
+        "defaultValue": {
+          "value": "{\n    'numeric': {\n        'text-align': 'right',\n        'font-family': '\\'Droid Sans Mono\\', Courier, monospace'\n    },\n\n    'string': {\n        'text-align': 'left'\n    },\n\n    'input': {\n        'padding': 0,\n        'margin': 0,\n        'width': '80px',\n        'border': 'none',\n        'font-size': '1rem'\n    },\n\n    'input-active': {\n        'outline': '#7FDBFF auto 3px'\n    },\n\n    'table': {\n        'border-collapse': 'collapse',\n        'box-sizing': 'border-box',\n        'font-size': '1rem'\n    },\n\n    'thead': {\n        'display': 'table-row-group'\n    },\n\n    'th': {\n        'text-align': 'left',\n        'font-weight': 'normal',\n        'border': 'thin lightgrey solid',\n        'width': '80px'\n    },\n\n    'td': {\n        'white-space': 'nowrap',\n        'border': 'thin lightgrey solid',\n        'width': '80px',\n        'max-width': '80px',\n        'text-overflow': 'ellipsis',\n        'overflow-x': 'hidden'\n    }\n}",
+          "computed": false
+        }
+      },
+      "merged_styles": {
+        "type": {
+          "name": "custom",
+          "raw": "STYLE_SHAPE"
+        },
+        "required": false,
+        "description": "`merged_styles` is recursively merged into `base_styles`.\nUse `merged_styles` if you want to update or overwrite a small set\nof the base styles.",
+        "defaultValue": {
+          "value": "{}",
+          "computed": false
+        }
+      },
+      "types": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "{}",
+          "computed": false
+        }
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash supplied function"
+      }
+    }
+  },
+  "src/components/VirtualizedTable.react.js": {
+    "description": "",
+    "methods": [
+      {
+        "name": "cellRenderer",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "{columnIndex, key, rowIndex, style}",
+            "type": null
+          }
+        ],
+        "returns": null
+      }
+    ],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID of the component, used to identify the component\nin Dash callbacks"
+      },
+      "changed_data": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": ""
+      },
+      "dataframe": {
+        "type": {
+          "name": "objectOf",
+          "value": {
+            "name": "shape",
+            "value": {
+              "data": {
+                "name": "arrayOf",
+                "value": {
+                  "name": "array"
+                },
+                "required": false
+              },
+              "columns": {
+                "name": "arrayOf",
+                "value": {
+                  "name": "string"
+                },
+                "required": false
+              },
+              "index": {
+                "name": "array",
+                "required": false
+              }
+            }
+          }
+        },
+        "required": false,
+        "description": "The data of this table, in the form of a Pandas DataFrame.to_dict('split')\nFor example,\n{\n   'columns': ['Column 1', 'Column 2', 'Column 3'],\n   'data': [[1, 2, 3], [4, 3, 1]],\n   'index': [1, 2, 3]\n}\n\nIf `editable=True`, then this `dataframe` will be updated when the\nuser changes values"
+      },
+      "display_index": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not to show the index column",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "index_name": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The name of the index column.\nThis name is not included in the `dataframe` object",
+        "defaultValue": {
+          "value": "''",
+          "computed": false
+        }
+      },
+      "editable": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not this table is editable",
+        "defaultValue": {
+          "value": "true",
+          "computed": false
+        }
+      },
+      "styles": {
+        "type": {
+          "name": "custom",
+          "raw": "STYLE_SHAPE"
+        },
+        "required": false,
+        "description": "CSS styles for all of the different elements in this table.\nThe `styles` have a default value. If you want to remove\nall default styles, set `styles` to `{}`.",
+        "defaultValue": {
+          "value": "{\n    'container': {\n        'font-size': '1rem'\n    },\n    'cell': {\n        'white-space': 'nowrap',\n        'border-left': BORDER,\n        'border-bottom': BORDER,\n        'border-top': 'none',\n        'border-right': 'none',\n        'text-overflow': 'ellipsis',\n        'overflow-x': 'hidden',\n        'box-sizing': 'border-box'\n    },\n    'cell-rightmost': {\n        'border-right': BORDER\n    },\n    'header': {\n        'text-align': 'left',\n        'border-left': BORDER,\n        'border-bottom': BORDER,\n        'border-top': BORDER,\n        'font-weight': 600,\n        'display': 'inline-block',\n        'box-sizing': 'border-box'\n    },\n    'header-rightmost': {\n        'border-right': BORDER\n    }\n}",
+          "computed": false
+        }
+      },
+      "column_width": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Column width (in pixels)",
+        "defaultValue": {
+          "value": "80",
+          "computed": false
+        }
+      },
+      "row_height": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Row height (in pixels)",
+        "defaultValue": {
+          "value": "20",
+          "computed": false
+        }
+      },
+      "height": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Height of entire table (in pixels)",
+        "defaultValue": {
+          "value": "500",
+          "computed": false
+        }
+      },
+      "width": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Width of entire table (in pixels)",
+        "defaultValue": {
+          "value": "600",
+          "computed": false
+        }
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash supplied function"
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "src/components/Pipe.react.js": {
+    "description": "Pipe component listens for messages and propagates them into the dash component hierarcy",
+    "displayName": "Pipe",
+    "methods": [
+      {
+        "name": "add_callback",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
+        "name": "send_info",
+        "docblock": null,
+        "modifiers": [],
+        "params": [],
+        "returns": null
+      },
+      {
+        "name": "handleMessage",
+        "docblock": null,
+        "modifiers": [],
+        "params": [
+          {
+            "name": "e",
+            "type": null
+          }
+        ],
+        "returns": null
+      }
+    ],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The ID used to identify this component in Dash callbacks"
+      },
+      "label": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The label for messages that the component should absorb."
+      },
+      "channel_name": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The back-end channel name for sourcing messages."
+      },
+      "value": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The current value"
+      },
+      "setProps": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "Dash-assigned callback that should be called whenever any of the\nproperties change"
+      }
+    }
+  }
+}

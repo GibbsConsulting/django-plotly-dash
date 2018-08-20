@@ -76,6 +76,7 @@ class DjangoDash:
     def __init__(self, name=None, serve_locally=False,
                  expanded_callbacks=False,
                  add_bootstrap_links=False,
+                 app_name=None, # EB added: app_name
                  **kwargs): # pylint: disable=unused-argument
         if name is None:
             global uid_counter # pylint: disable=global-statement
@@ -83,6 +84,12 @@ class DjangoDash:
             self._uid = "djdash_%i" % uid_counter
         else:
             self._uid = name
+
+        # EB added:
+        if app_name:
+            self.content_redirect_url = "/".join([app_name, self._uid])
+        # End EB added:
+
         self.layout = None
         self._callback_sets = []
 
@@ -144,7 +151,8 @@ class DjangoDash:
                          expanded_callbacks=self._expanded_callbacks,
                          replacements=replacements,
                          ndid=ndid,
-                         serve_locally=self._serve_locally)
+                         serve_locally=self._serve_locally,
+                         content_redirect_url=self.content_redirect_url) # EB added
 
         rd.layout = self.layout
 
@@ -205,13 +213,18 @@ class WrappedDash(Dash):
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
                  base_pathname=None, replacements=None, ndid=None,
-                 expanded_callbacks=False, serve_locally=False, **kwargs):
+                 expanded_callbacks=False, serve_locally=False,
+                 content_redirect_url=None, # EB added
+                 **kwargs):
 
         self._uid = ndid
 
         self._flask_app = Flask(self._uid)
         self._notflask = PseudoFlask()
         self._base_pathname = base_pathname
+
+        if content_redirect_url:
+            self.content_redirect_url = content_redirect_url # EB added
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask

@@ -1,0 +1,20 @@
+.react-grid-Container {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.react-grid-Container *, :before, :after {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.react-grid-Container .react-grid-HeaderCell input {
+    height: initial;
+    width: 100%;
+}

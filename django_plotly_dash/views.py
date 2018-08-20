@@ -26,9 +26,12 @@ SOFTWARE.
 
 import json
 
+import re
+
 from django.http import HttpResponse, HttpResponseRedirect
 
 from .models import DashApp
+
 
 def routes(*args, **kwargs):
     'Return routes'
@@ -94,7 +97,43 @@ def main_view(request, ident, stateless=False, **kwargs):
 
     view_func = app.locate_endpoint_function()
     resp = view_func()
-    return HttpResponse(resp)
+
+    # EB added
+    print("main_view: checking if bool is true")
+    if request.session.get('create_dash_html') == True:
+        print("main_view: creating content")
+
+        # build the base url and use for redirecting to the appropriate url:
+        dpd_app_url = request.build_absolute_uri()
+        split_url = dpd_app_url.split('/')
+        end_index = [i for i, j in enumerate(split_url) if j == 'django_plotly_dash'][0]
+        print("end_index: " + str(end_index))
+        base_url = "/".join(split_url[:end_index])
+        print("base_url: " +str(base_url))
+        print("app.dashboard_url: " +str(app.content_redirect_url))
+        main_app_url = base_url + "/" + app.content_redirect_url
+        print("Printing main_app_url: " + str(main_app_url))
+
+        # Get the response value:
+        dash_content = HttpResponse(resp).getvalue()
+
+        # Remove unwanted content from the response
+        dash_content = clean_dash_content(dash_content)
+
+        # Store the dash content in the request session so that it can be injected in to a template
+        request.session['dash_content'] = dash_content
+        request.session['create_dash_html'] = False
+
+        print("Redirecting to main app url")
+        return HttpResponseRedirect(redirect_to=main_app_url)
+
+    else: # else use the original method made by the dpd team
+        return HttpResponse(resp)
+
+
+        # End EB added
+
+
 
 def component_suites(request, resource=None, component=None, **kwargs):
     'Return part of a client-side component, served locally for some reason'
@@ -121,3 +160,41 @@ def add_to_session(request, template_name="index.html", **kwargs):
     request.session['django_plotly_dash'] = django_plotly_dash
 
     return TemplateResponse(request, template_name, {})
+
+
+def create_Dash_html(request, dash_app):
+
+    # If this is the first time loading the site, signal to create a Dash:
+    if request.session.get('create_dash_html') == None:
+        print("no dash created before. setting bool to True..")
+        request.session['create_dash_html'] = True
+
+    # if a Dash to is to be created
+    if request.session['create_dash_html'] == True:
+        print("reditrecting to dashh app base pathname to get content: %s" %(str(dash_app.get_base_pathname(specific_identifier=None)[1])))
+
+
+        return HttpResponseRedirect(redirect_to=dash_app.get_base_pathname(specific_identifier=None)[1])
+
+    else:
+        # set the flag for the next time a Dash is to be created upon a page load
+        request.session['create_dash_html'] = True
+        return
+
+
+def clean_dash_content(dash_content):
+    '''Description: This is a total hack to get rid of carriage returns in the html returned by the call to dash_dispatcher.
+    	  	    There is a more elegant way but I haven't sussed it yet.'''
+    #print("Function: clean_dash_content")
+    string_content = str(dash_content)
+    string_content = string_content.replace("\\n   ", "")
+    string_content = string_content.replace("\\\\n", "")
+    string_content = string_content.replace("\\\'", "")
+    string_content = string_content.replace(">\\n<", "><")
+    string_content = string_content[:-6]
+    string_content = string_content[1:]
+    string_content = re.sub('\s+',' ', string_content)
+    string_content = string_content[1:]
+    cleaned_dash_content = string_content
+
+    return cleaned_dash_content

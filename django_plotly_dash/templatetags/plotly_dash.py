@@ -42,9 +42,9 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
     dstyle = """
     position: relative;
     padding-bottom: %s%%;
-    height: 0;
+    height: %s;
     overflow:hidden;
-    """ % (ratio*100)
+    """ % ((ratio*100), "100%")
 
     istyle = """
     position: absolute;

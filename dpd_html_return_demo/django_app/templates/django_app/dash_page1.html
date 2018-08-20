@@ -1,0 +1,44 @@
+{% load static %}
+
+<html>
+
+    {% block vendor_stylesheets %}
+
+    <!-- Some typical example css: -->
+
+      <!-- Bootstrap -->
+      <link href="{% static 'django_app/css/bootstrap.min.css' %}" rel="stylesheet">
+      <!-- Font Awesome -->
+      <link href="{% static 'django_app/css/font-awesome.min.css' %}" rel="stylesheet">
+
+    {% endblock vendor_stylesheets %}
+
+    <body>
+
+        {% block content %}
+
+              <div class='col-md-12'>
+
+                {{ dash_content | safe }}
+
+              </div>
+
+        {% endblock %}
+
+    </body>
+
+    <footer>
+
+        {% block javascripts %}
+        <!-- Some typical example js scripts: -->
+        <!-- jQuery -->
+        <script src="{% static 'django_app/js/jquery.min.js' %}"></script>
+        <!-- Bootstrap -->
+        <script src="{% static 'django_app/js/bootstrap.min.js' %}"></script>
+
+        {% endblock %}
+
+    </footer>
+
+
+</html>
