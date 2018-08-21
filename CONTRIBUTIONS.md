@@ -17,3 +17,5 @@ Thanks to the following people:
 [delsim](https://github.com/delsim)
 
 [weber-s](https://github.com/weber-s)
+
+[eddy-obj](https://github.com/eddy-ojb)
