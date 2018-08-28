@@ -1,0 +1,36 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block title%}Demo Six - Simple Injection{%endblock%}
+
+{%block content%}
+
+<h1>Simple embedding</h1>
+
+<p>
+Direct insertion of html into a web page.
+</p>
+
+<p>
+This demo is based on a contribution by, and
+with thanks to, <a href="https://github.com/eddy-ojb">@eddy-ojb</a>
+</p>
+
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p>&lt;div class="<span>{</span>% plotly_class name="dash_example_1" template_type="div-direct"%}">
+    <p class="ml-3"><span>{</span>% plotly_direct name="dash_example_1" %}</p>
+    <p>&lt;\div>
+  </div>
+</div>
+<p></p>
+<div class="card border-dark">
+  <div class="card-body">
+    <div class="{%plotly_class name="dash_example_1" template_type="div-direct"%}">
+      {%plotly_direct name="dash_example_1"%}
+    </div>
+  </div>
+</div>
+<p></p>
+{%endblock%}
