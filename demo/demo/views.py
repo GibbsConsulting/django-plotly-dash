@@ -4,10 +4,13 @@ Example view generating non-trivial content
 
 from django.shortcuts import render
 
-def dash_example_1_view(request, template_name="demo_six.html",**kwargs):
-    
+#pylint: disable=unused-argument
+
+def dash_example_1_view(request, template_name="demo_six.html", **kwargs):
+    'Example view that inserts content into the dash context passed to the dash application'
+
     context = {}
-    
+
     # create some context to send over to Dash:
     dash_context = request.session.get("django_plotly_dash", dict())
     dash_context['django_to_dash_context'] = "I am Dash receiving context from Django"
