@@ -36,6 +36,7 @@ from django.utils.text import slugify
 from plotly.utils import PlotlyJSONEncoder
 
 from .app_name import app_name, main_view_label
+from .middleware import EmbeddedHolder
 
 uid_counter = 0
 
@@ -466,6 +467,7 @@ class WrappedDash(Dash):
         metas = self._generate_meta_html()
         title = getattr(self, 'title', 'Dash')
         if self._favicon:
+            import flask
             favicon = '<link rel="icon" type="image/x-icon" href="{}">'.format(
                 flask.url_for('assets.static', filename=self._favicon))
         else:
@@ -484,7 +486,7 @@ class WrappedDash(Dash):
 
         return index
 
-    def interpolate_index(self, **kwargs):
+    def interpolate_index(self, **kwargs): #pylint: disable=arguments-differ
 
         if not self._return_embedded:
             resp = super(WrappedDash, self).interpolate_index(**kwargs)
@@ -497,6 +499,9 @@ class WrappedDash(Dash):
         return kwargs['app_entry']
 
     def set_embedded(self, embedded_holder=None):
+        'Set a handler for embedded references prior to evaluating a view function'
         self._return_embedded = embedded_holder if embedded_holder else EmbeddedHolder()
+
     def exit_embedded(self):
+        'Exit the embedded section after processing a view'
         self._return_embedded = False

@@ -3,6 +3,9 @@
 TODO attribution here
 '''
 
+# The linter doesn't like the members of the html and dcc imports (as they are dynamic?)
+#pylint: disable=no-member
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -25,16 +28,16 @@ dash_example1 = DjangoDash(name=dashboard_name1,
 # I was using e.g. Bootstrap inconsistenyly across the dash layout. Staying consistent worked fine for me.
 dash_example1.layout = html.Div(id='main',
                                 children=[
-                                html.Div([dcc.Dropdown(id='my-dropdown1',
-                                                       options=[{'label': 'New York City', 'value': 'NYC'},
-                                                                {'label': 'Montreal', 'value': 'MTL'},
-                                                                {'label': 'San Francisco', 'value': 'SF'}
-                                                               ],
-                                                       value='NYC',
-                                                       className='col-md-12',
-                                                      ),
-                                          html.Div(id='test-output-div')
-                                         ]),
+                                    html.Div([dcc.Dropdown(id='my-dropdown1',
+                                                           options=[{'label': 'New York City', 'value': 'NYC'},
+                                                                    {'label': 'Montreal', 'value': 'MTL'},
+                                                                    {'label': 'San Francisco', 'value': 'SF'}
+                                                                   ],
+                                                           value='NYC',
+                                                           className='col-md-12',
+                                                          ),
+                                              html.Div(id='test-output-div')
+                                             ]),
 
                                     dcc.Dropdown(
                                         id='my-dropdown2',
@@ -49,7 +52,7 @@ dash_example1.layout = html.Div(id='main',
 
                                     html.Div(id='test-output-div2')
 
-                                ]) # end of 'main'
+                                    ]) # end of 'main'
 
 @dash_example1.expanded_callback(
     dash.dependencies.Output('test-output-div', 'children'),
@@ -78,7 +81,7 @@ def callback_test(*args, **kwargs): #pylint: disable=unused-argument
 
     fig = dict(data=data, layout=layout)
     line_graph = dcc.Graph(id='line-area-graph2', figure=fig, style={'display':'inline-block', 'width':'100%',
-                                                                     'height':'100%;'} )
+                                                                     'height':'100%;'})
     children = [line_graph]
 
     return children
@@ -88,6 +91,7 @@ def callback_test(*args, **kwargs): #pylint: disable=unused-argument
     dash.dependencies.Output('test-output-div2', 'children'),
     [dash.dependencies.Input('my-dropdown2', 'value')])
 def callback_test2(*args, **kwargs):
+    'Callback to exercise session functionality'
 
     print(args)
     print(kwargs)

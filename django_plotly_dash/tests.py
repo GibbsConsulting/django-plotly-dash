@@ -29,6 +29,8 @@ SOFTWARE.
 
 import pytest
 
+#pylint: disable=bare-except
+
 def test_dash_app():
     'Test the import and formation of the dash app orm wrappers'
 
@@ -176,11 +178,11 @@ def test_injection_updating(client):
         have_thrown = False
 
         try:
-            response2 = client.post(url, json.dumps({'output':{'id':'test-output-div2', 'property':'children'},
-                                                     'inputs':[{'id':'my-dropdown2',
-                                                                'property':'value',
-                                                                'value':'TestIt'},
-                                                              ]}), content_type="application/json")
+            client.post(url, json.dumps({'output':{'id':'test-output-div2', 'property':'children'},
+                                         'inputs':[{'id':'my-dropdown2',
+                                                    'property':'value',
+                                                    'value':'TestIt'},
+                                                  ]}), content_type="application/json")
         except:
             have_thrown = True
 
