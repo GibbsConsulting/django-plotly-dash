@@ -11,6 +11,12 @@
   Live updating uses a websocket connection. The server pushes messages to the UI, and this is then translated into a
   callback through a dash component.
 </p>
+<p>
+Each press of a button causes a new random value to be added to that colour's time series in each
+chart. Separate values are generated for each chart. The top chart has values
+local to this page, and the bottom chart - including its values - is shared across all views of this
+page.
+</p>
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>
@@ -45,7 +51,7 @@
 </p>
 <p>
   Any http command
-  can be used to send a message to the apps. This is equiavent to a press of
+  can be used to send a message to the apps. This is equivalent to a press of
   the red button. Other colours can be specified, including yellow, cyan and black in
   addition to the three named in the LiveInput app.
 </p>
