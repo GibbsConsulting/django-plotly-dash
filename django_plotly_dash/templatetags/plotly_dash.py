@@ -30,11 +30,26 @@ from django import template
 from django.core.cache import cache
 
 from django_plotly_dash.models import DashApp
-from django_plotly_dash.util import pipe_ws_endpoint_name
+from django_plotly_dash.util import pipe_ws_endpoint_name, cache_timeout_initial_arguments
 
 register = template.Library()
 
 ws_default_url = "/%s" % pipe_ws_endpoint_name()
+
+def _locate_daapp(name, slug, da, cache_id=None):
+
+    app = None
+
+    if name is not None:
+        da, app = DashApp.locate_item(name, stateless=True, cache_id=cache_id)
+
+    if slug is not None:
+        da, app = DashApp.locate_item(slug, stateless=False, cache_id=cache_id)
+
+    if not app:
+        app = da.as_dash_instance()
+
+    return da, app
 
 @register.inclusion_tag("django_plotly_dash/plotly_app.html", takes_context=True)
 def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False, initial_arguments=None):
@@ -57,24 +72,43 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
     height: 100%;
     """
 
-    app = None
-
     if initial_arguments:
         # Generate a cache id
         cache_id = "dpd-initial-args-%s" % str(uuid.uuid4()).replace('-', '')
         # Store args in json form in cache
-        cache.set(cache_id, initial_arguments, 60)
+        cache.set(cache_id, initial_arguments, cache_timeout_initial_arguments())
     else:
         cache_id = None
 
-    if name is not None:
-        da, app = DashApp.locate_item(name, stateless=True, cache_id=cache_id)
+    da, app = _locate_daapp(name, slug, da, cache_id=cache_id)
 
-    if slug is not None:
-        da, app = DashApp.locate_item(slug, stateless=False, cache_id=cache_id)
+    return locals()
 
-    if not app:
-        app = da.as_dash_instance(cache_id=cache_id)
+@register.simple_tag(takes_context=True)
+def plotly_header(context):
+    'Insert placeholder for django-plotly-dash header content'
+    return context.request.dpd_content_handler.header_placeholder
+
+@register.simple_tag(takes_context=True)
+def plotly_footer(context):
+    'Insert placeholder for django-plotly-dash footer content'
+    return context.request.dpd_content_handler.footer_placeholder
+
+@register.inclusion_tag("django_plotly_dash/plotly_direct.html", takes_context=True)
+def plotly_direct(context, name=None, slug=None, da=None):
+    'Direct insertion of a Dash app'
+
+    da, app = _locate_daapp(name, slug, da)
+
+    view_func = app.locate_endpoint_function()
+
+    # Load embedded holder inserted by middleware
+    eh = context.request.dpd_content_handler.embedded_holder
+    app.set_embedded(eh)
+    try:
+        resp = view_func()
+    finally:
+        app.exit_embedded()
 
     return locals()
 
@@ -87,14 +121,8 @@ def plotly_message_pipe(context, url=None):
 @register.simple_tag()
 def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
     'Return a slug-friendly identifier'
-    if name is not None:
-        da, app = DashApp.locate_item(name, stateless=True)
 
-    if slug is not None:
-        da, app = DashApp.locate_item(slug, stateless=False)
-
-    if not app:
-        app = da.as_dash_instance()
+    da, app = _locate_daapp(name, slug, da)
 
     slugified_id = app.slugified_id()
 
@@ -106,14 +134,7 @@ def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
 def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, template_type=None):
     'Return a string of space-separated class names'
 
-    if name is not None:
-        da, app = DashApp.locate_item(name, stateless=True)
-
-    if slug is not None:
-        da, app = DashApp.locate_item(slug, stateless=False)
-
-    if not app:
-        app = da.as_dash_instance()
+    da, app = _locate_daapp(name, slug, da)
 
     return app.extra_html_properties(prefix=prefix,
                                      postfix=postfix,

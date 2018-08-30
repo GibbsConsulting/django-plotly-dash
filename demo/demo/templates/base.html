@@ -1,16 +1,17 @@
 <!DOCTYPE HTML>
 <html>
  <head>
-   {%load plotly_dash%}
-   {%load staticfiles%}
-   {%load bootstrap4%}
-   {%bootstrap_css%}
-   {%bootstrap_javascript jquery="full"%}
-   {%block extra_header%}{%endblock%}
-   {%block app_header_css%}
+   {% load plotly_dash%}
+   {% load staticfiles%}
+   {% load bootstrap4%}
+   {% bootstrap_css%}
+   {% bootstrap_javascript jquery="full"%}
+   {% block extra_header%}{% endblock%}
+   {% block app_header_css%}
    <link rel="stylesheet" type="text/css" href="{%static "demo/demo.css"%}"></link>
-   {%endblock%}
-   <title>Django Plotly Dash Examples - {%block title%}{%endblock%}</title>
+   {% endblock%}
+   {% plotly_header%}
+   <title>Django Plotly Dash Examples - {% block title%}{% endblock%}</title>
  </head>
  <body>
    <header>
@@ -19,26 +20,33 @@
          <a class="navbar-brand" href="#">
            <img src="{%static "demo/logo.svg"%}" alt="Logo"/>
          </a>
-         {%block demo_items%}
+         {% block demo_items %}
          <a class="nav-item nav-link btn btn-lg" href="{%url "home"%}">Contents</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-one"%}">Demo One - Simple Use</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-two"%}">Demo Two - Initial State</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-three"%}">Demo Three - Enhanced Callbacks</a>
-         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-four"%}">Demo Four - Live Updating</a>
+         {% block demo_menu_items %}
+         {% if 0 %}
+         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-one"%}">One - Simple Use</a>
+         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-two"%}">Two - Initial State</a>
+         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-three"%}">Three - Enhanced Callbacks</a>
+         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-four"%}">Four - Live Updating</a>
+         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-five"%}">Five - Direct Injection</a>
+         <a class="nav-item nav-link btn btn-lg" href="{%url "demo-six"%}">Six - Simple Injection</a>
+         {% endif %}
+         {% endblock %}
          <a class="nav-item nav-link btn btn-lg"
             target="_blank"
             href="https://django-plotly-dash.readthedocs.io/en/latest/">Online Documentation</a>
-         {%endblock%}
+         {% endblock %}
        </div>
      </nav>
    </header>
    <main>
      <div class="container">
-       {%block content%}{%endblock%}
+       {% block content%}{% endblock%}
      </div>
    </main>
-   {%block footer%}
-   {%endblock%}
-</body>
-{%block post_body%}{%endblock%}
+   {% block footer%}
+   {% endblock%}
+ </body>
+ {% block post_body%}{% endblock%}
+ {% plotly_footer%}
 </html>

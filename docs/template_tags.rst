@@ -42,6 +42,32 @@ a JSON-encoded string representation. Each entry in the dictionary has the ``id`
 value is a dictionary mapping property
 name keys to initial values.
 
+.. _plotly_direct:
+
+The ``plotly_direct`` template tag
+----------------------------------
+
+This template tag allows the direct insertion of html into a template, instead
+of embedding it in an iframe.
+
+.. code-block:: jinja
+
+  {%load plotly_dash%}
+
+  {%plotly_direct name="SimpleExample"%}
+
+The tag arguments are:
+
+:name = None: The name of the application, as passed to a ``DjangoDash`` constructor.
+:slug = None: The slug of an existing ``DashApp`` instance.
+:da = None: An existing ``django_plotly_dash.models.DashApp`` model instance.
+
+These arguments are equivalent to the same ones for the ``plotly_app`` template tag. Note
+that ``initial_arguments`` are not currently supported, and as the app is directly injected into
+the page there are no arguments to control the size of the iframe.
+
+This tag should not appear more than once on a page. This rule however is not enforced at present.
+
 .. _plotly_message_pipe:
 
 The ``plotly_message_pipe`` template tag

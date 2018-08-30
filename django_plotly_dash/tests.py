@@ -29,6 +29,8 @@ SOFTWARE.
 
 import pytest
 
+#pylint: disable=bare-except
+
 def test_dash_app():
     'Test the import and formation of the dash app orm wrappers'
 
@@ -119,3 +121,85 @@ def test_updating(client):
 
         assert response.content == b'{"response": {"props": {"children": "The chosen T-shirt is a medium blue one."}}}'
         assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_injection_app_access(client):
+    'Check direct use of a stateless application using demo test data'
+
+    from django.urls import reverse
+    from .app_name import main_view_label
+
+    for route_name in ['layout', 'dependencies', main_view_label]:
+        for prefix, arg_map in [('app-', {'ident':'dash_example_1'}),
+                                #('', {'ident':'simpleexample-1'}),
+                               ]:
+            url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+            response = client.get(url)
+
+            assert response.content
+            assert response.status_code == 200
+
+    for route_name in ['routes',]:
+        for prefix, arg_map in [('app-', {'ident':'dash_example_1'}),]:
+            url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+            did_fail = False
+            try:
+                response = client.get(url)
+            except:
+                did_fail = True
+
+            assert did_fail
+
+@pytest.mark.django_db
+def test_injection_updating(client):
+    'Check updating of an app using demo test data'
+
+    import json
+    from django.urls import reverse
+
+    route_name = 'update-component'
+
+    for prefix, arg_map in [('app-', {'ident':'dash_example_1'}),]:
+        url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+        response = client.post(url, json.dumps({'output':{'id':'test-output-div', 'property':'children'},
+                                                'inputs':[{'id':'my-dropdown1',
+                                                           'property':'value',
+                                                           'value':'TestIt'},
+                                                         ]}), content_type="application/json")
+
+        rStart = b'{"response": {"props": {"children":'
+
+        assert response.content[:len(rStart)] == rStart
+        assert response.status_code == 200
+
+        have_thrown = False
+
+        try:
+            client.post(url, json.dumps({'output':{'id':'test-output-div2', 'property':'children'},
+                                         'inputs':[{'id':'my-dropdown2',
+                                                    'property':'value',
+                                                    'value':'TestIt'},
+                                                  ]}), content_type="application/json")
+        except:
+            have_thrown = True
+
+        assert have_thrown
+
+        session = client.session
+        session['django_plotly_dash'] = {'django_to_dash_context': 'Test 789 content'}
+        session.save()
+
+        response3 = client.post(url, json.dumps({'output':{'id':'test-output-div2', 'property':'children'},
+                                                 'inputs':[{'id':'my-dropdown2',
+                                                            'property':'value',
+                                                            'value':'TestIt'},
+                                                          ]}), content_type="application/json")
+        rStart3 = b'{"response": {"props": {"children":'
+
+        assert response3.content[:len(rStart3)] == rStart3
+        assert response3.status_code == 200
+
+        assert response3.content.find(b'Test 789 content') > 0

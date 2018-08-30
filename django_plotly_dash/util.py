@@ -53,3 +53,7 @@ def insert_demo_migrations():
 def http_poke_endpoint_enabled():
     'Return true if the http endpoint is enabled through the settings'
     return _get_settings().get('http_poke_enabled', True)
+
+def cache_timeout_initial_arguments():
+    'Return cache timeout, in seconds, for initial arguments'
+    return _get_settings().get('cache_timeout_initial_arguments', 60)

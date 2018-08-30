@@ -36,6 +36,8 @@ from django.utils.text import slugify
 from plotly.utils import PlotlyJSONEncoder
 
 from .app_name import app_name, main_view_label
+from .middleware import EmbeddedHolder
+
 
 uid_counter = 0
 
@@ -236,6 +238,8 @@ class WrappedDash(Dash):
         else:
             self._replacements = dict()
         self._use_dash_layout = len(self._replacements) < 1
+
+        self._return_embedded = False
 
     def use_dash_dispatch(self):
         'Indicate if dispatch is using underlying dash code or the wrapped code'
@@ -456,3 +460,49 @@ class WrappedDash(Dash):
                                                                                                          'template_type':template_type,
                                                                                                          'prefix':prefix,
                                                                                                         }
+
+    def index(self, *args, **kwargs):  # pylint: disable=unused-argument
+        scripts = self._generate_scripts_html()
+        css = self._generate_css_dist_html()
+        config = self._generate_config_html()
+        metas = self._generate_meta_html()
+        title = getattr(self, 'title', 'Dash')
+        if self._favicon:
+            import flask
+            favicon = '<link rel="icon" type="image/x-icon" href="{}">'.format(
+                flask.url_for('assets.static', filename=self._favicon))
+        else:
+            favicon = ''
+
+            _app_entry = '''
+<div id="react-entry-point">
+  <div class="_dash-loading">
+    Loading Django-Plotly-Dash app
+  </div>
+</div>
+'''
+        index = self.interpolate_index(
+            metas=metas, title=title, css=css, config=config,
+            scripts=scripts, app_entry=_app_entry, favicon=favicon)
+
+        return index
+
+    def interpolate_index(self, **kwargs): #pylint: disable=arguments-differ
+
+        if not self._return_embedded:
+            resp = super(WrappedDash, self).interpolate_index(**kwargs)
+            return resp
+
+        self._return_embedded.add_css(kwargs['css'])
+        self._return_embedded.add_config(kwargs['config'])
+        self._return_embedded.add_scripts(kwargs['scripts'])
+
+        return kwargs['app_entry']
+
+    def set_embedded(self, embedded_holder=None):
+        'Set a handler for embedded references prior to evaluating a view function'
+        self._return_embedded = embedded_holder if embedded_holder else EmbeddedHolder()
+
+    def exit_embedded(self):
+        'Exit the embedded section after processing a view'
+        self._return_embedded = False

@@ -117,7 +117,7 @@ def callback_c(*args, **kwargs):
     return "Args are [%s] and kwargs are %s" %(",".join(args), str(kwargs))
 
 liveIn = DjangoDash("LiveInput",
-                    serve_locally=True,
+                    serve_locally=False,
                     add_bootstrap_links=True)
 
 liveIn.layout = html.Div([
