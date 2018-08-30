@@ -17,6 +17,12 @@ chart. Separate values are generated for each chart. The top chart has values
 local to this page, and the bottom chart - including its values - is shared across all views of this
 page.
 </p>
+<p>
+Reloading this page, or viewing in a second browser window, will show a new and initially empty
+top chart and a copy of the bottom chart. Pressing any button in any window will cause all instances
+of the bottom chart to update with the same values. Note that button presses are throttled so that
+only one press per colour per second is processed.
+</p>
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>
