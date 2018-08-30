@@ -21,6 +21,9 @@ below.
 
       # Insert data for the demo when migrating
       "insert_demo_migrations" : False,
+
+      # Timeout for caching of initial arguments in seconds
+      "cache_timeout_initial_arguments": 60,
   }
 
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in

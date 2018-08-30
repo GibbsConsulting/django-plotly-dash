@@ -38,6 +38,7 @@ from plotly.utils import PlotlyJSONEncoder
 from .app_name import app_name, main_view_label
 from .middleware import EmbeddedHolder
 
+
 uid_counter = 0
 
 usable_apps = {}

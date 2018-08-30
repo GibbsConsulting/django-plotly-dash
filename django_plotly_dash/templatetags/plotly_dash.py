@@ -30,7 +30,7 @@ from django import template
 from django.core.cache import cache
 
 from django_plotly_dash.models import DashApp
-from django_plotly_dash.util import pipe_ws_endpoint_name
+from django_plotly_dash.util import pipe_ws_endpoint_name, cache_timeout_initial_arguments
 
 register = template.Library()
 
@@ -76,7 +76,7 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
         # Generate a cache id
         cache_id = "dpd-initial-args-%s" % str(uuid.uuid4()).replace('-', '')
         # Store args in json form in cache
-        cache.set(cache_id, initial_arguments, 60)
+        cache.set(cache_id, initial_arguments, cache_timeout_initial_arguments())
     else:
         cache_id = None
 
