@@ -193,6 +193,8 @@ class PseudoFlask:
     def __init__(self):
         self.config = {}
         self.endpoints = {}
+        self.name = "PseudoFlaskDummyName"
+        self.blueprints = {}
 
     # pylint: disable=unused-argument, missing-docstring
 
