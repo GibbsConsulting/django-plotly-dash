@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
-# pylint: disable=too-many-arguments, unused-variable, unused-argument
+# pylint: disable=too-many-arguments, unused-variable, unused-argument, possibly-unused-variable
 
 import uuid
 

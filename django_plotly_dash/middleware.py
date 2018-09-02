@@ -6,7 +6,7 @@ This middleware enables the collection of items from templates for inclusion in 
 
 #pylint: disable=too-few-public-methods
 
-class EmbeddedHolder(object):
+class EmbeddedHolder:
     'Hold details of embedded content from processing a view'
     def __init__(self):
         self.css = ""
