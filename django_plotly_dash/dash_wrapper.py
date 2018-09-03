@@ -78,6 +78,7 @@ class DjangoDash:
     def __init__(self, name=None, serve_locally=False,
                  expanded_callbacks=False,
                  add_bootstrap_links=False,
+                 suppress_callback_exceptions=False,
                  **kwargs): # pylint: disable=unused-argument
         if name is None:
             global uid_counter # pylint: disable=global-statement
@@ -96,6 +97,7 @@ class DjangoDash:
 
         self._expanded_callbacks = expanded_callbacks
         self._serve_locally = serve_locally
+        self._suppress_callback_exceptions = suppress_callback_exceptions
 
         if add_bootstrap_links:
             from bootstrap4.bootstrap import css_url
@@ -157,6 +159,7 @@ class DjangoDash:
                          serve_locally=self._serve_locally)
 
         rd.layout = self.layout
+        rd.config['suppress_callback_exceptions'] = self._suppress_callback_exceptions
 
         for cb, func in self._callback_sets:
             rd.callback(**cb)(func)
