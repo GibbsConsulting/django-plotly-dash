@@ -7,7 +7,7 @@ django-redis
 grip
 pandas
 pylint
-pytest
+pytest>=3.6
 pytest-django
 pytest-cov
 pytz

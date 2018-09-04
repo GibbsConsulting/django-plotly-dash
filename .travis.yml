@@ -9,6 +9,9 @@ install:
   - pip install -r dev_requirements.txt
   - python setup.py develop
 
+services:
+  - redis-server
+
 script:
   - pushd demo
   - pytest demo --cov=demo --cov=django_plotly_dash --cov-report term-missing
