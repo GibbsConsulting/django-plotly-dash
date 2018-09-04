@@ -1,5 +1,7 @@
 # django-plotly-dash
 
+![Develop Branch Build Status](https://travis-ci.org/GibbsConsulting/django-plotly-dash.svg?branch=master)
+
 Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https://www.djangoproject.com/) tags. Multiple Dash apps can
 then be embedded into a single web page, persist and share internal state, and also have access to the
 current user and session variables.
