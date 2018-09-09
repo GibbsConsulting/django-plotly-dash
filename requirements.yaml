@@ -1,0 +1,14 @@
+name: dpd
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - django>=2.0
+  - flask>=1
+  - pip:
+    - dash
+    - dash-core-components
+    - dash-html-components
+    - dash-renderer
+    - plotly
+    - dpd-components

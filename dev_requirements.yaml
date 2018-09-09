@@ -1,0 +1,23 @@
+name: dpd
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pandas
+  - pylint
+  - pytest>=3.6
+  - pytest-cov
+  - pytz
+  - redis
+  - twine
+  - twisted
+  - hiredis
+  - pip:
+    - channels>=2.0
+    - channels-redis
+    - daphne
+    - django-bootstrap4
+    - django-redis
+    - grip
+    - pytest-django
+    - sphinx-autobuild
