@@ -482,7 +482,7 @@ class WrappedDash(Dash):
             _app_entry = '''
 <div id="react-entry-point">
   <div class="_dash-loading">
-    Loading Django-Plotly-Dash app
+    Loading...
   </div>
 </div>
 '''
