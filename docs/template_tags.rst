@@ -70,6 +70,40 @@ This tag should not appear more than once on a page. This rule however is not en
 
 .. _plotly_message_pipe:
 
+
+The ``plotly_header`` and ``plotly_footer`` template tag
+--------------------------------------------------------
+
+``DjangoDash`` allows you to inject directly the html generate by ``Dash`` in
+the DOM of the page (without iframe). To include your app CSS and JS, use the
+``plotly_header`` and ``plotly_footer`` tag in your template, as folllows:
+
+.. code-block:: jinja
+
+    <!-- templates/base.html -->
+    <!DOCTYPE html>
+    <html>
+        <head>
+        ...
+        {% load plotly_dash%}
+        ...
+        {% plotly_header %}
+
+        ...
+        </head>
+        <body>
+        ...
+        {%plotly_direct name="SimpleExample"%}
+        ...
+        </body>
+        ...
+        {% plotly_footer %}
+    </html> 
+
+This part in mandatory if you want to use ``plotly_direct`` tag.
+
+
+
 The ``plotly_message_pipe`` template tag
 ----------------------------------------
 
