@@ -68,6 +68,9 @@ the page there are no arguments to control the size of the iframe.
 
 This tag should not appear more than once on a page. This rule however is not enforced at present.
 
+If this tag is used, then the :ref:`header and footer <plotly_header_footer>` tags should also be
+added to the template.
+
 .. _plotly_header_footer:
 
 The ``plotly_header`` and ``plotly_footer`` template tags
@@ -99,7 +102,7 @@ follows:
         {% plotly_footer %}
     </html>
 
-This part in mandatory if you want to use the ``plotly_direct`` tag, and these two tags can safely be included
+This part in mandatory if you want to use the :ref:`plotly_direct <plotly_direct>` tag, and these two tags can safely be included
 on any page that has loaded the ``plotly_dash`` template tag library with minimal overhead. Neither tag has
 any arguments.
 
