@@ -17,6 +17,9 @@ Then, add ``django_plotly_dash`` to ``INSTALLED_APPS`` in the Django ``settings.
         ...
         ]
 
+Further, if the :ref:`header and footer <plotly_header_footer>` tags are in use
+then ``django_plotly_dash.middleware.BaseMiddleware`` should be added to ``MIDDLEWARE`` in the same file. This can be safely added now even if not used.
+
 The project directory name ``django_plotly_dash`` can also be used on its own if preferred, but this will stop the use of readable application names in
 the Django admin interface.
 
