@@ -42,14 +42,18 @@ class ContentCollector:
     def adjust_response(self, response):
         'Locate placeholder magic strings and replace with content'
 
-        c1 = self._replace(response.content,
-                           self.header_placeholder,
-                           self.embedded_holder.css)
+        try:
+            c1 = self._replace(response.content,
+                            self.header_placeholder,
+                            self.embedded_holder.css)
 
-        response.content = self._replace(c1,
-                                         self.footer_placeholder,
-                                         "\n".join([self.embedded_holder.config,
-                                                    self.embedded_holder.scripts]))
+            response.content = self._replace(c1,
+                                            self.footer_placeholder,
+                                            "\n".join([self.embedded_holder.config,
+                                                        self.embedded_holder.scripts]))
+        except AttributeError:
+            # Catch the "FileResponse instance has no `content` attribute" error when serving media files in the Django development server.
+            pass
 
         return response
 
