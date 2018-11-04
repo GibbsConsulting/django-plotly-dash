@@ -12,6 +12,7 @@ pytest-django
 pytest-cov
 pytz
 redis
+sphinx
 sphinx-autobuild
 twine
 

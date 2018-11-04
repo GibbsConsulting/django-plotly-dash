@@ -8,7 +8,7 @@ dependency of ``django-plotly-dash``.
 
 .. _pipe_component:
 The ``Pipe`` component
---------------
+----------------------
 
 Each ``Pipe`` component instance listens for messages on a single channel. The ``value`` member of any message on that channel whose ``label`` matches
 that of the component will be used to update the ``value`` property of the component. This property can then be used in callbacks like

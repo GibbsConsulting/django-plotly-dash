@@ -123,7 +123,7 @@ the page footer - to avoid delaying the main page load - along
 with other scripts is generally advisable.
 
 The ``plotly_app_identifier`` template tag
------------------------------------------
+------------------------------------------
 
 This tag provides an identifier for an app, in a form that is suitable for use as a classname or identifier
 in HTML:

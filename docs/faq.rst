@@ -20,3 +20,10 @@ own requirements but are accessed using standard network protocols.
 
 Create a `github issue <https://github.com/GibbsConsulting/django-plotly-dash/issues>`_. See :ref:`bug reporting <bug-reporting>` for details
 on what makes a good bug report.
+
+* Where should ``Dash`` layout and callback functions be placed?
+
+In general, the only constraint on the files containing these functions is that they should be imported into the file containing
+the ``DjangoDash`` instantiation. This is discussed in
+the :ref:`installation` section and also
+in this github `issue <https://github.com/GibbsConsulting/django-plotly-dash/issues/58>`_.

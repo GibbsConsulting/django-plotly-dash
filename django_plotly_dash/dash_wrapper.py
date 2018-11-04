@@ -56,7 +56,10 @@ def get_local_stateless_by_name(name):
     '''
     name = slugify(name)
     # TODO wrap this in raising a 404 if not found
-    return usable_apps[name]
+    try:
+        return usable_apps[name]
+    except:
+        raise KeyError("Unable to find stateless DjangoApp called %s"%name)
 
 class Holder:
     'Helper class for holding configuration options'
