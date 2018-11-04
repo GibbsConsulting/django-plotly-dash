@@ -130,6 +130,8 @@ PLOTLY_DASH = {
     "insert_demo_migrations" : True,  # Insert model instances used by the demo
 
     "http_poke_enabled" : True, # Flag controlling availability of direct-to-messaging http endpoint
+
+    "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
     }
 
 # Static files (CSS, JavaScript, Images)

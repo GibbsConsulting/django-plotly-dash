@@ -31,6 +31,8 @@ from .views import routes, layout, dependencies, update, main_view, component_su
 
 from .app_name import app_name, main_view_label
 
+from .access import process_view_function
+
 urlpatterns = []
 
 for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '', '', '', ),
@@ -48,7 +50,11 @@ for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '
                                                      ]:
 
         route_name = '%s%s%s' % (name_prefix, name, name_suffix)
+        wrapped_view_function = process_view_function(view_function,
+                                                      route_name=route_name,
+                                                      url_part=url_part,
+                                                      name=name)
         urlpatterns.append(path('%s/<slug:ident>%s/%s%s' % (base_type, url_ending, url_part, url_suffix),
-                                view_function,
+                                wrapped_view_function,
                                 args,
                                 name=route_name))
