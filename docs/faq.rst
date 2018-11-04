@@ -27,3 +27,8 @@ In general, the only constraint on the files containing these functions is that 
 the ``DjangoDash`` instantiation. This is discussed in
 the :ref:`installation` section and also
 in this github `issue <https://github.com/GibbsConsulting/django-plotly-dash/issues/58>`_.
+
+* Can per-user or other fine-grained access control be used?
+
+ Yes. See the :ref:`view_decoration` configuration setting.
+

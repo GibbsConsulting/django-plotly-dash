@@ -24,10 +24,15 @@ below.
 
       # Timeout for caching of initial arguments in seconds
       "cache_timeout_initial_arguments": 60,
+
+      # Name of view wrapping function
+      "view_decorator": None,
   }
 
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in
 the Django settings file.
+
+.. _endpoints:
 
 Endpoints
 ---------
@@ -44,3 +49,11 @@ two requirements
     as part of the public API.
 
 A reverse proxy front end, such as ``nginx``, can route appropriately according to URL.
+
+.. _view_decoration:
+
+View decoration
+---------------
+
+Each view delegated through to ``plotly_dash`` can be wrapped using a view decoration function. This enables access to be restricted to
+logged-in users, or using a desired conditions based on the user and session state.
