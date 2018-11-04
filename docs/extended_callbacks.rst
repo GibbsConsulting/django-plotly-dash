@@ -52,7 +52,7 @@ in the :ref:`models_and_state` section.
 
 .. _using_session_state:
 Using session state
-------------------
+-------------------
 
 Unless an explicit pipe is created, changes to the session state and other server-side objects are not automatically
 propagated to an application. Something in the front-end UI has to invoke a callback; at this point the

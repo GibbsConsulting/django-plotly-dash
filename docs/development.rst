@@ -7,6 +7,13 @@ The application and demo are developed, built and tested in a virtualenv envirom
 a number of ``bash`` shell scripts. The resultant package should work on any Python installation
 that meets the requirements.
 
+Automatic builds have been set up on `Travis-CI <https://travis-ci.org/GibbsConsulting/django-plotly-dash>`_ including
+running tests and reporting code coverage.
+
+Current status: |Travis Badge|
+
+.. |Travis Badge| image:: https://travis-ci.org/GibbsConsulting/django-plotly-dash.svg?branch=master
+
 Environment setup
 -----------------
 

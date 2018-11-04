@@ -20,4 +20,5 @@ dependencies:
     - django-redis
     - grip
     - pytest-django
+    - sphinx
     - sphinx-autobuild

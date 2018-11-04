@@ -6,7 +6,7 @@ Django models and application state
 The ``django_plotly_dash`` application defines ``DashApp`` and ``StatelessApp`` models.
 
 The ``StatelessApp`` model
-----------------------
+--------------------------
 
 An instance of the ``StatelessApp`` model represents a single dash application. Every instantiation of
 a ``DjangoDash`` object is registered, and any object that is referenced through the ``DashApp`` model - this
