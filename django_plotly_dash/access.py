@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+import importlib
 from django.conf import settings
 
 from django.contrib.auth.decorators import login_required as login_required_decorator
