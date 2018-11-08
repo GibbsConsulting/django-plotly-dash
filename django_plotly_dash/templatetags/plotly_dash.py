@@ -29,6 +29,8 @@ import uuid
 from django import template
 from django.core.cache import cache
 
+from django.contrib.sites.shortcuts import get_current_site
+
 from django_plotly_dash.models import DashApp
 from django_plotly_dash.util import pipe_ws_endpoint_name, cache_timeout_initial_arguments
 
@@ -139,3 +141,8 @@ def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, templ
     return app.extra_html_properties(prefix=prefix,
                                      postfix=postfix,
                                      template_type=template_type)
+
+@register.simple_tag(takes_context=True)
+def site_root_url(context):
+    current_site_url = get_current_site(context.request)
+    return current_site_url.domain
