@@ -3,6 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/django-plotly-dash.svg)](https://badge.fury.io/py/django-plotly-dash)
 ![Develop Branch Build Status](https://travis-ci.org/GibbsConsulting/django-plotly-dash.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/GibbsConsulting/django-plotly-dash/badge.svg?branch=master)](https://coveralls.io/github/GibbsConsulting/django-plotly-dash?branch=master)
+[!Downloads](https://img.shields.io/pypi/dw/:package.svg)
 
 Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https://www.djangoproject.com/) tags. Multiple Dash apps can
 then be embedded into a single web page, persist and share internal state, and also have access to the
