@@ -1,6 +1,7 @@
 # django-plotly-dash
 
 [![PyPI version](https://badge.fury.io/py/django-plotly-dash.svg)](https://badge.fury.io/py/django-plotly-dash)
+[![Downloads](https://crate.io/packages/django-plotly-dash/)
 ![Develop Branch Build Status](https://travis-ci.org/GibbsConsulting/django-plotly-dash.svg?branch=master)
 
 Expose [plotly dash](https://plot.ly/products/dash/) apps as [Django](https://www.djangoproject.com/) tags. Multiple Dash apps can
