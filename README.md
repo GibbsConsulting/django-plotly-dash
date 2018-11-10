@@ -1,7 +1,7 @@
 # django-plotly-dash
 
 [![PyPI version](https://badge.fury.io/py/django-plotly-dash.svg)](https://badge.fury.io/py/django-plotly-dash)
-[!Downloads](https://img.shields.io/pypi/dw/django-plotly-dash.svg)
+[![Downloads](https://img.shields.io/pypi/dw/django-plotly-dash.svg)](https://img.shields.io/pypi/dw/django-plotly-dash.svg)
 ![Develop Branch Build Status](https://travis-ci.org/GibbsConsulting/django-plotly-dash.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/GibbsConsulting/django-plotly-dash/badge.svg?branch=master)](https://coveralls.io/github/GibbsConsulting/django-plotly-dash?branch=master)
 
