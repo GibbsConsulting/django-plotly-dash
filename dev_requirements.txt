@@ -10,6 +10,7 @@ pylint
 pytest>=3.6
 pytest-django
 pytest-cov
+python-coveralls
 pytz
 redis
 sphinx
