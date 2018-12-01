@@ -108,7 +108,7 @@ suitable for inclusion in a base template. Neither tag has
 any arguments.
 
 Note that if you are using any functionality that needs the use of these tags, then the associated middleware
-should be added in ``settings.py`` as mentioned in the :ref:`installation <installation>` section.
+should be added in ``settings.py``
 
 .. code-block:: python
 
