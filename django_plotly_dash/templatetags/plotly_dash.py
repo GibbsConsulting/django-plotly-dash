@@ -144,5 +144,6 @@ def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, templ
 
 @register.simple_tag(takes_context=True)
 def site_root_url(context):
+    'Provide the root url of the demo site'
     current_site_url = get_current_site(context.request)
     return current_site_url.domain
