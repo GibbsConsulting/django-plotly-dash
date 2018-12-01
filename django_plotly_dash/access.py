@@ -36,7 +36,7 @@ try:
     try:
         dash_view_decorator = locals()[dash_view_decorator_name]
     except:
-        mod_name, func_name = dash_view_decorator_name.rsplit('.',1)
+        mod_name, func_name = dash_view_decorator_name.rsplit('.', 1)
         if len(mod_name):
             mod = importlib.import_module(mod_name)
             dash_view_decorator = getattr(mod, func_name)
@@ -49,6 +49,6 @@ def process_view_function(view_function, **kwargs):
     'Process view function and wrap according to settings'
 
     if dash_view_decorator:
-        return dash_view_decorator(view_function,**kwargs)
+        return dash_view_decorator(view_function, **kwargs)
 
     return view_function
