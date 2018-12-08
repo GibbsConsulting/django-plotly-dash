@@ -120,7 +120,7 @@ Release builds
 This section contains the recipe for building a release of the project.
 
 First, update the version number appropriately
-in ``django_plotly_dash/__init__.py``, and then
+in ``django_plotly_dash/version.py``, and then
 ensure that the checks and tests have been run::
 
   ./check_code
@@ -140,7 +140,7 @@ first a snapshot of the development environment used for the build should be gen
   pip freeze > frozen_dev.txt
 
   git add frozen_dev.txt
-  git add django_plotly_dash/__init__.py
+  git add django_plotly_dash/version.py
 
   git commit -m" ... suitable commit message for this release ..."
 

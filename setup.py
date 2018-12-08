@@ -2,16 +2,18 @@
 
 from setuptools import setup
 
-import django_plotly_dash as dpd
+#import django_plotly_dash as dpd
+#VERSION = dpd.__version__
 
-VERSION = dpd.__version__
+with open('django_plotly_dash/version.py') as f:
+    exec(f.read())
 
 with open('README.md') as f:
     long_description = f.read()
 
 setup(
     name="django-plotly-dash",
-    version=VERSION,
+    version=__version__,
     url="https://github.com/GibbsConsulting/django-plotly-dash",
     description="Django use of plotly dash apps through template tags",
     long_description=long_description,
