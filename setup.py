@@ -5,7 +5,8 @@ from setuptools import setup
 #import django_plotly_dash as dpd
 #VERSION = dpd.__version__
 
-exec(open('django_plotly_dash/version.py').read())
+with open('django_plotly_dash/version.py') as f:
+    exec(f.read())
 
 with open('README.md') as f:
     long_description = f.read()
