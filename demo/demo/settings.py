@@ -133,7 +133,7 @@ PLOTLY_DASH = {
 
     "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
 
-    "cache_arguments" : False, # True for cache, False for session-based argument propagation
+    "cache_arguments" : True, # True for cache, False for session-based argument propagation
     }
 
 # Static files (CSS, JavaScript, Images)
