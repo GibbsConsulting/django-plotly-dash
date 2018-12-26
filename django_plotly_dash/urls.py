@@ -37,8 +37,8 @@ urlpatterns = []
 
 for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '', '', '', ),
                                                               ('app', {'stateless':True}, 'app-', '', '', ),
-                                                              ('instance', {}, '', '/initial/<slug:cache_id>/', '--args', ),
-                                                              ('app', {'stateless':True}, 'app-', '/initial/<slug:cache_id>/', '--args', ),
+                                                              ('instance', {}, '', '/initial/<slug:cache_id>', '--args', ),
+                                                              ('app', {'stateless':True}, 'app-', '/initial/<slug:cache_id>', '--args', ),
                                                              ]:
 
     for url_part, view_function, name, url_suffix in [('_dash-routes', routes, 'routes', '', ),

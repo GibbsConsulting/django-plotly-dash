@@ -23,7 +23,10 @@ SOFTWARE.
 
 '''
 
+import uuid
+
 from django.conf import settings
+from django.core.cache import cache
 
 def _get_settings():
     try:
@@ -57,3 +60,38 @@ def http_poke_endpoint_enabled():
 def cache_timeout_initial_arguments():
     'Return cache timeout, in seconds, for initial arguments'
     return _get_settings().get('cache_timeout_initial_arguments', 60)
+
+def initial_argument_location():
+    'Return True if cache to be used for setting and getting initial arguments, or False for a session'
+
+    setget_location = _get_settings().get('cache_arguments', True)
+
+    return setget_location
+
+def store_initial_arguments(request, initial_arguments=None):
+    'Store initial arguments, if any, and return a cache identifier'
+
+    if initial_arguments is None:
+        return None
+
+    # Generate a cache id
+    cache_id = "dpd-initial-args-%s" % str(uuid.uuid4()).replace('-', '')
+
+    # Store args in json form in cache
+    if initial_argument_location():
+        cache.set(cache_id, initial_arguments, cache_timeout_initial_arguments())
+    else:
+        request.session[cache_id] = initial_arguments
+
+    return cache_id
+
+def get_initial_arguments(request, cache_id=None):
+    'Extract initial arguments for the dash app'
+
+    if cache_id is None:
+        return None
+
+    if initial_argument_location():
+        return cache.get(cache_id)
+
+    return request.session[cache_id]

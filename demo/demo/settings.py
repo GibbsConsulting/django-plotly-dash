@@ -132,6 +132,8 @@ PLOTLY_DASH = {
     "http_poke_enabled" : True, # Flag controlling availability of direct-to-messaging http endpoint
 
     "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
+
+    "cache_arguments" : True, # True for cache, False for session-based argument propagation
     }
 
 # Static files (CSS, JavaScript, Images)

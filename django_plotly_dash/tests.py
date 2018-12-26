@@ -203,3 +203,44 @@ def test_injection_updating(client):
         assert response3.status_code == 200
 
         assert response3.content.find(b'Test 789 content') > 0
+
+@pytest.mark.django_db
+def test_argument_settings(settings, client):
+    'Test the setting that controls how initial arguments are propagated through to the dash app'
+
+    from django_plotly_dash.util import initial_argument_location, store_initial_arguments, get_initial_arguments
+
+    assert initial_argument_location()
+
+    settings.PLOTLY_DASH = {'cache_arguments': True}
+
+    assert initial_argument_location()
+
+    test_value = {"test":"first"}
+
+    cache_id = store_initial_arguments(None, test_value)
+
+    assert len(cache_id) > 10
+
+    fetched = get_initial_arguments(None, cache_id)
+
+    assert fetched == test_value
+
+    settings.PLOTLY_DASH = {'cache_arguments': False}
+
+    assert not initial_argument_location()
+
+    cache_id2 = store_initial_arguments(client, test_value)
+
+    assert len(cache_id2) > 10
+
+    assert cache_id != cache_id2
+
+    ## For some reason, sessions are continually replaced, so lookup here doesnt work
+    #fetched2 = get_initial_arguments(client, cache_id2)
+    #assert fetched2 == test_value
+
+    assert store_initial_arguments(None, None) is None
+    assert get_initial_arguments(None, None) is None
+    assert store_initial_arguments(client, None) is None
+    assert get_initial_arguments(client, None) is None

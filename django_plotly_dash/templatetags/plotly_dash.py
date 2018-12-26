@@ -24,15 +24,12 @@ SOFTWARE.
 
 # pylint: disable=too-many-arguments, unused-variable, unused-argument, possibly-unused-variable
 
-import uuid
-
 from django import template
-from django.core.cache import cache
 
 from django.contrib.sites.shortcuts import get_current_site
 
 from django_plotly_dash.models import DashApp
-from django_plotly_dash.util import pipe_ws_endpoint_name, cache_timeout_initial_arguments
+from django_plotly_dash.util import pipe_ws_endpoint_name, store_initial_arguments
 
 register = template.Library()
 
@@ -74,13 +71,7 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
     height: 100%;
     """
 
-    if initial_arguments:
-        # Generate a cache id
-        cache_id = "dpd-initial-args-%s" % str(uuid.uuid4()).replace('-', '')
-        # Store args in json form in cache
-        cache.set(cache_id, initial_arguments, cache_timeout_initial_arguments())
-    else:
-        cache_id = None
+    cache_id = store_initial_arguments(context['request'], initial_arguments)
 
     da, app = _locate_daapp(name, slug, da, cache_id=cache_id)
 
