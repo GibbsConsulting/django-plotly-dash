@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   id="svg2"
+   viewBox="270 150 50 40"
+   height="40"
+   width="50">
+  <defs
+     id="defs4" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1">
+    <text
+       id="text4257"
+       y="177.0697"
+       x="278.92001"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Medium';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:none;fill-opacity:1;stroke:#7ed8e7;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.95702004;"
+       xml:space="preserve"><tspan
+         id="tspan4265"
+         y="177.0697"
+         x="278.92001">d</tspan></text>
+    <text
+       id="text4273"
+       y="177.0697"
+       x="303.24301"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Medium';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:none;fill-opacity:1;stroke:#7ed8e7;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.95702006"
+       xml:space="preserve"><tspan
+         y="177.0697"
+         x="303.24301"
+         id="tspan4275">d</tspan><tspan
+         id="tspan4277"
+         y="205.1947"
+         x="303.24301" /></text>
+    <text
+       id="text4279"
+       y="176.69971"
+       x="290.64288"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:22.5px;line-height:125%;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu, Medium';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:none;fill-opacity:1;stroke:#7ed8e7;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:0.95702004;"
+       xml:space="preserve"><tspan
+         y="176.69971"
+         x="290.64288"
+         id="tspan4281">p</tspan><tspan
+         id="tspan4283"
+         y="204.82471"
+         x="290.64288" /></text>
+  </g>
+</svg>
