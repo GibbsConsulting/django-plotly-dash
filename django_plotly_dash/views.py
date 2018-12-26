@@ -27,9 +27,9 @@ SOFTWARE.
 import json
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.core.cache import cache
 
 from .models import DashApp
+from .util import get_initial_arguments
 
 def routes(*args, **kwargs):
     'Return routes'
@@ -52,10 +52,7 @@ def layout(request, ident, stateless=False, cache_id=None, **kwargs):
     view_func = app.locate_endpoint_function('dash-layout')
     resp = view_func()
 
-    if cache_id:
-        initial_arguments = cache.get(cache_id)
-    else:
-        initial_arguments = None
+    initial_arguments = get_initial_arguments(request, cache_id)
 
     response_data, mimetype = app.augment_initial_layout(resp, initial_arguments)
     return HttpResponse(response_data,
