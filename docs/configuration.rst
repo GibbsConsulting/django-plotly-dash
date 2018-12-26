@@ -27,6 +27,9 @@ below.
 
       # Name of view wrapping function
       "view_decorator": None,
+
+      # Flag to control location of initial argument storage
+      "cache_arguments": True,
   }
 
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in
@@ -57,3 +60,13 @@ View decoration
 
 Each view delegated through to ``plotly_dash`` can be wrapped using a view decoration function. This enables access to be restricted to
 logged-in users, or using a desired conditions based on the user and session state.
+
+.. _cache_arguments:
+
+Initial arguments
+-----------------
+
+Initial arguments are stored within the server between the specification of an app in a template tag and the invocation of the
+view functions for the app. This storage is transient and can be efficiently performed using Django's caching framework. In some
+situations, however, a suitably configured cache is not available. For this use case, setting the ``cache_arguments`` flag to ``False`` will
+cause initial arguments to be placed inside the Django session.
