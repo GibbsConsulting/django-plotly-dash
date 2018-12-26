@@ -27,6 +27,8 @@ from django.conf import settings
 
 from django.contrib.auth.decorators import login_required as login_required_decorator
 
+#pylint: disable=bare-except, unused-argument
+
 def login_required(view_function, **kwargs):
     'Wrap all DPD calls with login_required'
     return login_required_decorator(view_function)
@@ -37,7 +39,7 @@ try:
         dash_view_decorator = locals()[dash_view_decorator_name]
     except:
         mod_name, func_name = dash_view_decorator_name.rsplit('.', 1)
-        if len(mod_name):
+        if mod_name:
             mod = importlib.import_module(mod_name)
             dash_view_decorator = getattr(mod, func_name)
         else:

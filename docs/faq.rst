@@ -30,5 +30,5 @@ in this github `issue <https://github.com/GibbsConsulting/django-plotly-dash/iss
 
 * Can per-user or other fine-grained access control be used?
 
- Yes. See the :ref:`view_decoration` configuration setting.
+ Yes. See the :ref:`view_decoration` configuration setting and :ref:`access_control` section.
 
