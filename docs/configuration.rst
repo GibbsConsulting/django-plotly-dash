@@ -57,3 +57,19 @@ View decoration
 
 Each view delegated through to ``plotly_dash`` can be wrapped using a view decoration function. This enables access to be restricted to
 logged-in users, or using a desired conditions based on the user and session state.
+
+To restrict all access to logged-in users, use the ``login_required`` wrapper:
+
+.. code-block:: python
+
+  PLOTLY_DASH = {
+
+      ...
+      # Name of view wrapping function
+      "view_decorator": "django_plotly_dash.access.login_required",
+      ...
+  }
+
+More information can be found in the :ref:`view decoration <access_control>` section.
+
+

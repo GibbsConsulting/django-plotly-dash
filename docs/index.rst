@@ -23,6 +23,7 @@ Contents
    template_tags
    dash_components
    configuration
-   development
+   access_control
    faq
+   development
    license
