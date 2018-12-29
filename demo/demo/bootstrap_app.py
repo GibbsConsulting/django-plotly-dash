@@ -28,7 +28,8 @@ import dash_html_components as html
 
 from django_plotly_dash import DjangoDash
 
-dd = DjangoDash("BootstrapApplication")
+dd = DjangoDash("BootstrapApplication",
+                add_bootstrap_links=True)
 
 dd.layout = html.Div(
     [
