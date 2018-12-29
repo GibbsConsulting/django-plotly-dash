@@ -27,7 +27,7 @@ SOFTWARE.
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 
-from .views import routes, layout, dependencies, update, main_view, component_suites
+from .views import routes, layout, dependencies, update, main_view, component_suites, component_component_suites
 
 from .app_name import app_name, main_view_label
 
@@ -47,6 +47,7 @@ for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '
                                                       ('_dash-update-component', csrf_exempt(update), 'update-component', '', ),
                                                       ('', main_view, main_view_label, '', ),
                                                       ('_dash-component-suites', component_suites, 'component-suites', '/<slug:component>/<resource>', ),
+                                                      ('_dash-component-suites', component_component_suites, 'component-component-suites', '/<slug:component>/_components/<resource>', ),
                                                      ]:
 
         route_name = '%s%s%s' % (name_prefix, name, name_suffix)
