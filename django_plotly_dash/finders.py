@@ -135,7 +135,6 @@ class DashAssetFinder(BaseFinder):
         super(DashAssetFinder, self).__init__()
 
     def find(self, path, all=False):
-        print("DashAppAssetFinder:find: ",path,all)
         return []
 
     def list(self, ignore_patterns):
