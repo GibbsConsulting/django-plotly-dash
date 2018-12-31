@@ -26,8 +26,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Load demo plotly apps - this triggers their registration
-import demo.plotly_apps # pylint: disable=unused-import
-import demo.dash_apps # pylint: disable=unused-import
+import demo.plotly_apps    # pylint: disable=unused-import
+import demo.dash_apps      # pylint: disable=unused-import
+import demo.bootstrap_app  # pylint: disable=unused-import
 
 from django_plotly_dash.views import add_to_session
 
@@ -41,6 +42,7 @@ urlpatterns = [
     url('^demo-four$', TemplateView.as_view(template_name='demo_four.html'), name="demo-four"),
     url('^demo-five$', TemplateView.as_view(template_name='demo_five.html'), name="demo-five"),
     url('^demo-six', dash_example_1_view, name="demo-six"),
+    url('^demo-seven', TemplateView.as_view(template_name='demo_seven.html'), name="demo-seven"),
     url('^admin/', admin.site.urls),
     url('^django_plotly_dash/', include('django_plotly_dash.urls')),
 

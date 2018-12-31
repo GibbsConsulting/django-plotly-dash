@@ -187,6 +187,7 @@ if DEBUG:
                              'dash_html_components',
                              'dash_renderer',
                              'dpd_components',
+                             'dash_bootstrap_components',
                             ]:
 
         module = importlib.import_module(dash_module_name)

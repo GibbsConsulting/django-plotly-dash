@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block title%}Demo Seven - Dash Bootstrap Components{%endblock%}
+
+{%block content%}
+<h1>Dash Bootstrap Components</h1>
+<p>
+  This example demonstrates the use of the dash-bootstrap-components package.
+</p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p>&lt;div class="<span>{</span>% plotly_class name="BootstrapApplication"%}">
+    <p class="ml-3"><span>{</span>% plotly_app name="BootstrapApplication" %}</p>
+    <p>&lt;\div>
+  </div>
+</div>
+<p></p>
+<div class="card border-dark">
+  <div class="card-body">
+    <div class="{%plotly_class name="BootstrapApplication"%}">
+      {%plotly_app name="BootstrapApplication"%}
+    </div>
+  </div>
+</div>
+{%endblock%}

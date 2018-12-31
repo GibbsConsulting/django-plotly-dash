@@ -5,5 +5,7 @@ dash-renderer
 plotly
 dpd-components
 
+dash-bootstrap-components
+
 Django>=2
 Flask>=1.0.2
