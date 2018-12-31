@@ -44,6 +44,7 @@ class DashComponentFinder(BaseFinder):
 
         self.locations = []
         self.storages = OrderedDict()
+        self.components = {}
 
         self.ignore_patterns = ["*.py", "*.pyc",]
 
@@ -65,16 +66,36 @@ class DashComponentFinder(BaseFinder):
             self.locations.append(component_name)
 
             self.storages[component_name] = storage
+            self.components[path] = component_name
 
         super(DashComponentFinder, self).__init__()
 
     def find(self, path, all=False):
-        print("DashAssetFinder:find: ",path,all)
+        matches = []
+        for component_name in self.locations:
+            storage = self.storages[component_name]
+            location = storage.location # dir on disc
+
+            component_path = "dash/component/%s" % component_name
+            if len(path) > len(component_path) and path[:len(component_path)] == component_path:
+
+                matched_path = os.path.join(location, path[len(component_path)+1:])
+                if os.path.exists(matched_path):
+                    if not all:
+                        return matched_path
+                    matches.append(matched_path)
+
+        return matches
+
+    def find_location(self, path):
+        if os.path.exists(path):
+            return path
 
     def list(self, ignore_patterns):
         for component_name in self.locations:
             storage = self.storages[component_name]
             for path in get_files(storage, ignore_patterns + self.ignore_patterns):
+                print("DashAssetFinder",path,storage)
                 yield path, storage
 
 class DashAssetFinder(BaseFinder):
@@ -114,7 +135,8 @@ class DashAssetFinder(BaseFinder):
         super(DashAssetFinder, self).__init__()
 
     def find(self, path, all=False):
-        print("DashAppFinder:find: ",path,all)
+        print("DashAppAssetFinder:find: ",path,all)
+        return []
 
     def list(self, ignore_patterns):
         for component_name in self.locations:

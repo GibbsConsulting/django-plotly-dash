@@ -111,10 +111,12 @@ def component_suites(request, resource=None, component=None, extra_element="", *
     'Return part of a client-side component, served locally for some reason'
 
     get_params = request.GET.urlencode()
-    if get_params:
-        redone_url = "/static/dash/component/%s/%s?%s" %(component, resource, get_params)
+    if get_params and False:
+        redone_url = "/static/dash/component/%s/%s%s?%s" %(component, extra_element, resource, get_params)
     else:
-        redone_url = "/static/dash/component/%s/%s" %(component, resource)
+        redone_url = "/static/dash/component/%s/%s%s" %(component, extra_element, resource)
+
+    print("Redirecting to :",redone_url)
 
     return HttpResponseRedirect(redirect_to=redone_url)
 
