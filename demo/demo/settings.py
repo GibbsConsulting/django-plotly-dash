@@ -175,26 +175,18 @@ CHANNEL_LAYERS = {
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    'django_plotly_dash.finders.DashAssetFinder',
+    'django_plotly_dash.finders.DashComponentFinder',
 ]
 
-# In order to serve dash components locally - not recommended in general, but
-# can be useful for development especially if offline - we add in the root directory
-# of each module. This is a bit of fudge and only needed if serve_locally=True is
-# set on a DjangoDash instance.
-#
-# Note that this makes all of the python module (including .py and .pyc) files available
-# through the static route. This is not a big deal for development but at the same time
-# not particularly neat or tidy.
+# Plotly components containing static content that should
+# be handled by the Django staticfiles infrastructure
 
-if DEBUG:
-
-    import importlib
-
-    for dash_module_name in ['dash_core_components',
-                             'dash_html_components',
-                             'dash_renderer',
-                             'dpd_components',
-                            ]:
-
-        module = importlib.import_module(dash_module_name)
-        STATICFILES_DIRS.append(("dash/%s"%dash_module_name, os.path.dirname(module.__file__)))
+PLOTLY_COMPONENTS = [
+    'dash_core_components',
+    'dash_html_components',
+    'dash_bootstrap_components',
+    'dash_renderer',
+    'dpd_components',
+]

@@ -26,6 +26,7 @@ SOFTWARE.
 '''
 
 import json
+import inspect
 
 from dash import Dash
 from flask import Flask
@@ -49,6 +50,10 @@ def add_usable_app(name, app):
     global usable_apps # pylint: disable=global-statement
     usable_apps[name] = app
     return name
+
+def all_apps():
+    'Return a dictionary of all locally registered apps with the slug name as key'
+    return usable_apps
 
 def get_local_stateless_by_name(name):
     '''
@@ -106,6 +111,11 @@ class DjangoDash:
             from bootstrap4.bootstrap import css_url
             bootstrap_source = css_url()['href']
             self.css.append_script({'external_url':[bootstrap_source,]})
+
+        # Remember some caller info for static files
+        caller_frame = inspect.stack()[1]
+        self.caller_module = inspect.getmodule(caller_frame[0])
+        self.caller_module_location = inspect.getfile(self.caller_module)
 
     def as_dash_instance(self, cache_id=None):
         '''
