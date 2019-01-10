@@ -62,8 +62,10 @@ Direct use in this manner, without any application state or
 use of live updating, is equivalent to inserting an ``iframe`` containing the
 URL of a ``Dash`` application.
 
-The registration code needs to be in a location
-that will be imported into the Django process before any model or
-template tag attempts to use it. The example Django application
-in the demo subdirectory achieves this through an import in the main urls.py file; any views.py would also be sufficient.
+.. note::
+  The registration code needs to be in a location
+  that will be imported into the Django process before any model or
+  template tag attempts to use it. The example Django application
+  in the demo subdirectory achieves this through an import in the main ``urls.py`` file, 
+  but any ``views.py`` would also be sufficient.
 
