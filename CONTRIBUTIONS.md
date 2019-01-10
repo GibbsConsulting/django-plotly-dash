@@ -19,3 +19,5 @@ Thanks to the following people:
 [weber-s](https://github.com/weber-s)
 
 [eddy-obj](https://github.com/eddy-ojb)
+
+[brylie](https://github.com/brylie)
