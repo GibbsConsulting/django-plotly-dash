@@ -33,12 +33,14 @@ from django.contrib.staticfiles.utils import get_files
 from django.core.files.storage import FileSystemStorage
 
 from django.conf import settings
-from django.apps import apps
+from django.apps import apps #pylint: disable=unused-import
 
 from django_plotly_dash.dash_wrapper import all_apps
 
 class DashComponentFinder(BaseFinder):
     'Find static files in components'
+
+    #pylint: disable=abstract-method, redefined-builtin
 
     def __init__(self):
 
@@ -87,7 +89,9 @@ class DashComponentFinder(BaseFinder):
 
         return matches
 
+    # pylint: disable=inconsistent-return-statements, no-self-use
     def find_location(self, path):
+        'Return location, if it exists'
         if os.path.exists(path):
             return path
 
@@ -95,11 +99,13 @@ class DashComponentFinder(BaseFinder):
         for component_name in self.locations:
             storage = self.storages[component_name]
             for path in get_files(storage, ignore_patterns + self.ignore_patterns):
-                print("DashAssetFinder",path,storage)
+                print("DashAssetFinder", path, storage)
                 yield path, storage
 
 class DashAssetFinder(BaseFinder):
     'Find static files in asset directories'
+
+    #pylint: disable=unused-import, unused-variable, no-name-in-module, import-error, abstract-method
 
     def __init__(self):
 
@@ -120,7 +126,7 @@ class DashAssetFinder(BaseFinder):
         for app_slug, obj in self.apps.items():
             caller_module = obj.caller_module
             location = obj.caller_module_location
-            path_directory = os.path.join(os.path.dirname(location),self.subdir)
+            path_directory = os.path.join(os.path.dirname(location), self.subdir)
 
             if os.path.isdir(path_directory):
 
@@ -134,6 +140,7 @@ class DashAssetFinder(BaseFinder):
 
         super(DashAssetFinder, self).__init__()
 
+    #pylint: disable=redefined-builtin
     def find(self, path, all=False):
         return []
 
