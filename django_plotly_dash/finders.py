@@ -111,9 +111,6 @@ class DashAssetFinder(BaseFinder):
 
         # Get all registered apps
 
-        import demo.plotly_apps
-        import demo.dash_apps
-
         self.apps = all_apps()
 
         self.subdir = 'assets'
