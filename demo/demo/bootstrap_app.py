@@ -38,3 +38,13 @@ dd.layout = html.Div(
     ]
     )
 
+dis = DjangoDash("DjangoSessionState",
+                 add_bootstrap_links=True)
+
+dis.layout = html.Div(
+    [
+    dbc.Alert("This is an alert", color="primary"),
+    dbc.Alert("Danger", color="danger"),
+    ]
+    )
+
