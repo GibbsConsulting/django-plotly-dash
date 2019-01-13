@@ -83,11 +83,12 @@ class DjangoDash:
 
     To use, construct an instance of DjangoDash() in place of a Dash() one.
     '''
+    #pylint: disable=too-many-instance-attributes
     def __init__(self, name=None, serve_locally=False,
                  expanded_callbacks=False,
                  add_bootstrap_links=False,
                  suppress_callback_exceptions=False,
-                 **kwargs): # pylint: disable=unused-argument
+                 **kwargs): # pylint: disable=unused-argument, too-many-arguments
         if name is None:
             global uid_counter # pylint: disable=global-statement
             uid_counter += 1

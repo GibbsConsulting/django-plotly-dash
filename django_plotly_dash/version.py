@@ -4,4 +4,4 @@ Define version number for django-plotly-dash, in a form that can be used by setu
 This addresses issue #81
 '''
 
-__version__ = "0.9.5"
+__version__ = "0.9.6"
