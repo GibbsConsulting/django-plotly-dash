@@ -35,6 +35,45 @@ below.
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in
 the Django settings file.
 
+The Django staticfiles infrastructure is used to serve all local static files for
+the Dash apps. This requires adding a setting for the specification of additional static
+file finders
+
+.. code-block:: python
+
+  # Staticfiles finders for locating dash app assets and related files
+
+  STATICFILES_FINDERS = [
+      'django.contrib.staticfiles.finders.FileSystemFinder',
+      'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+      'django_plotly_dash.finders.DashAssetFinder',
+      'django_plotly_dash.finders.DashComponentFinder',
+  ]
+
+and also providing a list of components used
+
+.. code-block:: python
+
+  # Plotly components containing static content that should
+  # be handled by the Django staticfiles infrastructure
+
+  PLOTLY_COMPONENTS = [
+
+      # Common components
+      'dash_core_components',
+      'dash_html_components',
+      'dash_renderer',
+
+      # django-plotly-dash components
+      'dpd_components',
+
+      # Other components, as needed
+      'dash_bootstrap_components',
+  ]
+
+This list should be extended with any additional components that the applications
+use, where the components have files that have to be served locally.
+
 .. _endpoints:
 
 Endpoints

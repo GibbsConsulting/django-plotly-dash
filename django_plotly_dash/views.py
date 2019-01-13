@@ -111,13 +111,25 @@ def component_suites(request, resource=None, component=None, extra_element="", *
     'Return part of a client-side component, served locally for some reason'
 
     get_params = request.GET.urlencode()
-    if get_params:
-        redone_url = "/static/dash/%s/%s%s?%s" %(component, extra_element, resource, get_params)
+    if get_params and False:
+        redone_url = "/static/dash/component/%s/%s%s?%s" %(component, extra_element, resource, get_params)
     else:
-        redone_url = "/static/dash/%s/%s%s" %(component, extra_element, resource)
+        redone_url = "/static/dash/component/%s/%s%s" %(component, extra_element, resource)
+
+    print("Redirecting to :",redone_url)
 
     return HttpResponseRedirect(redirect_to=redone_url)
 
+def app_assets(request, **kwargs):
+    'Return a local dash app asset, served up through the Django static framework'
+    get_params = request.GET.urlencode()
+    extra_part = ""
+    if get_params:
+        redone_url = "/static/dash/assets/%s?%s" %(extra_part, get_params)
+    else:
+        redone_url = "/static/dash/assets/%s" % extra_part
+
+    return HttpResponseRedirect(redirect_to=redone_url)
 
 # pylint: disable=wrong-import-position, wrong-import-order
 from django.template.response import TemplateResponse

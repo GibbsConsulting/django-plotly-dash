@@ -79,8 +79,13 @@ well as adding ``channels`` to the ``INSTALLED_APPS`` list, a ``CHANNEL_LAYERS``
 
 The host and port entries in ``hosts`` should be adjusted to match the network location of the Redis instance.
 
+Further configuration
+---------------------
+
 Further configuration options can be specified through the optional ``PLOTLY_DASH`` settings variable. The
 available options are detailed in the :ref:`configuration <configuration>` section.
+
+This includes arranging for Dash assets to be served using the Django ``staticfiles`` functionality.
 
 Source code and demo
 --------------------
