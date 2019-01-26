@@ -101,6 +101,7 @@ def main_view(request, ident, stateless=False, cache_id=None, **kwargs):
     return HttpResponse(resp)
 
 def component_component_suites(request, resource=None, component=None, **kwargs):
+    'Return part of a client-side component, served locally for some reason'
     return component_suites(request,
                             resource=resource,
                             component=component,
@@ -116,7 +117,7 @@ def component_suites(request, resource=None, component=None, extra_element="", *
     else:
         redone_url = "/static/dash/component/%s/%s%s" %(component, extra_element, resource)
 
-    print("Redirecting to :",redone_url)
+    print("Redirecting to :", redone_url)
 
     return HttpResponseRedirect(redirect_to=redone_url)
 
