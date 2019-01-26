@@ -403,8 +403,7 @@ class WrappedDash(Dash):
         'Invoke callback, adjusting variable names as needed'
         return super(WrappedDash, self).callback(self._fix_callback_item(output),
                                                  [self._fix_callback_item(x) for x in inputs],
-                                                 [self._fix_callback_item(x) for x in state],
-                                                 [self._fix_callback_item(x) for x in events])
+                                                 [self._fix_callback_item(x) for x in state])
 
     def dispatch(self):
         'Perform dispatch, using request embedded within flask global state'
