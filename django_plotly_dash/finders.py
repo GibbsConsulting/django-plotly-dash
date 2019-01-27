@@ -50,7 +50,12 @@ class DashComponentFinder(BaseFinder):
 
         self.ignore_patterns = ["*.py", "*.pyc",]
 
-        for component_name in settings.PLOTLY_COMPONENTS:
+        try:
+            components = settings.PLOTLY_COMPONENTS
+        except:
+            components = []
+
+        for component_name in components:
 
             module = importlib.import_module(component_name)
             path_directory = os.path.dirname(module.__file__)
