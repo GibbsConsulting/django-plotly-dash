@@ -9,8 +9,14 @@
   This example demonstrates passing session state values from Django to a Dash app.
 </p>
 <p>
-  The current value of <span>ind_use</span> is <span>{{ind_use}}</span>
+  The view that renders this page updates a variable each time
+  the view is rendered in this session. Clicking on the button will update the session
+  with a record of the number of clicks of the button since the page was rendered.
 </p>
+<p>
+  The current page render count in this session is <span>{{ind_use}}</span>
+</p>
+<p></p>
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>
