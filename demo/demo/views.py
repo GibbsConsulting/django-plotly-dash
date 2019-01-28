@@ -17,3 +17,20 @@ def dash_example_1_view(request, template_name="demo_six.html", **kwargs):
     request.session['django_plotly_dash'] = dash_context
 
     return render(request, template_name=template_name, context=context)
+
+def session_state_view(request, template_name, **kwargs):
+    'Example view that exhibits the use of sessions to store state'
+
+    session = request.session
+
+    demo_count = session.get('django_plotly_dash', {})
+
+    ind_use = demo_count.get('ind_use', 0)
+    ind_use += 1
+    demo_count['ind_use'] = ind_use
+
+    context = {'ind_use' : ind_use}
+
+    session['django_plotly_dash'] = demo_count
+
+    return render(request, template_name=template_name, context=context)

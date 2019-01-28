@@ -23,6 +23,7 @@ Contents
    template_tags
    dash_components
    configuration
+   demo_notes
    access_control
    faq
    development
