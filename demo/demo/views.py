@@ -19,6 +19,7 @@ def dash_example_1_view(request, template_name="demo_six.html", **kwargs):
     return render(request, template_name=template_name, context=context)
 
 def session_state_view(request, template_name, **kwargs):
+    'Example view that exhibits the use of sessions to store state'
 
     session = request.session
 

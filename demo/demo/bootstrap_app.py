@@ -43,28 +43,31 @@ dis = DjangoDash("DjangoSessionState",
 
 dis.layout = html.Div(
     [
-    dbc.Alert("This is an alert", id="base-alert", color="primary"),
-    dbc.Alert(children="Danger", id="danger-alert", color="danger"),
-    dbc.Button("Update session state", id="update-button", color="warning"),
-    ]
+        dbc.Alert("This is an alert", id="base-alert", color="primary"),
+        dbc.Alert(children="Danger", id="danger-alert", color="danger"),
+        dbc.Button("Update session state", id="update-button", color="warning"),
+        ]
     )
 
+#pylint: ignore=unused-argument
 @dis.expanded_callback(
     dash.dependencies.Output("base-alert", 'children'),
     [dash.dependencies.Input('danger-alert', 'children'),]
     )
 def session_demo_danger_callback(da_children, session_state=None, **kwargs):
-    # Update output based just on state
+    'Update output based just on state'
     if not session_state:
         return "Session state not yet available"
 
-    return "Session state contains: " + str(session_state.get('bootstrap_demo_state', "NOTHING")) + " and the page render count is " + str(session_state.get("ind_use","NOT SET"))
+    return "Session state contains: " + str(session_state.get('bootstrap_demo_state', "NOTHING")) + " and the page render count is " + str(session_state.get("ind_use", "NOT SET"))
 
+#pylint: ignore=unused-argument
 @dis.expanded_callback(
     dash.dependencies.Output("danger-alert", 'children'),
     [dash.dependencies.Input('update-button', 'n_clicks'),]
     )
-def session_demo_danger_callback(n_clicks, session_state=None, **kwargs):
+def session_demo_alert_callback(n_clicks, session_state=None, **kwargs):
+    'Output text based on both app state and session state'
     if session_state is None:
         raise NotImplementedError("Cannot handle a missing session state")
     csf = session_state.get('bootstrap_demo_state', None)
@@ -74,5 +77,4 @@ def session_demo_danger_callback(n_clicks, session_state=None, **kwargs):
     else:
         csf['clicks'] = n_clicks
     return "Button has been clicked %s times since the page was rendered" %n_clicks
-
 
