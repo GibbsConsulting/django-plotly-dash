@@ -90,7 +90,7 @@ This includes arranging for Dash assets to be served using the Django ``staticfi
 Source code and demo
 --------------------
 
-The source code repository contains a simple demo application.
+The source code repository contains a :ref:`simple demo <demo_notes>` application.
 
 To install and run it::
 
@@ -116,5 +116,6 @@ the ``prepare_redis`` step is skipped then the fourth demo page, exhibiting live
 More details on setting up a development environment, which is also sufficient for running
 the demo, can be found in the :ref:`development <development>` section.
 
-Note that the current demo, along with the codebase, is in a prerelease and very raw form.
+Note that the current demo, along with the codebase, is in a prerelease and very raw form. An
+overview can be found in the  :ref:`demonstration application<demo_notes>` section.`
 

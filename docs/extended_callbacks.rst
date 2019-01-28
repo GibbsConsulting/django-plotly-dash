@@ -54,6 +54,9 @@ in the :ref:`models_and_state` section.
 Using session state
 -------------------
 
+The :ref:`walkthrough <session_example>` of the session state example details how
+the XXX demo interacts with a ``Django`` session.
+
 Unless an explicit pipe is created, changes to the session state and other server-side objects are not automatically
 propagated to an application. Something in the front-end UI has to invoke a callback; at this point the
 latest version of these objects will be provided to the callback. The same considerations
