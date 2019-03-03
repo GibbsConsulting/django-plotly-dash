@@ -205,6 +205,15 @@ class DjangoDash:
         self._expanded_callbacks = True
         return self.callback(output, inputs, state, events)
 
+    def get_asset_url(self, asset_name):
+        '''URL of an asset associated with this component
+
+        Use a placeholder and insert later
+        '''
+        return self._uid +"/"+ asset_name
+
+        #return self.as_dash_instance().get_asset_url(asset_name)
+
 class PseudoFlask:
     'Dummy implementation of a Flask instance, providing stub functionality'
     def __init__(self):
@@ -506,6 +515,8 @@ class WrappedDash(Dash):
         return index
 
     def interpolate_index(self, **kwargs): #pylint: disable=arguments-differ
+
+        print("IN INTERPOLATE INDEX")
 
         if not self._return_embedded:
             resp = super(WrappedDash, self).interpolate_index(**kwargs)

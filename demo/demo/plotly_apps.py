@@ -309,3 +309,10 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
     return {'data':traces,
             #'layout': go.Layout
            }
+
+localState = DjangoDash("LocalState",
+                        serve_locally=True)
+
+localState.layout = html.Div([html.Img(src=localState.get_asset_url('image_one.png')),
+                              html.Img(src='/assets/image_two.png'),
+                              ])

@@ -1,0 +1,33 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block title%}Demo Nine - Serving local assets{%endblock%}
+
+{%block content%}
+<h1>Serving Local Assets</h1>
+<p>
+  This example demonstrates serving local assets as part of a Dash app.
+</p>
+<p>
+  The extra files are specified using the standard plotly dash approach, and are
+  made available through the standard Django staticfiles infrastructure. This means that
+  they will be served the same way as other static files through a reverse proxy.
+</p>
+<p></p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p>&lt;div class="<span>{</span>% plotly_class name="LocalState"%}">
+    <p class="ml-3"><span>{</span>% plotly_app name="LocalState" ratio=0.3 %}</p>
+    <p>&lt;\div>
+  </div>
+</div>
+<p></p>
+<div class="card border-dark">
+  <div class="card-body">
+    <div class="{%plotly_class name="LocalState"%}">
+      {%plotly_app name="LocalState" ratio=0.3 %}
+    </div>
+  </div>
+</div>
+{%endblock%}
