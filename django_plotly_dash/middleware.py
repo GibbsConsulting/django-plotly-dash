@@ -29,6 +29,7 @@ SOFTWARE.
 from django.conf import settings
 from django.middleware.csrf import CsrfViewMiddleware, _sanitize_token, _compare_salted_tokens, get_token
 import json
+from .app_name import app_name
 
 class EmbeddedHolder:
     'Hold details of embedded content from processing a view'
@@ -190,34 +191,30 @@ class DPDCsrfViewMiddleware(CsrfViewMiddleware):
                 # CSRF.
                 return self._reject(request, REASON_NO_CSRF_COOKIE)
 
-            print("App name:")
-            print(request.resolver_match.app_name)
-
-            # Check non-cookie token for match.
-            request_csrf_token = ""
-            if request.method == "POST":
-                try:
-                    request_csrf_token = request.POST.get('csrfmiddlewaretoken', '')
-                except IOError:
-                    # Handle a broken connection before we've completed reading
-                    # the POST data. process_view shouldn't raise any
-                    # exceptions, so we'll ignore and serve the user a 403
-                    # (assuming they're still listening, which they probably
-                    # aren't because of the error).
-                    pass
-
-            if request_csrf_token == "":
-                # Fall back to X-CSRFToken, to make things easier for AJAX,
-                # and possible for PUT/DELETE.
-                request_csrf_token = request.META.get(settings.CSRF_HEADER_NAME, '')
-
-            if request_csrf_token == "undefined" or "" :
-                import json
+            if request.resolver_match.app_name == app_name:
                 body = json.loads(request.body.decode('utf-8'))
                 for i in body['inputs']:
                     if i['id'] == 'csrfmiddlewaretoken':
                         request_csrf_token = i['value']
 
+            else:
+                # Check non-cookie token for match.
+                request_csrf_token = ""
+                if request.method == "POST":
+                    try:
+                        request_csrf_token = request.POST.get('csrfmiddlewaretoken', '')
+                    except IOError:
+                        # Handle a broken connection before we've completed reading
+                        # the POST data. process_view shouldn't raise any
+                        # exceptions, so we'll ignore and serve the user a 403
+                        # (assuming they're still listening, which they probably
+                        # aren't because of the error).
+                        pass
+
+                if request_csrf_token == "":
+                    # Fall back to X-CSRFToken, to make things easier for AJAX,
+                    # and possible for PUT/DELETE.
+                    request_csrf_token = request.META.get(settings.CSRF_HEADER_NAME, '')
 
             request_csrf_token = _sanitize_token(request_csrf_token)
             if not _compare_salted_tokens(request_csrf_token, csrf_token):

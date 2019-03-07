@@ -57,7 +57,7 @@ dis.layout = html.Div(
     [dash.dependencies.Input('danger-alert', 'children'),
     dash.dependencies.Input('csrfmiddlewaretoken', 'value'),]
     )
-def session_demo_danger_callback(da_children, session_state=None, **kwargs):
+def session_demo_danger_callback(da_children, token, session_state=None, **kwargs):
     'Update output based just on state'
     if not session_state:
         return "Session state not yet available"

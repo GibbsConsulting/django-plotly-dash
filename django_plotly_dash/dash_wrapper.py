@@ -341,7 +341,6 @@ class WrappedDash(Dash):
                 if r is None:
                     r = self.walk_tree_and_replace(v, overrides)
                 response[k] = r
-                print("Response: %s" %(str(response[k])))
             return response
         if isinstance(data, list):
             # process each entry in turn and return
