@@ -30,6 +30,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from .models import DashApp
 from .util import get_initial_arguments
+from django.middleware.csrf import get_token
+
 
 def routes(*args, **kwargs):
     'Return routes'
@@ -51,13 +53,15 @@ def layout(request, ident, stateless=False, cache_id=None, **kwargs):
 
     view_func = app.locate_endpoint_function('dash-layout')
     resp = view_func()
+    
+    # get the token upon request of the layout
+    app._csrfmiddlewaretoken = get_token(request)
 
     initial_arguments = get_initial_arguments(request, cache_id)
 
     response_data, mimetype = app.augment_initial_layout(resp, initial_arguments)
     return HttpResponse(response_data,
                         content_type=mimetype)
-
 def update(request, ident, stateless=False, **kwargs):
     'Generate update json response'
     dash_app, app = DashApp.locate_item(ident, stateless)

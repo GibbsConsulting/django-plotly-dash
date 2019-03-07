@@ -23,6 +23,7 @@ SOFTWARE.
 '''
 
 import dash
+import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 
@@ -42,7 +43,8 @@ dis = DjangoDash("DjangoSessionState",
                  add_bootstrap_links=True)
 
 dis.layout = html.Div(
-    [
+    [   
+        dcc.Input(id='csrfmiddlewaretoken', style={'display': 'hidden'}, value=''),
         dbc.Alert("This is an alert", id="base-alert", color="primary"),
         dbc.Alert(children="Danger", id="danger-alert", color="danger"),
         dbc.Button("Update session state", id="update-button", color="warning"),
@@ -52,7 +54,8 @@ dis.layout = html.Div(
 #pylint: ignore=unused-argument
 @dis.expanded_callback(
     dash.dependencies.Output("base-alert", 'children'),
-    [dash.dependencies.Input('danger-alert', 'children'),]
+    [dash.dependencies.Input('danger-alert', 'children'),
+    dash.dependencies.Input('csrfmiddlewaretoken', 'value'),]
     )
 def session_demo_danger_callback(da_children, session_state=None, **kwargs):
     'Update output based just on state'
@@ -64,9 +67,10 @@ def session_demo_danger_callback(da_children, session_state=None, **kwargs):
 #pylint: ignore=unused-argument
 @dis.expanded_callback(
     dash.dependencies.Output("danger-alert", 'children'),
-    [dash.dependencies.Input('update-button', 'n_clicks'),]
+    [dash.dependencies.Input('update-button', 'n_clicks'),
+    dash.dependencies.Input('csrfmiddlewaretoken', 'value'),]
     )
-def session_demo_alert_callback(n_clicks, session_state=None, **kwargs):
+def session_demo_alert_callback(n_clicks, csrftoken, session_state=None, **kwargs):
     'Output text based on both app state and session state'
     if session_state is None:
         raise NotImplementedError("Cannot handle a missing session state")

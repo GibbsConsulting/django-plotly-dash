@@ -27,6 +27,7 @@ import uuid
 
 from django.conf import settings
 from django.core.cache import cache
+from django.views.decorators.csrf import csrf_exempt
 
 def _get_settings():
     try:
@@ -95,3 +96,17 @@ def get_initial_arguments(request, cache_id=None):
         return cache.get(cache_id)
 
     return request.session[cache_id]
+
+def csrf_enabled():
+    'Return true if csrf protection enabled'
+    return _get_settings().get('enable_anti_csrf', False)
+
+def check_csrf_exempt(view_function, **kwargs):
+    'Check if csrf_enabled. If not, use csrf exempt on update function'
+
+    if not csrf_enabled():
+        return csrf_exempt(view_function, **kwargs)
+
+    return view_function
+
+

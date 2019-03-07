@@ -323,16 +323,25 @@ class WrappedDash(Dash):
             replacements = {}
             # look for id entry
             thisID = data.get('id', None)
+
             if thisID is not None:
                 replacements = overrides.get(thisID, None) if overrides else None
+
                 if not replacements:
                     replacements = self._replacements.get(thisID, {})
+
             # walk all keys and replace if needed
             for k, v in data.items():
                 r = replacements.get(k, None)
+
+                # if the element is csrfmiddlewaretoken then replace value:
+                if thisID == 'csrfmiddlewaretoken' and k == 'value':
+                    r = self._csrfmiddlewaretoken
+                    
                 if r is None:
                     r = self.walk_tree_and_replace(v, overrides)
                 response[k] = r
+                print("Response: %s" %(str(response[k])))
             return response
         if isinstance(data, list):
             # process each entry in turn and return

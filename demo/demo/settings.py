@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django_plotly_dash.middleware.DPDCsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 
@@ -134,6 +134,8 @@ PLOTLY_DASH = {
     "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
 
     "cache_arguments" : True, # True for cache, False for session-based argument propagation
+
+    "enable_anti_csrf": True, # Set to True if wanting to use Django CSRF Token framework as part of Dash
     }
 
 # Static files (CSS, JavaScript, Images)
