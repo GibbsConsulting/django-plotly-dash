@@ -104,7 +104,6 @@ class DashComponentFinder(BaseFinder):
         for component_name in self.locations:
             storage = self.storages[component_name]
             for path in get_files(storage, ignore_patterns + self.ignore_patterns):
-                print("DashAssetFinder", path, storage)
                 yield path, storage
 
 class DashAssetFinder(BaseFinder):

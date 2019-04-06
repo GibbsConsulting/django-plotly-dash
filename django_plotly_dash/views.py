@@ -27,6 +27,7 @@ SOFTWARE.
 import json
 
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 
 from .models import DashApp
 from .util import get_initial_arguments
@@ -117,8 +118,6 @@ def component_suites(request, resource=None, component=None, extra_element="", *
     else:
         redone_url = "/static/dash/component/%s/%s%s" %(component, extra_element, resource)
 
-    print("Redirecting to :", redone_url)
-
     return HttpResponseRedirect(redirect_to=redone_url)
 
 def app_assets(request, **kwargs):
@@ -145,3 +144,14 @@ def add_to_session(request, template_name="index.html", **kwargs):
     request.session['django_plotly_dash'] = django_plotly_dash
 
     return TemplateResponse(request, template_name, {})
+
+def asset_redirection(request, path, ident=None, stateless=False, **kwargs):
+    'Redirect static assets for a component'
+
+    X, app = DashApp.locate_item(ident, stateless)
+
+    # Redirect to a location based on the import path of the module containing the DjangoDash app
+    static_path = X.get_asset_static_url(path)
+
+    return redirect(static_path)
+

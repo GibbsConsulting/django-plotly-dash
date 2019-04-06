@@ -54,7 +54,7 @@ coverage.xml
 *.log
 local_settings.py
 */db.sqlite3
-demo/static/*
+demo/staticfiles/*
 
 # Flask stuff:
 instance/
