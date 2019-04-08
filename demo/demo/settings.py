@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+    'dpd_static_support',
 ]
 
 MIDDLEWARE = [
@@ -138,6 +139,8 @@ PLOTLY_DASH = {
     "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
 
     "cache_arguments" : True, # True for cache, False for session-based argument propagation
+
+    #"serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
     }
 
 # Static files (CSS, JavaScript, Images)

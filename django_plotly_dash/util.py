@@ -108,3 +108,6 @@ def full_asset_path(module_name, asset_path):
 
 def static_asset_path(module_name, asset_path):
     return static(full_asset_path(module_name, asset_path))
+
+def serve_locally():
+    return _get_settings().get('serve_locally', settings.DEBUG)

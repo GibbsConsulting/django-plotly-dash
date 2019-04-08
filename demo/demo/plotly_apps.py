@@ -84,6 +84,7 @@ def callback_size(dropdown_color, dropdown_size):
 
 a2 = DjangoDash("Ex2",
                 serve_locally=True)
+
 a2.layout = html.Div([
     dcc.RadioItems(id="dropdown-one",
                    options=[{'label':i, 'value':j} for i, j in [("O2", "Oxygen"),
@@ -186,8 +187,7 @@ def callback_liveIn_button_press(red_clicks, blue_clicks, green_clicks,
                                                                                              change_col,
                                                                                              datetime.fromtimestamp(0.001*timestamp))
 
-liveOut = DjangoDash("LiveOutput",
-                    )#serve_locally=True)
+liveOut = DjangoDash("LiveOutput")
 
 def _get_cache_key(state_uid):
     return "demo-liveout-s6-%s" % state_uid
@@ -314,5 +314,5 @@ localState = DjangoDash("LocalState",
                         serve_locally=True)
 
 localState.layout = html.Div([html.Img(src=localState.get_asset_url('image_one.png')),
-                              html.Img(src='/assets/image_two.png'),
+                              html.Img(src='assets/image_two.png'),
                               ])

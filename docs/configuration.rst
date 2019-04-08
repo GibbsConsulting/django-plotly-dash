@@ -30,6 +30,9 @@ below.
 
       # Flag to control location of initial argument storage
       "cache_arguments": True,
+
+      # Flag controlling local serving of assets
+      "serve_locally': settings.DEBUG,
   }
 
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in
@@ -44,10 +47,13 @@ file finders
   # Staticfiles finders for locating dash app assets and related files
 
   STATICFILES_FINDERS = [
+
       'django.contrib.staticfiles.finders.FileSystemFinder',
       'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
       'django_plotly_dash.finders.DashAssetFinder',
       'django_plotly_dash.finders.DashComponentFinder',
+      'django_plotly_dash.finders.DashAppDirectoryFinder',
   ]
 
 and also providing a list of components used
@@ -73,6 +79,41 @@ and also providing a list of components used
 
 This list should be extended with any additional components that the applications
 use, where the components have files that have to be served locally.
+
+Furthermore, middleware should be added for redirection of external assets from
+underlying packages, such as ``dash-bootstrap-components``. With the standard
+Django middleware, along with ``whitenoise``, the entry within the ``settings.py``
+file will look something like
+
+.. code-block:: python
+
+  # Standard Django middleware with the addition of both
+  # whitenoise and django_plotly_dash items
+
+  MIDDLEWARE = [
+
+        'django.middleware.security.SecurityMiddleware',
+
+        'whitenoise.middleware.WhiteNoiseMiddleware',
+
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+
+        'django_plotly_dash.middleware.BaseMiddleware',
+        'django_plotly_dash.middleware.ExternalRedirectionMiddleware',
+
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ]
+
+
+Individual apps can set their ``serve_locally`` flag. However, it is recommended to use
+the equivalent global ``PLOTLY_DASH`` setting to provide a common approach for all
+static assets. See :ref:`local_assets` for more information on how local assets are configured
+and served as part of the standard Django staticfiles approach, along with details on the
+integration of other components and some known issues.
 
 .. _endpoints:
 

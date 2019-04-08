@@ -16,4 +16,5 @@ redis
 sphinx
 sphinx-autobuild
 twine
+whitenoise
 

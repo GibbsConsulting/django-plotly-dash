@@ -39,6 +39,8 @@ from plotly.utils import PlotlyJSONEncoder
 from .app_name import app_name, main_view_label
 from .middleware import EmbeddedHolder
 
+from .util import static_asset_path
+from .util import serve_locally as serve_locally_setting
 
 uid_counter = 0
 
@@ -84,11 +86,12 @@ class DjangoDash:
     To use, construct an instance of DjangoDash() in place of a Dash() one.
     '''
     #pylint: disable=too-many-instance-attributes
-    def __init__(self, name=None, serve_locally=False,
+    def __init__(self, name=None, serve_locally=None,
                  expanded_callbacks=False,
                  add_bootstrap_links=False,
                  suppress_callback_exceptions=False,
                  **kwargs): # pylint: disable=unused-argument, too-many-arguments
+
         if name is None:
             global uid_counter # pylint: disable=global-statement
             uid_counter += 1
@@ -104,19 +107,40 @@ class DjangoDash:
         add_usable_app(self._uid,
                        self)
 
+        if serve_locally is None:
+            self._serve_locally = serve_locally_setting()
+        else:
+            self._serve_locally = serve_locally
+
         self._expanded_callbacks = expanded_callbacks
-        self._serve_locally = serve_locally
         self._suppress_callback_exceptions = suppress_callback_exceptions
 
         if add_bootstrap_links:
             from bootstrap4.bootstrap import css_url
             bootstrap_source = css_url()['href']
-            self.css.append_script({'external_url':[bootstrap_source,]})
+
+            if self._serve_locally:
+                # Ensure package is loaded; if not present then pip install dpd-static-support
+                import dpd_static_support
+                hard_coded_package_name = "dpd_static_support"
+                base_file_name = bootstrap_source.split('/')[-1]
+
+                self.css.append_script({'external_url':        [bootstrap_source,],
+                                        'relative_package_path' : base_file_name,
+                                        'namespace':              hard_coded_package_name,
+                                        })
+            else:
+                self.css.append_script({'external_url':[bootstrap_source,],})
 
         # Remember some caller info for static files
         caller_frame = inspect.stack()[1]
         self.caller_module = inspect.getmodule(caller_frame[0])
         self.caller_module_location = inspect.getfile(self.caller_module)
+        self.assets_folder = "assets"
+
+    def get_asset_static_url(self, asset_path):
+        module_name = self.caller_module.__name__
+        return static_asset_path(module_name, asset_path)
 
     def as_dash_instance(self, cache_id=None):
         '''
@@ -210,7 +234,8 @@ class DjangoDash:
 
         Use a placeholder and insert later
         '''
-        return self._uid +"/"+ asset_name
+
+        return "assets/" + str(asset_name)
 
         #return self.as_dash_instance().get_asset_url(asset_name)
 
@@ -243,7 +268,8 @@ class WrappedDash(Dash):
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
                  base_pathname=None, replacements=None, ndid=None,
-                 expanded_callbacks=False, serve_locally=False, **kwargs):
+                 expanded_callbacks=False, serve_locally=False,
+                 **kwargs):
 
         self._uid = ndid
 
@@ -254,7 +280,8 @@ class WrappedDash(Dash):
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
 
-        super(WrappedDash, self).__init__(**kwargs)
+        super(WrappedDash, self).__init__(__name__,
+                                          **kwargs)
 
         self.css.config.serve_locally = serve_locally
         self.scripts.config.serve_locally = serve_locally

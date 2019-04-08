@@ -25,6 +25,8 @@ SOFTWARE.
 
 '''
 
+from .util import serve_locally
+
 #pylint: disable=too-few-public-methods
 
 class EmbeddedHolder:
@@ -98,3 +100,44 @@ class BaseMiddleware:
         response = request.dpd_content_handler.adjust_response(response)
 
         return response
+
+
+# Bootstrap4 substitutions, if available
+try:
+    from dpd_static_support.mappings import substitutions as dpd_ss_substitutions
+    substitutions += dpd_ss_substitutions
+except Exception as e:
+    pass
+
+
+class ExternalRedirectionMiddleware:
+    'Middleware to force redirection in third-party content through rewriting'
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+        substitutions = []
+
+        if serve_locally():
+            substitutions += dpd_ss_substitutions
+
+        self._encoding = "utf-8"
+
+        self.substitutions = [(self._encode(source),
+                               self._encode(target)) for source, target in substitutions]
+
+    def __call__(self, request):
+
+        response = self.get_response(request)
+
+        content = response.content
+
+        for source, target in self.substitutions:
+            content = content.replace(source, target)
+
+        response.content = content
+        return response
+
+    def _encode(self, string):
+        return string.encode(self._encoding)
+

@@ -32,3 +32,28 @@ in this github `issue <https://github.com/GibbsConsulting/django-plotly-dash/iss
 
  Yes. See the :ref:`view_decoration` configuration setting and :ref:`access_control` section.
 
+* What settings are needed to run the server in debug mode?
+
+The ``prepare_demo`` script in the root of the git repository contains the full set of commands
+for running the server in debug mode. In particular, the debug server is launched with the ``--nostatic`` option. This
+will cause the staticfiles to be served from the collected files in the ``STATIC_ROOT`` location rather than the normal
+``runserver`` behaviour of serving directly from the various
+locations in the ``STATICFILES_DIRS`` list.
+
+* Is use of the ``get_asset_url`` function optional for including static assets?
+
+No, it is needed. Consider this example (it is part of ``demo-nine``):
+
+.. code-block:: python
+
+  localState = DjangoDash("LocalState",
+                          serve_locally=True)
+
+  localState.layout = html.Div([html.Img(src=localState.get_asset_url('image_one.png')),
+                                html.Img(src='/assets/image_two.png'),
+                                ])
+
+The first ``Img`` will have its source file correctly served up by Django as a standard static file. However, the second image will
+not be rendered as the path will be incorrect.
+
+See the :ref:`local_assets` section for more information on `configuration` with local assets.
