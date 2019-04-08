@@ -7,5 +7,5 @@ dpd-components
 
 dash-bootstrap-components
 
-Django>=2
+Django>=2,<2.2
 Flask>=1.0.2
