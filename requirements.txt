@@ -1,5 +1,5 @@
 dash==0.38
-dash-core-components
+dash-core-components==0.43.1
 dash-html-components==0.13.5
 dash-renderer==0.19
 plotly
