@@ -67,6 +67,14 @@ def test_demo_routing():
     assert pipe_ws_endpoint_name() == 'ws/channel'
     assert insert_demo_migrations()
 
+def test_local_serving(settings):
+    'Test local serve settings'
+
+    from django_plotly_dash.util import serve_locally, static_asset_root, full_asset_path
+    assert serve_locally() == settings.DEBUG
+    assert static_asset_root() == 'dpd/assets'
+    assert full_asset_path('fred.jim', 'harry') == 'dpd/assets/fred/jim/harry'
+
 @pytest.mark.django_db
 def test_direct_access(client):
     'Check direct use of a stateless application using demo test data'
@@ -244,3 +252,32 @@ def test_argument_settings(settings, client):
     assert get_initial_arguments(None, None) is None
     assert store_initial_arguments(client, None) is None
     assert get_initial_arguments(client, None) is None
+
+def test_middleware_artifacts():
+    'Import and vaguely exercise middleware objects'
+
+    from django_plotly_dash.middleware import EmbeddedHolder, ContentCollector
+
+    eh = EmbeddedHolder()
+    eh.add_css("some_css")
+    eh.add_config("some_config")
+    eh.add_scripts("some_scripts")
+
+    assert eh.config == 'some_config'
+
+    cc = ContentCollector()
+
+    assert cc._encode("fred") == b'fred'
+
+def test_finders():
+    'Import and vaguely exercise staticfiles finders'
+
+    from django_plotly_dash.finders import DashComponentFinder, DashAppDirectoryFinder, DashAssetFinder
+
+    dcf = DashComponentFinder()
+    dadf = DashAppDirectoryFinder()
+    daf = DashAssetFinder()
+
+    assert dcf is not None
+    assert dadf is not None
+    assert daf is not None
