@@ -27,7 +27,7 @@ First, install the package. This will also install plotly and some dash packages
 
     pip install django_plotly_dash
 
-Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings.py` file
+Then, add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings.py` file
 
     INSTALLED_APPS = [
         ...
@@ -35,11 +35,25 @@ Then, just add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings
         ...
         ]
 
+The application's routes need to be registered within the routing structure by an appropriate ``include`` statement in
+a ``urls.py`` file::
+
+    urlpatterns = [
+        ...
+        path('django_plotly_dash/', include('django_plotly_dash.urls')),
+    ]
+
+The name within the URL is not important and can be changed.
+
+For the final installation step, a migration is needed to update the
+database::
+
+    ./manage.py migrate
+    
 Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
 
-Live updating of applications, to share application
-state, requires further
-configuration. See the [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/) for more details.
+Further configuration, including live updating to share application
+state, is described in the [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/).
 
 ## Demonstration
 
