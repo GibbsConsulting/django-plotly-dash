@@ -5,4 +5,7 @@ cd demo
 ./manage.py migrate
 ./manage.py shell < configdb.py # Add a superuser if needed
 ./manage.py collectstatic -i "*.py" -i "*.pyc" --noinput --link
-./manage.py runserver
+#
+# Run debug server. Use the nostatic flag to enable the use of whitenose rather than the standard Django debug handling
+#
+./manage.py runserver --nostatic

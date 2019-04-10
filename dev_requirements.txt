@@ -1,9 +1,10 @@
 channels>=2.0
 channels-redis
 daphne
-Django>=2.0
+Django>=2.0,<2.2
 django-bootstrap4
 django-redis
+dpd-static-support
 grip
 pandas
 pylint
@@ -16,4 +17,5 @@ redis
 sphinx
 sphinx-autobuild
 twine
+whitenoise
 

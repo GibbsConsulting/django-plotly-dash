@@ -17,11 +17,16 @@ Then, add ``django_plotly_dash`` to ``INSTALLED_APPS`` in the Django ``settings.
         ...
         ]
 
-Further, if the :ref:`header and footer <plotly_header_footer>` tags are in use
-then ``django_plotly_dash.middleware.BaseMiddleware`` should be added to ``MIDDLEWARE`` in the same file. This can be safely added now even if not used.
-
 The project directory name ``django_plotly_dash`` can also be used on its own if preferred, but this will stop the use of readable application names in
 the Django admin interface.
+
+Further, if the :ref:`header and footer <plotly_header_footer>` tags are in use
+then ``django_plotly_dash.middleware.BaseMiddleware`` should be added to ``MIDDLEWARE`` in the same file. This
+can be safely added now even if not used.
+
+If assets are being served locally through the use of the global ``serve_locally`` or on a per-app basis, then
+``django_plotly_dash.middleware.ExternalRedirectionMiddleware`` should be added, along with the ``whitenoise`` package whose
+middleware should also be added as per the instructions for that package.
 
 The application's routes need to be registered within the routing structure by an appropriate ``include`` statement in
 a ``urls.py`` file::

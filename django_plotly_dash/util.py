@@ -27,6 +27,7 @@ import uuid
 
 from django.conf import settings
 from django.core.cache import cache
+from django.contrib.staticfiles.templatetags.staticfiles import static
 
 def _get_settings():
     try:
@@ -95,3 +96,18 @@ def get_initial_arguments(request, cache_id=None):
         return cache.get(cache_id)
 
     return request.session[cache_id]
+
+def static_asset_root():
+    return _get_settings().get('static_asset_root','dpd/assets')
+
+def full_asset_path(module_name, asset_path):
+    path_contrib = "%s/%s/%s" %(static_asset_root(),
+                                "/".join(module_name.split(".")),
+                                asset_path)
+    return path_contrib
+
+def static_asset_path(module_name, asset_path):
+    return static(full_asset_path(module_name, asset_path))
+
+def serve_locally():
+    return _get_settings().get('serve_locally', settings.DEBUG)

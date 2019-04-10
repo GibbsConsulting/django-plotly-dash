@@ -1,11 +1,11 @@
-dash
-dash-core-components
-dash-html-components
-dash-renderer
+dash==0.38
+dash-core-components==0.43.1
+dash-html-components==0.13.5
+dash-renderer==0.19
 plotly
 dpd-components
 
 dash-bootstrap-components
 
-Django>=2
+Django>=2,<2.2
 Flask>=1.0.2
