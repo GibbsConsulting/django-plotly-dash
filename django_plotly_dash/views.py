@@ -90,8 +90,16 @@ def update(request, ident, stateless=False, **kwargs):
     if str(resp) == 'EDGECASEEXIT':
         return HttpResponse("")
 
-    return HttpResponse(resp.data,
-                        content_type=resp.mimetype)
+    # Change in returned value type
+    try:
+        rdata = resp.data
+        rtype = resp.mimetype
+    except:
+        rdata = resp
+        rtype = "application/json"
+
+    return HttpResponse(rdata,
+                        content_type=rtype)
 
 def main_view(request, ident, stateless=False, cache_id=None, **kwargs):
     'Main view for a dash app'
