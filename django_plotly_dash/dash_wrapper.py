@@ -437,7 +437,15 @@ class WrappedDash(Dash):
 
     def callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
         'Invoke callback, adjusting variable names as needed'
-        return super(WrappedDash, self).callback(self._fix_callback_item(output),
+
+        if isinstance(output, (list, tuple)):
+            fixed_outputs = [self._fix_callback_item(x) for x in output]
+            # Temporary check; can be removed once the library has been extended
+            raise NotImplementedError("django-plotly-dash cannot handle multiple callback outputs at present")
+        else:
+            fixed_outputs = self._fix_callback_item(output)
+
+        return super(WrappedDash, self).callback(fixed_outputs,
                                                  [self._fix_callback_item(x) for x in inputs],
                                                  [self._fix_callback_item(x) for x in state])
 
@@ -520,6 +528,7 @@ class WrappedDash(Dash):
         css = self._generate_css_dist_html()
         config = self._generate_config_html()
         metas = self._generate_meta_html()
+        renderer = self._generate_renderer()
         title = getattr(self, 'title', 'Dash')
         if self._favicon:
             import flask
@@ -537,13 +546,12 @@ class WrappedDash(Dash):
 '''
         index = self.interpolate_index(
             metas=metas, title=title, css=css, config=config,
-            scripts=scripts, app_entry=_app_entry, favicon=favicon)
+            scripts=scripts, app_entry=_app_entry, favicon=favicon,
+            renderer=renderer)
 
         return index
 
     def interpolate_index(self, **kwargs): #pylint: disable=arguments-differ
-
-        print("IN INTERPOLATE INDEX")
 
         if not self._return_embedded:
             resp = super(WrappedDash, self).interpolate_index(**kwargs)
