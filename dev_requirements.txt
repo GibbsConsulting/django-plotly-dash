@@ -1,7 +1,7 @@
 channels>=2.0
 channels-redis
 daphne
-Django>=2.0,<2.2
+Django>=2.0,<2.3
 django-bootstrap4
 django-redis
 dpd-static-support
