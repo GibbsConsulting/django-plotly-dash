@@ -464,7 +464,7 @@ class WrappedDash(Dash):
 
         try:
             output_id = output['id']
-            output_property = output['propert']
+            output_property = output['property']
             target_id = "%s.%s" %(output_id, output_property)
         except:
             target_id = output
