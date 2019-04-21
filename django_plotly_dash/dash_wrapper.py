@@ -462,8 +462,13 @@ class WrappedDash(Dash):
         state = body.get('state', [])
         output = body['output']
 
-        target_id = output
-        output_id, output_property = output.split(".")
+        try:
+            output_id = output['id']
+            output_property = output['propert']
+            target_id = "%s.%s" %(output_id, output_property)
+        except:
+            target_id = output
+            output_id, output_property = output.split(".")
 
         args = []
 
