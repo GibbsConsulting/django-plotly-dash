@@ -23,3 +23,5 @@ Thanks to the following people:
 [brylie](https://github.com/brylie)
 
 [robd003](https://github.com/robd003)
+
+[dwinston](https://github.com/dwinston)
