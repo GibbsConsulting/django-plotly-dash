@@ -462,7 +462,9 @@ class WrappedDash(Dash):
         state = body.get('state', [])
         output = body['output']
 
-        target_id = '{}.{}'.format(output['id'], output['property'])
+        target_id = output
+        output_id, output_property = output.split(".")
+
         args = []
 
         da = argMap.get('dash_app', None)
@@ -491,10 +493,10 @@ class WrappedDash(Dash):
             return 'EDGECASEEXIT'
 
         res = self.callback_map[target_id]['callback'](*args, **argMap)
-        if da and da.have_current_state_entry(output['id'], output['property']):
+        if da and da.have_current_state_entry(output_id, output_property):
             response = json.loads(res.data.decode('utf-8'))
-            value = response.get('response', {}).get('props', {}).get(output['property'], None)
-            da.update_current_state(output['id'], output['property'], value)
+            value = response.get('response', {}).get('props', {}).get(output_property, None)
+            da.update_current_state(output_id, output_property, value)
 
         return res
 
