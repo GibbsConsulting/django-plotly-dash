@@ -25,7 +25,7 @@ SOFTWARE.
 
 '''
 
-from .util import serve_locally
+from .util import serve_locally, static_path
 
 #pylint: disable=too-few-public-methods
 
@@ -104,8 +104,10 @@ class BaseMiddleware:
 
 # Bootstrap4 substitutions, if available
 try:
-    from dpd_static_support.mappings import substitutions as dpd_ss_substitutions
-    substitutions += dpd_ss_substitutions
+    from dpd_static_support.mappings import substitutions as dpd_direct_substitutions
+    from dpd_static_support.mappings import static_substitutions as dpd_ss_substitutions
+    substitutions += [(x, static_path(y)) for x, y in dpd_ss_substitutions]
+    substitutions += dpd_direct_substitutions
 except Exception as e:
     pass
 

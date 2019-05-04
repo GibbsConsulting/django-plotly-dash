@@ -111,3 +111,6 @@ def static_asset_path(module_name, asset_path):
 
 def serve_locally():
     return _get_settings().get('serve_locally', settings.DEBUG)
+
+def static_path(relative_path):
+    return static(relative_path)
