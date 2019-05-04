@@ -46,7 +46,7 @@ class EmbeddedHolder:
     def add_scripts(self, scripts):
         'Add js content'
         if scripts:
-            self.scripts = scripts
+            self.scripts += scripts
 
 class ContentCollector:
     '''
