@@ -4,7 +4,7 @@ daphne
 Django>=2.0,<2.3
 django-bootstrap4
 django-redis
-dpd-static-support
+dpd-static-support>=0.0.4
 grip
 pandas
 pylint
