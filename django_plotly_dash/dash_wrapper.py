@@ -453,7 +453,7 @@ class WrappedDash(Dash):
         'Perform dispatch, using request embedded within flask global state'
         import flask
         body = flask.request.get_json()
-        return self. dispatch_with_args(body, argMap=dict())
+        return self.dispatch_with_args(body, argMap=dict())
 
     #pylint: disable=too-many-locals
     def dispatch_with_args(self, body, argMap):

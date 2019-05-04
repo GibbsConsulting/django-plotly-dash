@@ -71,10 +71,15 @@ def session_demo_alert_callback(n_clicks, session_state=None, **kwargs):
     if session_state is None:
         raise NotImplementedError("Cannot handle a missing session state")
     csf = session_state.get('bootstrap_demo_state', None)
+    print("Expanded callback; have args:")
+    print(kwargs)
+    print(session_state)
     if not csf:
-        csf = dict(clicks=0)
-        session_state['bootstrap_demo_state'] = csf
+        csf = dict(clicks=0, overall=0)
     else:
         csf['clicks'] = n_clicks
+        if n_clicks is not None and n_clicks > csf.get('overall_max',0):
+            csf['overall_max'] = n_clicks
+    session_state['bootstrap_demo_state'] = csf
     return "Button has been clicked %s times since the page was rendered" %n_clicks
 

@@ -27,7 +27,6 @@ import uuid
 
 from django.conf import settings
 from django.core.cache import cache
-from django.contrib.staticfiles.templatetags.staticfiles import static
 
 def _get_settings():
     try:
@@ -107,10 +106,14 @@ def full_asset_path(module_name, asset_path):
     return path_contrib
 
 def static_asset_path(module_name, asset_path):
-    return static(full_asset_path(module_name, asset_path))
+    return static_path(full_asset_path(module_name, asset_path))
 
 def serve_locally():
     return _get_settings().get('serve_locally', settings.DEBUG)
 
 def static_path(relative_path):
-    return static(relative_path)
+    try:
+        static_url = settings.STATIC_URL
+    except:
+        static_url = '/static/'
+    return "%s%s" %(static_url, relative_path)
