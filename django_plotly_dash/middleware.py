@@ -25,7 +25,7 @@ SOFTWARE.
 
 '''
 
-from .util import serve_locally
+from .util import serve_locally, static_path
 
 #pylint: disable=too-few-public-methods
 
@@ -46,7 +46,7 @@ class EmbeddedHolder:
     def add_scripts(self, scripts):
         'Add js content'
         if scripts:
-            self.scripts = scripts
+            self.scripts += scripts
 
 class ContentCollector:
     '''
@@ -103,9 +103,12 @@ class BaseMiddleware:
 
 
 # Bootstrap4 substitutions, if available
+dpd_substitutions = []
 try:
-    from dpd_static_support.mappings import substitutions as dpd_ss_substitutions
-    substitutions += dpd_ss_substitutions
+    from dpd_static_support.mappings import substitutions as dpd_direct_substitutions
+    dpd_substitutions += dpd_direct_substitutions
+    from dpd_static_support.mappings import static_substitutions as dpd_ss_substitutions
+    dpd_substitutions += [(x, static_path(y)) for x, y in dpd_ss_substitutions]
 except Exception as e:
     pass
 
@@ -119,7 +122,7 @@ class ExternalRedirectionMiddleware:
         substitutions = []
 
         if serve_locally():
-            substitutions += dpd_ss_substitutions
+            substitutions += dpd_substitutions
 
         self._encoding = "utf-8"
 

@@ -30,7 +30,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 
 from .models import DashApp
-from .util import get_initial_arguments
+from .util import get_initial_arguments, static_path
 
 def routes(*args, **kwargs):
     'Return routes'
@@ -122,9 +122,9 @@ def component_suites(request, resource=None, component=None, extra_element="", *
 
     get_params = request.GET.urlencode()
     if get_params and False:
-        redone_url = "/static/dash/component/%s/%s%s?%s" %(component, extra_element, resource, get_params)
+        redone_url = static_path("dash/component/%s/%s%s?%s" %(component, extra_element, resource, get_params))
     else:
-        redone_url = "/static/dash/component/%s/%s%s" %(component, extra_element, resource)
+        redone_url = static_path("dash/component/%s/%s%s" %(component, extra_element, resource))
 
     return HttpResponseRedirect(redirect_to=redone_url)
 
@@ -133,9 +133,9 @@ def app_assets(request, **kwargs):
     get_params = request.GET.urlencode()
     extra_part = ""
     if get_params:
-        redone_url = "/static/dash/assets/%s?%s" %(extra_part, get_params)
+        redone_url = static_path("dash/assets/%s?%s" %(extra_part, get_params))
     else:
-        redone_url = "/static/dash/assets/%s" % extra_part
+        redone_url = static_path("dash/assets/%s" % extra_part)
 
     return HttpResponseRedirect(redirect_to=redone_url)
 

@@ -97,10 +97,15 @@ def plotly_direct(context, name=None, slug=None, da=None):
 
     # Load embedded holder inserted by middleware
     eh = context.request.dpd_content_handler.embedded_holder
+
+    # Need to add in renderer launcher
+    renderer_launcher = '<script id="_dash-renderer" type="application/javascript">var renderer = new DashRenderer();</script>'
+
     app.set_embedded(eh)
     try:
         resp = view_func()
     finally:
+        eh.add_scripts(renderer_launcher)
         app.exit_embedded()
 
     return locals()

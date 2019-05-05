@@ -26,7 +26,8 @@ can be safely added now even if not used.
 
 If assets are being served locally through the use of the global ``serve_locally`` or on a per-app basis, then
 ``django_plotly_dash.middleware.ExternalRedirectionMiddleware`` should be added, along with the ``whitenoise`` package whose
-middleware should also be added as per the instructions for that package.
+middleware should also be added as per the instructions for that package. In addition, ``dpd_static_support`` should be
+added to the ``INSTALLED_APPS`` setting.
 
 The application's routes need to be registered within the routing structure by an appropriate ``include`` statement in
 a ``urls.py`` file::
