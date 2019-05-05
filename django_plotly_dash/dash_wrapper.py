@@ -551,11 +551,6 @@ class WrappedDash(Dash):
   </div>
 </div>
 '''
-
-        print("Renderer part")
-        print(renderer)
-
-
         index = self.interpolate_index(
             metas=metas, title=title, css=css, config=config,
             scripts=scripts, app_entry=_app_entry, favicon=favicon,
