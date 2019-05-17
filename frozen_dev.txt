@@ -27,12 +27,12 @@ decorator==4.3.0
 Django==2.1.1
 django-bootstrap4==0.0.7
 django-pdb==0.6.2
--e git+https://github.com/delsim/django-plotly-dash.git@883dbd9969a993cfb5a5b34c62b658f13ac0d613#egg=django_plotly_dash
+-e git+https://github.com/delsim/django-plotly-dash.git@ade40bb9023e36bcb2657b45c9b787eb0c21f6c0#egg=django_plotly_dash
 django-redis==4.9.0
 docopt==0.6.2
 docutils==0.14
 dpd-components==0.1.0
-dpd-static-support==0.0.2
+dpd-static-support==0.0.3
 Flask==1.0.2
 Flask-Compress==1.4.0
 grip==4.5.2
