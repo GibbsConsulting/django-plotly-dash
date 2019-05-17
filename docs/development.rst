@@ -42,28 +42,9 @@ the :ref:`configuration <configuration>` of the host and port for channels is se
 the Django project.
 
 During development, it can be convenient to serve the ``Dash`` components
-locally. Passing ``serve_locally=True`` to a ``DjangoDash`` constructor will cause all of the
+locally. Whilst passing ``serve_locally=True`` to a ``DjangoDash`` constructor will cause all of the
 css and javascript files for the components in that application from the
-local server. Additional Django settings are also needed to serve the
-static files::
-
-  STATIC_URL = '/static/'
-  STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-  STATICFILES_DIRS = []  # Or other sources as needed
-
-  if DEBUG:
-
-      import importlib
-
-      for dash_module_name in ['dash_core_components',
-                               'dash_html_components',
-                               'dash_renderer',
-                               'dpd_components',
-                              ]:
-
-          module = importlib.import_module(dash_module_name)
-          STATICFILES_DIRS.append(("dash/%s"%dash_module_name, os.path.dirname(module.__file__)))
+local server, it is recommended to use the global ``serve_locally`` configuration setting.
 
 Note that it is not good practice to serve static content in production through Django.
 
