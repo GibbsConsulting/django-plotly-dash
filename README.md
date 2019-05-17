@@ -20,6 +20,8 @@ More detailed information
 can be found in the online documentation at
 <https://readthedocs.org/projects/django-plotly-dash>
 
+An online version of the demo can be found at <https://djangoplotlydash.com>
+
 
 ## Installation
 
@@ -49,7 +51,7 @@ For the final installation step, a migration is needed to update the
 database::
 
     ./manage.py migrate
-    
+
 Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
 
 Further configuration, including live updating to share application

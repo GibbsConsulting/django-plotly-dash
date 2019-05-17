@@ -56,4 +56,8 @@ No, it is needed. Consider this example (it is part of ``demo-nine``):
 The first ``Img`` will have its source file correctly served up by Django as a standard static file. However, the second image will
 not be rendered as the path will be incorrect.
 
-See the :ref:`local_assets` section for more information on `configuration` with local assets.
+See the :ref:`local_assets` section for more information on configuration with local assets.
+
+* Is there a live demo available?
+
+Yes. It can be found `here <https://djangoplotlydash.com>`_

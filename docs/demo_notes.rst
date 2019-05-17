@@ -21,7 +21,11 @@ the `github repository <https://github.com/GibbsConsulting/django-plotly-dash/tr
 There is a more details walkthrough of the :ref:`session state storage <session_example>` example. This example also
 shows the use of `dash bootstrap components <https://pypi.org/project/dash-bootstrap-components/>`_.
 
+The demo application can also be viewed `online <https://djangoplotlydash.com>`_.
+
+
 .. _session_example:
+
 Session state example walkthrough
 ---------------------------------
 
