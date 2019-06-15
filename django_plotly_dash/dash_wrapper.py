@@ -100,6 +100,7 @@ class DjangoDash:
             self._uid = name
         self.layout = None
         self._callback_sets = []
+        self._clientside_callback_sets = []
 
         self.css = Holder()
         self.scripts = Holder()
@@ -201,6 +202,8 @@ class DjangoDash:
 
         for cb, func in self._callback_sets:
             rd.callback(**cb)(func)
+        for cb in self._clientside_callback_sets:
+            rd.clientside_callback(**cb)
         for s in self.css.items:
             rd.css.append_css(s)
         for s in self.scripts.items:
@@ -228,6 +231,16 @@ class DjangoDash:
         '''
         self._expanded_callbacks = True
         return self.callback(output, inputs, state, events)
+
+    def clientside_callback(self, clientside_function, output, inputs=None, state=None):
+        'Form a callback function by wrapping, in the same way as the underlying Dash application would'
+        callback_set = { 'clientside_function': clientside_function,
+                         'output': output,
+                         'inputs': inputs and inputs or dict(),
+                         'state': state and state or dict() }
+
+        self._clientside_callback_sets.append(callback_set)
+
 
     def get_asset_url(self, asset_name):
         '''URL of an asset associated with this component
@@ -448,6 +461,21 @@ class WrappedDash(Dash):
         return super(WrappedDash, self).callback(fixed_outputs,
                                                  [self._fix_callback_item(x) for x in inputs],
                                                  [self._fix_callback_item(x) for x in state])
+
+    def clientside_callback(self, clientside_function, output, inputs=[], state=[]): # pylint: disable=dangerous-default-value
+        'Invoke callback, adjusting variable names as needed'
+
+        if isinstance(output, (list, tuple)):
+            fixed_outputs = [self._fix_callback_item(x) for x in output]
+            # Temporary check; can be removed once the library has been extended
+            raise NotImplementedError("django-plotly-dash cannot handle multiple callback outputs at present")
+        else:
+            fixed_outputs = self._fix_callback_item(output)
+
+        return super(WrappedDash, self).clientside_callback(clientside_function,
+                                                            fixed_outputs,
+                                                            [self._fix_callback_item(x) for x in inputs],
+                                                            [self._fix_callback_item(x) for x in state])
 
     def dispatch(self):
         'Perform dispatch, using request embedded within flask global state'
