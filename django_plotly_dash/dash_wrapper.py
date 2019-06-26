@@ -252,7 +252,7 @@ class DjangoDash:
 
         #return self.as_dash_instance().get_asset_url(asset_name)
 
-class PseudoFlask:
+class PseudoFlask(Flask):
     'Dummy implementation of a Flask instance, providing stub functionality'
     def __init__(self):
         self.config = {}
