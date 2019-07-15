@@ -87,3 +87,18 @@ def test_app_callbacks():
     assert liveOut
 
     # TODO need something to trigger callbacks
+
+def test_stateless_lookup():
+    'Test side loading of stateless apps'
+
+    from django_plotly_dash.util import stateless_app_lookup_hook
+    lh_hook = stateless_app_lookup_hook()
+
+    with pytest.raises(ImportError):
+        lh_hook("not a real app name")
+
+    demo_app = lh_hook('demo_app')
+
+    assert demo_app is not None
+    assert demo_app._uid == 'name_of_demo_app'
+

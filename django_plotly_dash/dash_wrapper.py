@@ -41,10 +41,13 @@ from .middleware import EmbeddedHolder
 
 from .util import static_asset_path
 from .util import serve_locally as serve_locally_setting
+from .util import stateless_app_lookup_hook
 
 uid_counter = 0
 
 usable_apps = {}
+
+_stateless_app_lookup_func = None
 
 def add_usable_app(name, app):
     'Add app to local registry by name'
@@ -62,11 +65,23 @@ def get_local_stateless_by_name(name):
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
     name = slugify(name)
-    # TODO wrap this in raising a 404 if not found
-    try:
-        return usable_apps[name]
-    except:
+
+    sa = usable_apps.get(name, None)
+
+    if not sa:
+
+        global _stateless_app_lookup_func # pylint: disable=global-statement
+
+        if _stateless_app_lookup_func is None:
+            _stateless_app_lookup_func = stateless_app_lookup_hook()
+
+        sa = stateless_app_lookup_func(name)
+
+    if not sa:
+        # TODO wrap this in raising a 404 if not found
         raise KeyError("Unable to find stateless DjangoApp called %s"%name)
+
+    return sa
 
 class Holder:
     'Helper class for holding configuration options'

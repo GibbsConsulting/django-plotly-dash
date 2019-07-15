@@ -27,6 +27,7 @@ import uuid
 
 from django.conf import settings
 from django.core.cache import cache
+from django.utils.module_loading import import_string
 
 def _get_settings():
     try:
@@ -117,3 +118,14 @@ def static_path(relative_path):
     except:
         static_url = '/static/'
     return "%s%s" %(static_url, relative_path)
+
+def stateless_app_lookup_hook():
+    'Return a function that performs lookup for aa stateless app, given its name, or returns None'
+
+    func_name = _get_settings().get('stateless_loader', None)
+    if func_name:
+        func = import_string(func_name)
+        return func
+
+    # Default is no additional lookup
+    return lambda _: None
