@@ -253,6 +253,16 @@ def test_argument_settings(settings, client):
     assert store_initial_arguments(client, None) is None
     assert get_initial_arguments(client, None) is None
 
+def test_stateless_lookup_noop():
+    'Test no-op stateless lookup'
+
+    from django_plotly_dash.util import stateless_app_lookup_hook
+    lh_hook = stateless_app_lookup_hook()
+
+    assert lh_hook is not None
+    with pytest.raises(ImportError):
+        lh_hook("not an app")
+
 def test_middleware_artifacts():
     'Import and vaguely exercise middleware objects'
 
