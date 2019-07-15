@@ -100,5 +100,5 @@ def test_stateless_lookup():
     demo_app = lh_hook('demo_app')
 
     assert demo_app is not None
-    assert demo_app.name == 'name_of_demo_app'
+    assert demo_app._uid == 'name_of_demo_app'
 
