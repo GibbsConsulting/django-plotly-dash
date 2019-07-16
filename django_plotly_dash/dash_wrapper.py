@@ -75,7 +75,7 @@ def get_local_stateless_by_name(name):
         if _stateless_app_lookup_func is None:
             _stateless_app_lookup_func = stateless_app_lookup_hook()
 
-        sa = stateless_app_lookup_func(name)
+        sa = _stateless_app_lookup_func(name)
 
     if not sa:
         # TODO wrap this in raising a 404 if not found
