@@ -28,12 +28,15 @@ from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 
 from .views import routes, layout, dependencies, update, main_view, component_suites, component_component_suites, asset_redirection
+from .views import add_stateless_apps
 
 from .app_name import app_name, main_view_label
 
 from .access import process_view_function
 
-urlpatterns = []
+urlpatterns = [
+    path('add_stateless_apps',add_stateless_apps,name='add_stateless_apps'),
+    ]
 
 for base_type, args, name_prefix, url_ending, name_suffix in [('instance', {}, '', '', '', ),
                                                               ('app', {'stateless':True}, 'app-', '', '', ),

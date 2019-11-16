@@ -23,17 +23,23 @@ SOFTWARE.
 '''
 
 import json
+import logging
 
 from django.db import models
 from django.contrib import admin
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 
-from .dash_wrapper import get_local_stateless_by_name
+from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list
+
+
+logger = logging.getLogger(__name__)
+
 
 def get_stateless_by_name(name):
     'Locate stateless app instance given its name'
     return get_local_stateless_by_name(name)
+
 
 class StatelessApp(models.Model):
     '''
@@ -78,10 +84,33 @@ def find_stateless_by_name(name):
     dsa_app.save()
     return dash_app
 
+
+def check_stateless_loaded():
+    for ua in get_local_stateless_list():
+        try:
+            find_stateless_by_name(ua)
+        except:
+            logger.warning("django-plotly-dash: Unable to create stateless instance: "+str(ua))
+
+
 class StatelessAppAdmin(admin.ModelAdmin):
     'Admin for StatelessApp ORM model instances'
     list_display = ['app_name', 'slug',]
     list_filter = ['app_name', 'slug',]
+
+    def check_registered(modeladmin, request, queryset):
+        # Check all existing apps, keep if OK
+        for sa in queryset.all():
+            try:
+                q = sa.as_dash_app()
+            except:
+                logger.warnng("django-plotly-dash: Unable to load stateless app: "+str(sa))
+
+
+    check_registered.short_description = "Check stateless apps"
+
+    actions = [check_registered,]
+
 
 class DashApp(models.Model):
     '''

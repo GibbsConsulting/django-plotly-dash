@@ -37,7 +37,7 @@ except:
         return resource, None
 
 
-from .models import DashApp
+from .models import DashApp, check_stateless_loaded
 from .util import get_initial_arguments, static_path
 
 def routes(*args, **kwargs):
@@ -171,4 +171,9 @@ def asset_redirection(request, path, ident=None, stateless=False, **kwargs):
     static_path = X.get_asset_static_url(path)
 
     return redirect(static_path)
+
+def add_stateless_apps(request, **kwargs):
+    """Check all registered stateless apps and create ORM entries that are missing"""
+    check_stateless_loaded()
+    return redirect('admin:django_plotly_dash_statelessapp_changelist')
 

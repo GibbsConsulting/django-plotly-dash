@@ -60,6 +60,11 @@ def all_apps():
     'Return a dictionary of all locally registered apps with the slug name as key'
     return usable_apps
 
+def get_local_stateless_list():
+    """Return a list of all locally registered stateless apps
+    """
+    return list(usable_apps)
+
 def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
