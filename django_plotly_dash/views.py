@@ -28,6 +28,7 @@ import json
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
+from dash.fingerprint import check_fingerprint
 
 from .models import DashApp
 from .util import get_initial_arguments, static_path
@@ -124,7 +125,8 @@ def component_suites(request, resource=None, component=None, extra_element="", *
     if get_params and False:
         redone_url = static_path("dash/component/%s/%s%s?%s" %(component, extra_element, resource, get_params))
     else:
-        redone_url = static_path("dash/component/%s/%s%s" %(component, extra_element, resource))
+        resource, _fingerprint = check_fingerprint(resource)
+        redone_url = static_path("dash/component/%s/%s%s" % (component, extra_element, resource))
 
     return HttpResponseRedirect(redirect_to=redone_url)
 
