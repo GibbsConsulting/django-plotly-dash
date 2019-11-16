@@ -28,7 +28,14 @@ import json
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
-from dash.fingerprint import check_fingerprint
+
+try:
+    from dash.fingerprint import check_fingerprint
+except:
+    # check_fingerprint not available, fake it
+    def check_fingerprint(resource):
+        return resource, None
+
 
 from .models import DashApp
 from .util import get_initial_arguments, static_path
