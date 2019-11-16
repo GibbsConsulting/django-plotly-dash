@@ -14,6 +14,8 @@ source repository.
 #. Simple html injection
 #. Bootstrap components
 #. Session state storage
+#. Local serving of assets
+#. Multiple callback values
 
 The templates that drive each of these can be found in
 the `github repository <https://github.com/GibbsConsulting/django-plotly-dash/tree/master/demo/demo/templates>`_.
