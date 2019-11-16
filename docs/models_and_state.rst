@@ -34,6 +34,11 @@ The main role of a ``StatelessApp`` instance is to manage access to the associat
 exposed through the ``as_dash_app`` member
 function.
 
+In the Django admin, an action is provided to check all of the known stateless instances. Those that cannot be instantiated
+are logged; this is a useful quick check to see what apps are avalilable. Also, in the same admin an additional button
+is provided to create ``StatelessApp`` instances for any known instance that does not have an ORM entry.
+
+
 The ``DashApp`` model
 ---------------------
 
