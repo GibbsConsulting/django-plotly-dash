@@ -316,3 +316,61 @@ localState = DjangoDash("LocalState",
 localState.layout = html.Div([html.Img(src=localState.get_asset_url('image_one.png')),
                               html.Img(src='assets/image_two.png'),
                               ])
+
+multiple_callbacks = DjangoDash("MultipleCallbackValues")
+
+multiple_callbacks.layout = html.Div([
+    html.Button("Press Me",
+                id="button"),
+    dcc.RadioItems(id='dropdown-color',
+                   options=[{'label': c, 'value': c.lower()} for c in ['Red', 'Green', 'Blue']],
+                   value='red'
+                   ),
+    html.Div(id="output-one"),
+    html.Div(id="output-two"),
+    html.Div(id="output-three")
+    ])
+
+@multiple_callbacks.callback(
+    [dash.dependencies.Output('output-one', 'children'),
+     dash.dependencies.Output('output-two', 'children'),
+     dash.dependencies.Output('output-three', 'children')
+     ],
+    [dash.dependencies.Input('button','n_clicks'),
+     dash.dependencies.Input('dropdown-color','value'),
+     ])
+def multiple_callbacks_one(button_clicks, color_choice):
+    return ("Output 1: %s %s" % (button_clicks, color_choice),
+            "Output 2: %s %s" % (color_choice, button_clicks),
+            "Output 3: %s %s" % (button_clicks, color_choice),
+            )
+
+
+multiple_callbacks = DjangoDash("MultipleCallbackValuesExpanded")
+
+multiple_callbacks.layout = html.Div([
+    html.Button("Press Me",
+                id="button"),
+    dcc.RadioItems(id='dropdown-color',
+                   options=[{'label': c, 'value': c.lower()} for c in ['Red', 'Green', 'Blue']],
+                   value='red'
+                   ),
+    html.Div(id="output-one"),
+    html.Div(id="output-two"),
+    html.Div(id="output-three")
+    ])
+
+@multiple_callbacks.expanded_callback(
+    [dash.dependencies.Output('output-one', 'children'),
+     dash.dependencies.Output('output-two', 'children'),
+     dash.dependencies.Output('output-three', 'children')
+     ],
+    [dash.dependencies.Input('button','n_clicks'),
+     dash.dependencies.Input('dropdown-color','value'),
+     ])
+def multiple_callbacks_two(button_clicks, color_choice, **kwargs):
+    return ["Output 1: %s %s" % (button_clicks, color_choice),
+            "Output 2: %s %s" % (button_clicks, color_choice),
+            "Output 3: %s %s [%s]" % (button_clicks, color_choice, kwargs)
+            ]
+

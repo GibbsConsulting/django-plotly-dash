@@ -468,8 +468,6 @@ class WrappedDash(Dash):
 
         if isinstance(output, (list, tuple)):
             fixed_outputs = [self._fix_callback_item(x) for x in output]
-            # Temporary check; can be removed once the library has been extended
-            raise NotImplementedError("django-plotly-dash cannot handle multiple callback outputs at present")
         else:
             fixed_outputs = self._fix_callback_item(output)
 
@@ -505,13 +503,29 @@ class WrappedDash(Dash):
         state = body.get('state', [])
         output = body['output']
 
+        outputs = []
         try:
-            output_id = output['id']
-            output_property = output['property']
-            target_id = "%s.%s" %(output_id, output_property)
+            if output[:2] == '..' and output[-2:] == '..':
+                # Multiple outputs
+                outputs = output[2:-2].split('...')
+                target_id = output
+                # Special case of a single output
+                if len(outputs) == 1:
+                    target_id = output[2:-2]
         except:
-            target_id = output
-            output_id, output_property = output.split(".")
+            pass
+
+        single_case = False
+        if len(outputs) < 1:
+            try:
+                output_id = output['id']
+                output_property = output['property']
+                target_id = "%s.%s" %(output_id, output_property)
+            except:
+                target_id = output
+                output_id, output_property = output.split(".")
+            single_case = True
+            outputs = [output,]
 
         args = []
 
@@ -541,10 +555,20 @@ class WrappedDash(Dash):
             return 'EDGECASEEXIT'
 
         res = self.callback_map[target_id]['callback'](*args, **argMap)
-        if da and da.have_current_state_entry(output_id, output_property):
-            response = json.loads(res.data.decode('utf-8'))
-            value = response.get('response', {}).get('props', {}).get(output_property, None)
-            da.update_current_state(output_id, output_property, value)
+        if da:
+            if single_case and da.have_current_state_entry(output_id, output_property):
+                response = json.loads(res.data.decode('utf-8'))
+                value = response.get('response', {}).get('props', {}).get(output_property, None)
+                da.update_current_state(output_id, output_property, value)
+
+            response = json.loads(res)
+            root_value = response.get('response', {})
+            for output_item in outputs:
+                if isinstance(output_item, str):
+                    output_id, output_property = output_item.split('.')
+                    if da.have_current_state_entry(output_id, output_property):
+                        value = root_value.get(output_id,{}).get(output_property, None)
+                        da.update_current_state(output_id, output_property, value)
 
         return res
 
