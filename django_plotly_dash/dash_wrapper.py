@@ -509,6 +509,9 @@ class WrappedDash(Dash):
                 # Multiple outputs
                 outputs = output[2:-2].split('...')
                 target_id = output
+                # Special case of a single output
+                if len(outputs) == 1:
+                    target_id = output[2:-2]
         except:
             pass
 

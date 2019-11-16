@@ -182,7 +182,6 @@ def test_injection_updating_multiple_callbacks(client):
              'value':'purple-ish yellow with a hint of greeny orange'},
                                                          ]}), content_type="application/json")
 
-        print(response.content)
         assert response.status_code == 200
 
         resp = json.loads(response.content.decode('utf-8'))
@@ -217,6 +216,18 @@ def test_injection_updating(client):
 
         # New variant of output has a string used to name the properties
         response = client.post(url, json.dumps({'output':'test-output-div.children',
+                                                'inputs':[{'id':'my-dropdown1',
+                                                           'property':'value',
+                                                           'value':'TestIt'},
+                                                         ]}), content_type="application/json")
+
+        rStart = b'{"response": {"props": {"children":'
+
+        assert response.content[:len(rStart)] == rStart
+        assert response.status_code == 200
+
+        # Second variant has a single-entry mulitple property output 
+        response = client.post(url, json.dumps({'output':'..test-output-div.children..',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
                                                            'value':'TestIt'},
