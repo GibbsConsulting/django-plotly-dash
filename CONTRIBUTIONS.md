@@ -27,3 +27,5 @@ Thanks to the following people:
 [dwinston](https://github.com/dwinston)
 
 [gianlucasalvato](https://github.com/gianlucasalvato)
+
+[tiagoslg](https://https://github.com/tiagoslg)
