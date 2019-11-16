@@ -346,3 +346,22 @@ def test_finders():
     assert dcf is not None
     assert dadf is not None
     assert daf is not None
+
+@pytest.mark.django_db
+def test_app_loading(client):
+
+    from django_plotly_dash.models import check_stateless_loaded
+    from django.urls import reverse
+
+    # Function should run wthout raising errors
+    check_stateless_loaded()
+    assert True
+
+    url = reverse('the_django_plotly_dash:add_stateless_apps')
+
+    response = client.post(url)
+
+    # This view redirects to the main admin
+    assert response.status_code == 302
+
+
