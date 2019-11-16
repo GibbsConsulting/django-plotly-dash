@@ -61,6 +61,17 @@ def addExamples(apps, schema_editor):
 
     da3.save()
 
+    sa4 = StatelessApp(app_name="MultipleCallbackValues",
+                       slug="multiple-callback-values")
+
+    sa4.save()
+
+    da4 = DashApp(stateless_app=sa4,
+                  instance_name="Multiple Callback Values Example 1",
+                  slug="multiple-callback-values-1")
+
+    da4.save()
+
 
 def remExamples(apps, schema_editor):
 

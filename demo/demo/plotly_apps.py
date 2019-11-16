@@ -316,3 +316,11 @@ localState = DjangoDash("LocalState",
 localState.layout = html.Div([html.Img(src=localState.get_asset_url('image_one.png')),
                               html.Img(src='assets/image_two.png'),
                               ])
+
+multiple_callbacks = DjangoDash("MultipleCallbackValues")
+
+multiple_callbacks.layout = html.Div([
+    html.Button("PRESS ME",
+                id="button"),
+    ])
+
