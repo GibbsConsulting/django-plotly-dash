@@ -28,6 +28,7 @@ SOFTWARE.
 '''
 
 import pytest
+import json
 
 #pylint: disable=bare-except
 
@@ -109,7 +110,6 @@ def test_direct_access(client):
 def test_updating(client):
     'Check updating of an app using demo test data'
 
-    import json
     from django.urls import reverse
 
     route_name = 'update-component'
@@ -161,10 +161,42 @@ def test_injection_app_access(client):
             assert did_fail
 
 @pytest.mark.django_db
+def test_injection_updating_multiple_callbacks(client):
+    'Check updating of an app using demo test data for multiple callbacks'
+
+    from django.urls import reverse
+
+    route_name = 'update-component'
+
+    for prefix, arg_map in [('app-', {'ident':'multiple_callbacks'}),]:
+        url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+        # output is now a string of id and propery
+        response = client.post(url, json.dumps({'output':'..output-one.children...output-two.children...output-three.children..',
+                                                'inputs':[
+            {'id':'button',
+             'property':'n_clicks',
+             'value':'10'},
+            {'id':'dropdown-color',
+             'property':'value',
+             'value':'purple-ish yellow with a hint of greeny orange'},
+                                                         ]}), content_type="application/json")
+
+        print(response.content)
+        assert response.status_code == 200
+
+        resp = json.loads(response.content.decode('utf-8'))
+        assert 'response' in resp
+
+        resp_detail = resp['response']
+        assert 'output-two' in resp_detail
+        assert 'children' in resp_detail['output-two']
+        assert resp_detail['output-two']['children'] == "Output 2: 10 purple-ish yellow with a hint of greeny orange"
+
+@pytest.mark.django_db
 def test_injection_updating(client):
     'Check updating of an app using demo test data'
 
-    import json
     from django.urls import reverse
 
     route_name = 'update-component'
@@ -173,6 +205,18 @@ def test_injection_updating(client):
         url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
         response = client.post(url, json.dumps({'output':{'id':'test-output-div', 'property':'children'},
+                                                'inputs':[{'id':'my-dropdown1',
+                                                           'property':'value',
+                                                           'value':'TestIt'},
+                                                         ]}), content_type="application/json")
+
+        rStart = b'{"response": {"props": {"children":'
+
+        assert response.content[:len(rStart)] == rStart
+        assert response.status_code == 200
+
+        # New variant of output has a string used to name the properties
+        response = client.post(url, json.dumps({'output':'test-output-div.children',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
                                                            'value':'TestIt'},

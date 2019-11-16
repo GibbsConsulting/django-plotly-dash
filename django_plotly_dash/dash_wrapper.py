@@ -512,6 +512,7 @@ class WrappedDash(Dash):
         except:
             pass
 
+        single_case = False
         if len(outputs) < 1:
             try:
                 output_id = output['id']
@@ -520,6 +521,7 @@ class WrappedDash(Dash):
             except:
                 target_id = output
                 output_id, output_property = output.split(".")
+            single_case = True
             outputs = [output,]
 
         args = []
@@ -551,13 +553,19 @@ class WrappedDash(Dash):
 
         res = self.callback_map[target_id]['callback'](*args, **argMap)
         if da:
+            if single_case and da.have_current_state_entry(output_id, output_property):
+                response = json.loads(res.data.decode('utf-8'))
+                value = response.get('response', {}).get('props', {}).get(output_property, None)
+                da.update_current_state(output_id, output_property, value)
+
             response = json.loads(res)
             root_value = response.get('response', {})
             for output_item in outputs:
-                output_id, output_property = output_item.split('.')
-                if da.have_current_state_entry(output_id, output_property):
-                    value = root_value.get(output_id,{}).get(output_property, None)
-                    da.update_current_state(output_id, output_property, value)
+                if isinstance(output_item, str):
+                    output_id, output_property = output_item.split('.')
+                    if da.have_current_state_entry(output_id, output_property):
+                        value = root_value.get(output_id,{}).get(output_property, None)
+                        da.update_current_state(output_id, output_property, value)
 
         return res
 
