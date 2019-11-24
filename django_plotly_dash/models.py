@@ -54,6 +54,9 @@ class StatelessApp(models.Model):
     def save(self, *args, **kwargs): # pylint: disable=arguments-differ
         if not self.slug or len(self.slug) < 2:
             self.slug = slugify(self.app_name)
+            exist_count = StatelessApp.objects.filter(slug__startswith=self.slug).count()
+            if exist_count > 0:
+                self.slug = self.slug + str(exist_count+1)
         return super(StatelessApp, self).save(*args, **kwargs)
 
     def as_dash_app(self):

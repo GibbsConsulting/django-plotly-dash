@@ -42,6 +42,39 @@ a JSON-encoded string representation. Each entry in the dictionary has the ``id`
 value is a dictionary mapping property
 name keys to initial values.
 
+.. _plotly_app_bootstrap
+
+The ``plotly_app_bootstrap`` template tag
+-----------------------------------------
+
+This is a variant of the ``plotly_app`` template for use with responsive layouts using the Bootstrap library
+
+.. code-block:: jinja
+
+  {%load plotly_dash%}
+
+  {%plotly_app_bootstrap name="SimpleExample" aspect="16by9"%}
+
+The tag arguments are similar to the ``plotly_app`` ones:
+
+:name = None: The name of the application, as passed to a ``DjangoDash`` constructor.
+:slug = None: The slug of an existing ``DashApp`` instance.
+:da = None: An existing ``django_plotly_dash.models.DashApp`` model instance.
+:aspect= "4by3": The aspect ratio of the app. Should be one of 21by9, 16by9, 4by3 or 1by1.
+:initial_arguments = None: Initial arguments overriding app defaults and saved state.
+
+At least one of ``da``, ``slug`` or ``name`` must be provided. An object identified by ``slug`` will always be used, otherwise any
+identified by ``name`` will be. If either of these arguments are provided, they must resolve to valid objects even if
+not used. If neither are provided, then the model instance in ``da`` will be used.
+
+The aspect ratio has to be one of the available ones from
+the `Bootstrap <https://getbootstrap.com/docs/4.3/utilities/borders/>`_ framework.
+
+The ``initial_arguments`` are specified as a python dictionary. This can be the actual ``dict`` object, or
+a JSON-encoded string representation. Each entry in the dictionary has the ``id`` as key, and the corresponding
+value is a dictionary mapping property
+name keys to initial values.
+
 .. _plotly_direct:
 
 The ``plotly_direct`` template tag

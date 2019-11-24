@@ -77,6 +77,26 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
 
     return locals()
 
+@register.inclusion_tag("django_plotly_dash/plotly_app_bootstrap.html", takes_context=True)
+def plotly_app_bootstrap(context, name=None, slug=None, da=None, aspect="4by3", initial_arguments=None):
+    'Insert a dash application using a html iframe'
+
+    valid_ratios = ['21by9',
+                    '16by9',
+                    '4by3',
+                    '1by1',
+                    ]
+
+    if aspect not in valid_ratios:
+        raise ValueError("plotly_app_bootstrap requires a valid aspect ratio from %s, but was supplied %s" % (str(valid_ratios),
+                                                                                                              aspect))
+
+    cache_id = store_initial_arguments(context['request'], initial_arguments)
+
+    da, app = _locate_daapp(name, slug, da, cache_id=cache_id)
+
+    return locals()
+
 @register.simple_tag(takes_context=True)
 def plotly_header(context):
     'Insert placeholder for django-plotly-dash header content'
