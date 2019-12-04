@@ -41,6 +41,8 @@ import plotly.graph_objs as go
 
 import dpd_components as dpd
 
+from dash.exceptions import PreventUpdate
+
 from django_plotly_dash import DjangoDash
 from django_plotly_dash.consumers import send_to_pipe_channel
 
@@ -336,8 +338,8 @@ multiple_callbacks.layout = html.Div([
      dash.dependencies.Output('output-two', 'children'),
      dash.dependencies.Output('output-three', 'children')
      ],
-    [dash.dependencies.Input('button','n_clicks'),
-     dash.dependencies.Input('dropdown-color','value'),
+    [dash.dependencies.Input('button', 'n_clicks'),
+     dash.dependencies.Input('dropdown-color', 'value'),
      ])
 def multiple_callbacks_one(button_clicks, color_choice):
     return ("Output 1: %s %s" % (button_clicks, color_choice),
@@ -365,12 +367,13 @@ multiple_callbacks.layout = html.Div([
      dash.dependencies.Output('output-two', 'children'),
      dash.dependencies.Output('output-three', 'children')
      ],
-    [dash.dependencies.Input('button','n_clicks'),
-     dash.dependencies.Input('dropdown-color','value'),
+    [dash.dependencies.Input('button', 'n_clicks'),
+     dash.dependencies.Input('dropdown-color', 'value'),
      ])
 def multiple_callbacks_two(button_clicks, color_choice, **kwargs):
+    if color_choice == 'green':
+        raise PreventUpdate
     return ["Output 1: %s %s" % (button_clicks, color_choice),
             "Output 2: %s %s" % (button_clicks, color_choice),
             "Output 3: %s %s [%s]" % (button_clicks, color_choice, kwargs)
             ]
-
