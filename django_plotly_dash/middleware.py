@@ -133,12 +133,18 @@ class ExternalRedirectionMiddleware:
 
         response = self.get_response(request)
 
-        content = response.content
+        try:
+            content = response.content
 
-        for source, target in self.substitutions:
-            content = content.replace(source, target)
+            for source, target in self.substitutions:
+                content = content.replace(source, target)
 
-        response.content = content
+            response.content = content
+
+        except AttributeError:
+            # Not all files can contain substitutions, so ignore them
+            pass
+
         return response
 
     def _encode(self, string):
