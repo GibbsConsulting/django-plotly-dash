@@ -9,6 +9,11 @@
   Both standard and extended callbacks can return multiple responses. This example instantiates
   two example applications that use multiple return values for both types of callback.
 </p>
+<p>
+  Note that the second application will not update if the color choice is set to Green. This is
+  intentional; the callback raises a <b>dash.exceptions.PreventUpdate</b> exception when this
+  color choice is in effect.
+</p>
 <div class="card bg-light border-dark">
   <div class="card-body">
     <p><span>{</span>% load plotly_dash %}</p>

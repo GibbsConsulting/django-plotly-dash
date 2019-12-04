@@ -29,6 +29,8 @@ import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 
+from dash.exceptions import PreventUpdate
+
 try:
     from dash.fingerprint import check_fingerprint
 except:
@@ -68,6 +70,12 @@ def layout(request, ident, stateless=False, cache_id=None, **kwargs):
                         content_type=mimetype)
 
 def update(request, ident, stateless=False, **kwargs):
+    try:
+        return _update(request, ident, stateless, **kwargs)
+    except PreventUpdate:
+        return HttpResponse(status=204)
+
+def _update(request, ident, stateless=False, **kwargs):
     'Generate update json response'
     dash_app, app = DashApp.locate_item(ident, stateless)
 
