@@ -97,6 +97,7 @@ def _update(request, ident, stateless=False, **kwargs):
         arg_map = {'dash_app_id': ident,
                    'dash_app': dash_app,
                    'user': request.user,
+                   'request':request,
                    'session_state': app_state}
         resp = app.dispatch_with_args(request_body, arg_map)
         request.session['django_plotly_dash'] = app_state
