@@ -29,12 +29,15 @@ import dash_html_components as html
 from django_plotly_dash import DjangoDash
 
 dd = DjangoDash("BootstrapApplication",
+                serve_locally=True,
                 add_bootstrap_links=True)
 
 dd.layout = html.Div(
     [
         dbc.Alert("This is an alert", color="primary"),
         dbc.Alert("Danger", color="danger"),
+        dbc.Checklist(id='check_switch', switch=True, options=[{"label": "An example switch", "value": 1}], value=[0]),
+        dbc.Checklist(id='check_check', switch=False, options=[{"label": "An example checkbox", "value": 1}], value=[0]),
         ]
     )
 
