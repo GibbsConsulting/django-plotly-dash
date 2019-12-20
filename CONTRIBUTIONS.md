@@ -28,4 +28,6 @@ Thanks to the following people:
 
 [gianlucasalvato](https://github.com/gianlucasalvato)
 
-[tiagoslg](https://https://github.com/tiagoslg)
+[tiagoslg](https://github.com/tiagoslg)
+
+[jadeiX](https://github.com/jadeiX)
