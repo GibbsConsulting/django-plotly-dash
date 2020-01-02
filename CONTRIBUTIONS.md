@@ -31,3 +31,5 @@ Thanks to the following people:
 [tiagoslg](https://github.com/tiagoslg)
 
 [jadeiX](https://github.com/jadeiX)
+
+[vladdoster](https://github.com/vladdoster)
