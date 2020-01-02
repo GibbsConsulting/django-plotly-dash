@@ -107,7 +107,7 @@ class StatelessAppAdmin(admin.ModelAdmin):
             try:
                 q = sa.as_dash_app()
             except:
-                logger.warnng("django-plotly-dash: Unable to load stateless app: "+str(sa))
+                logger.warning("django-plotly-dash: Unable to load stateless app: "+str(sa))
 
 
     check_registered.short_description = "Check stateless apps"
