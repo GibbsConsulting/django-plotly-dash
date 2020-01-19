@@ -156,7 +156,10 @@ class DjangoDash:
         # Remember some caller info for static files
         caller_frame = inspect.stack()[1]
         self.caller_module = inspect.getmodule(caller_frame[0])
-        self.caller_module_location = inspect.getfile(self.caller_module)
+        try:
+            self.caller_module_location = inspect.getfile(self.caller_module)
+        except:
+            self.caller_module_location = None
         self.assets_folder = "assets"
 
     def get_asset_static_url(self, asset_path):
