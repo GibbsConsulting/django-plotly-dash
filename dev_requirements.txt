@@ -2,7 +2,7 @@ coveralls>=1.6.0
 channels>=2.0
 channels-redis
 daphne
-Django>=2.0,<2.3
+Django>=2.0
 django-bootstrap4
 django-redis
 dpd-static-support>=0.0.4
