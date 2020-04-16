@@ -15,7 +15,7 @@ these features:
 There is nothing here that cannot be achieved through expanding the Flask app around Plotly Dash, or indeed by using an alternative web
 framework. The purpose of this project is to enable the above features, given that the choice to use Django has already been made.
 
-The source code can be found in `this github repository <https://https://github.com/GibbsConsulting/django-plotly-dash>`_. This repository also includes
+The source code can be found in `this github repository <https://github.com/GibbsConsulting/django-plotly-dash>`_. This repository also includes
 a self-contained demo application, which can also be viewed `online <https://djangoplotlydash.com>`_.
 
 .. _overview:
