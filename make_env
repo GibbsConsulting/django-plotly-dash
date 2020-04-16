@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Create a virtualenv. Note that python 3.5 is the minimal requirement
+# Create a virtualenv. Note that python 3.6 is the minimal requirement
 #
-virtualenv -p python3.5 env
+virtualenv -p python3.6 env
 #
 source env/bin/activate
 #

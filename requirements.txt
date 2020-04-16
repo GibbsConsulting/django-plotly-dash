@@ -1,11 +1,11 @@
-dash
-dash-core-components
+dash<1.11
+dash-core-components==1.9.0
 dash-html-components
-dash-renderer
+dash-renderer==1.3.0
 plotly
 dpd-components
 
 dash-bootstrap-components
 
-Django>=2,<2.3
+Django>=2,<3
 Flask>=1.0.2
