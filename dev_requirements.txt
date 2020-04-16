@@ -1,5 +1,5 @@
 coveralls>=1.6.0
-channels>=2.0
+channels>=2.0,<2.1.4
 channels-redis
 daphne
 Django>=2.0,<2.3
