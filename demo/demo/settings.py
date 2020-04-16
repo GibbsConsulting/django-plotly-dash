@@ -80,6 +80,8 @@ TEMPLATES = [
     },
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 WSGI_APPLICATION = 'demo.wsgi.application'
 
 ASGI_APPLICATION = 'demo.routing.application'
