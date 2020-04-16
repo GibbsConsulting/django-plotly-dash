@@ -49,6 +49,6 @@ setup(
                         'channels<2.1.4',
                         'Django>=2,<3',
                         'Flask>=1.0.2'],
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     )
 
