@@ -29,6 +29,7 @@ import json
 import inspect
 
 from dash import Dash
+from dash._utils import split_callback_id
 from flask import Flask
 
 from django.urls import reverse
@@ -288,7 +289,9 @@ class PseudoFlask(Flask):
     def after_request(self, *args, **kwargs):
         pass
     def errorhandler(self, *args, **kwargs): # pylint: disable=no-self-use
-        return args[0]
+        def eh_func(f):
+            return args[0]
+        return eh_func
     def add_url_rule(self, *args, **kwargs):
         route = kwargs['endpoint']
         self.endpoints[route] = kwargs
@@ -554,6 +557,10 @@ class WrappedDash(Dash):
                     args.append(v)
                     if da:
                         da.update_current_state(c['id'], c['property'], v)
+
+        # Dash 1.11 introduces a set of outputs
+        outputs_list = body.get('outputs') or split_callback_id(output)
+        argMap['outputs_list'] = outputs_list
 
         # Special: intercept case of insufficient arguments
         # This happens when a propery has been updated with a pipe component
