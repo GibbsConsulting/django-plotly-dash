@@ -41,7 +41,7 @@ setup(
     'Documentation': 'http://django-plotly-dash.readthedocs.io/',
     },
     install_requires = ['plotly',
-                        'dash',
+                        'dash>=1.11',
                         'dash-core-components',
                         'dash-html-components',
                         'dash-renderer',

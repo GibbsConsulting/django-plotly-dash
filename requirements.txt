@@ -1,4 +1,4 @@
-dash
+dash>=1.11
 dash-core-components
 dash-html-components
 dash-renderer

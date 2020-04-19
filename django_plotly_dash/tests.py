@@ -32,6 +32,7 @@ import json
 
 #pylint: disable=bare-except
 
+
 def test_dash_app():
     'Test the import and formation of the dash app orm wrappers'
 
@@ -41,6 +42,7 @@ def test_dash_app():
     assert stateless_a
     assert stateless_a.app_name
     assert str(stateless_a) == stateless_a.app_name
+
 
 def test_util_error_cases(settings):
     'Test handling of missing settings'
@@ -61,12 +63,14 @@ def test_util_error_cases(settings):
     assert http_endpoint("fred") == '^dpd/views/fred/$'
     assert not insert_demo_migrations()
 
+
 def test_demo_routing():
     'Test configuration options for the demo'
 
     from django_plotly_dash.util import pipe_ws_endpoint_name, insert_demo_migrations
     assert pipe_ws_endpoint_name() == 'ws/channel'
     assert insert_demo_migrations()
+
 
 def test_local_serving(settings):
     'Test local serve settings'
@@ -75,6 +79,7 @@ def test_local_serving(settings):
     assert serve_locally() == settings.DEBUG
     assert static_asset_root() == 'dpd/assets'
     assert full_asset_path('fred.jim', 'harry') == 'dpd/assets/fred/jim/harry'
+
 
 @pytest.mark.django_db
 def test_direct_access(client):
@@ -106,6 +111,7 @@ def test_direct_access(client):
 
             assert did_fail
 
+
 @pytest.mark.django_db
 def test_updating(client):
     'Check updating of an app using demo test data'
@@ -118,7 +124,7 @@ def test_updating(client):
                             ('', {'ident':'simpleexample-1'}),]:
         url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
-        response = client.post(url, json.dumps({'output':{'id':'output-size', 'property':'children'},
+        response = client.post(url, json.dumps({'output': 'output-size.children',
                                                 'inputs':[{'id':'dropdown-color',
                                                            'property':'value',
                                                            'value':'blue'},
@@ -127,8 +133,9 @@ def test_updating(client):
                                                            'value':'medium'},
                                                          ]}), content_type="application/json")
 
-        assert response.content == b'{"response": {"props": {"children": "The chosen T-shirt is a medium blue one."}}}'
+        assert response.content == b'{"response": {"output-size": {"children": "The chosen T-shirt is a medium blue one."}}, "multi": true}'
         assert response.status_code == 200
+
 
 @pytest.mark.django_db
 def test_injection_app_access(client):
@@ -159,6 +166,7 @@ def test_injection_app_access(client):
                 did_fail = True
 
             assert did_fail
+
 
 @pytest.mark.django_db
 def test_injection_updating_multiple_callbacks(client):
@@ -192,6 +200,7 @@ def test_injection_updating_multiple_callbacks(client):
         assert 'children' in resp_detail['output-two']
         assert resp_detail['output-two']['children'] == "Output 2: 10 purple-ish yellow with a hint of greeny orange"
 
+
 @pytest.mark.django_db
 def test_injection_updating(client):
     'Check updating of an app using demo test data'
@@ -203,13 +212,14 @@ def test_injection_updating(client):
     for prefix, arg_map in [('app-', {'ident':'dash_example_1'}),]:
         url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
 
-        response = client.post(url, json.dumps({'output':{'id':'test-output-div', 'property':'children'},
+        response = client.post(url, json.dumps({#'output':{'id':'test-output-div', 'property':'children'},
+                                                'output': "test-output-div.children",
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"props": {"children":'
+        rStart = b'{"response": {"test-output-div": {"children": [{"props": {"id": "line-area-graph2"'
 
         assert response.content[:len(rStart)] == rStart
         assert response.status_code == 200
@@ -221,19 +231,19 @@ def test_injection_updating(client):
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"props": {"children":'
+        rStart = b'{"response": {"test-output-div": {"children": [{"props": {"id": "line-area-graph2"'
 
         assert response.content[:len(rStart)] == rStart
         assert response.status_code == 200
 
-        # Second variant has a single-entry mulitple property output 
+        # Second variant has a single-entry mulitple property output
         response = client.post(url, json.dumps({'output':'..test-output-div.children..',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"props": {"children":'
+        rStart = b'{"response": {"test-output-div": {"children": {"props": {"id": "line-area-graph2"'
 
         assert response.content[:len(rStart)] == rStart
         assert response.status_code == 200
@@ -241,7 +251,7 @@ def test_injection_updating(client):
         have_thrown = False
 
         try:
-            client.post(url, json.dumps({'output':{'id':'test-output-div2', 'property':'children'},
+            client.post(url, json.dumps({'output': 'test-output-div2.children',
                                          'inputs':[{'id':'my-dropdown2',
                                                     'property':'value',
                                                     'value':'TestIt'},
@@ -255,17 +265,18 @@ def test_injection_updating(client):
         session['django_plotly_dash'] = {'django_to_dash_context': 'Test 789 content'}
         session.save()
 
-        response3 = client.post(url, json.dumps({'output':{'id':'test-output-div2', 'property':'children'},
+        response3 = client.post(url, json.dumps({'output': 'test-output-div2.children',
                                                  'inputs':[{'id':'my-dropdown2',
                                                             'property':'value',
                                                             'value':'TestIt'},
                                                           ]}), content_type="application/json")
-        rStart3 = b'{"response": {"props": {"children":'
+        rStart3 = b'{"response": {"test-output-div2": {"children": [{"props": {"children": ["You have '
 
         assert response3.content[:len(rStart3)] == rStart3
         assert response3.status_code == 200
 
         assert response3.content.find(b'Test 789 content') > 0
+
 
 @pytest.mark.django_db
 def test_argument_settings(settings, client):
@@ -308,6 +319,7 @@ def test_argument_settings(settings, client):
     assert store_initial_arguments(client, None) is None
     assert get_initial_arguments(client, None) is None
 
+
 def test_stateless_lookup_noop():
     'Test no-op stateless lookup'
 
@@ -317,6 +329,7 @@ def test_stateless_lookup_noop():
     assert lh_hook is not None
     with pytest.raises(ImportError):
         lh_hook("not an app")
+
 
 def test_middleware_artifacts():
     'Import and vaguely exercise middleware objects'
@@ -334,6 +347,7 @@ def test_middleware_artifacts():
 
     assert cc._encode("fred") == b'fred'
 
+
 def test_finders():
     'Import and vaguely exercise staticfiles finders'
 
@@ -346,6 +360,7 @@ def test_finders():
     assert dcf is not None
     assert dadf is not None
     assert daf is not None
+
 
 @pytest.mark.django_db
 def test_app_loading(client):
