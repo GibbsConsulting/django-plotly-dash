@@ -559,7 +559,6 @@ class WrappedDash(Dash):
                         da.update_current_state(c['id'], c['property'], v)
 
         # Dash 1.11 introduces a set of outputs
-        print("Check output: ",output)
         outputs_list = body.get('outputs') or split_callback_id(output)
         argMap['outputs_list'] = outputs_list
 
