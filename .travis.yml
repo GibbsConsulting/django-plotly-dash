@@ -10,7 +10,6 @@ cache:
 
 install:
   - pip install -r requirements.txt
-  - pip install --no-deps channels
   - pip install -r dev_requirements.txt
   - python setup.py develop
 
