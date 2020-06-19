@@ -1,3 +1,5 @@
+asgiref
+attrs==19.3.0
 coveralls>=1.6.0
 channels>=2.0
 channels-redis
