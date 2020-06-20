@@ -19,6 +19,7 @@ pytz
 redis
 sphinx
 sphinx-autobuild
+sphinx_rtd_theme
 twine
 whitenoise
 

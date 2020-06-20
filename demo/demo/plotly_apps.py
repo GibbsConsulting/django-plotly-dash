@@ -342,7 +342,7 @@ multiple_callbacks.layout = html.Div([
      dash.dependencies.Input('dropdown-color', 'value'),
      ])
 def multiple_callbacks_one(button_clicks, color_choice):
-    return ("Output 1: %s %s" % (button_clicks, color_choice),
+    return ("Output 1: %s %s %s" % (button_clicks, color_choice, dash.callback_context.triggered),
             "Output 2: %s %s" % (color_choice, button_clicks),
             "Output 3: %s %s" % (button_clicks, color_choice),
             )
@@ -373,7 +373,7 @@ multiple_callbacks.layout = html.Div([
 def multiple_callbacks_two(button_clicks, color_choice, **kwargs):
     if color_choice == 'green':
         raise PreventUpdate
-    return ["Output 1: %s %s" % (button_clicks, color_choice),
-            "Output 2: %s %s" % (button_clicks, color_choice),
+    return ["Output 1: %s %s %s" % (button_clicks, color_choice, dash.callback_context.triggered),
+            "Output 2: %s %s %s" % (button_clicks, color_choice, kwargs['callback_context'].triggered),
             "Output 3: %s %s [%s]" % (button_clicks, color_choice, kwargs)
             ]

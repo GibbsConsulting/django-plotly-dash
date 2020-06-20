@@ -28,8 +28,10 @@ SOFTWARE.
 import json
 import inspect
 
+import dash
 from dash import Dash
-from dash._utils import split_callback_id
+from dash._utils import split_callback_id, inputs_to_dict
+
 from flask import Flask
 
 from django.urls import reverse
@@ -43,6 +45,54 @@ from .middleware import EmbeddedHolder
 from .util import static_asset_path
 from .util import serve_locally as serve_locally_setting
 from .util import stateless_app_lookup_hook
+
+try:
+    from dataclasses import dataclass
+    from typing import Dict, List
+
+    @dataclass(frozen-True)
+    class CallbackContext:
+        inputs_list : List
+        inputs: Dict
+        states_list: List
+        states: Dict
+        outputs_list: List
+        outputs: Dict
+        triggered: List
+
+except:
+    # Not got python 3.7 or dataclasses yet
+    class CallbackContext:
+        def __init__(self, **kwargs):
+            self._args = kwargs
+
+        @property
+        def inputs_list(self):
+            return self._args['inputs_list']
+
+        @property
+        def inputs(self):
+            return self._args['inputs']
+
+        @property
+        def states_list(self):
+            return self._args['states_list']
+
+        @property
+        def states(self):
+            return self._args['states']
+
+        @property
+        def outputs(self):
+            return self._args['outputs']
+
+        @property
+        def outputs_list(self):
+            return self._args['outputs_list']
+        @property
+        def triggered(self):
+            return self._args['triggered']
+
 
 uid_counter = 0
 
@@ -89,6 +139,7 @@ def get_local_stateless_by_name(name):
 
     return sa
 
+
 class Holder:
     'Helper class for holding configuration options'
     def __init__(self):
@@ -99,6 +150,7 @@ class Holder:
     def append_script(self, script):
         'Add extra script file name to component package'
         self.items.append(script)
+
 
 class DjangoDash:
     '''
@@ -511,8 +563,31 @@ class WrappedDash(Dash):
     def dispatch_with_args(self, body, argMap):
         'Perform callback dispatching, with enhanced arguments and recording of response'
         inputs = body.get('inputs', [])
-        state = body.get('state', [])
+        input_values = inputs_to_dict(inputs)
+        states = body.get('state', [])
         output = body['output']
+        outputs_list = body.get('outputs') or split_callback_id(output)
+        changed_props = body.get('changedPropIds', [])
+        triggered_inputs = [{"prop_id": x, "value": input_values.get(x)} for x in changed_props]
+
+        callback_context_info = {
+            'inputs_list': inputs,
+            'inputs': input_values,
+            'states_list': states,
+            'states': inputs_to_dict(states),
+            'outputs_list': outputs_list,
+            'outputs': outputs_list,
+            'triggered': triggered_inputs,
+            }
+
+        callback_context = CallbackContext(**callback_context_info)
+
+        # Overload dash global variable
+        dash.callback_context = callback_context
+
+        # Add context to arg map, if extended callbacks in use
+        if len(argMap) > 0:
+            argMap['callback_context'] = callback_context
 
         outputs = []
         try:

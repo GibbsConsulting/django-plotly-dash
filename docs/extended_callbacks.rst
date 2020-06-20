@@ -39,15 +39,26 @@ For example, the ``plotly_apps.py`` example contains this dash application:
 
 The additional arguments, which are reported as the ``kwargs`` content in this example, include
 
+:callback_context: The ``Dash`` callback context. See the `documentation <https://dash.plotly.com/advanced-callbacks`_ on the content of
+                   this variable. This variable is provided as an argument to the expanded callback as well as
+                   the ``dash.callback_context`` global variable.
 :dash_app: For stateful applications, the ``DashApp`` model instance
 :dash_app_id: The application identifier. For stateless applications, this is the (slugified) name given to the ``DjangoDash`` constructor.
               For stateful applications, it is the (slugified) unique identifier for the associated model instance.
+:request: The Django request object.
 :session_state: A dictionary of information, unique to this user session. Any changes made to its content during the
                 callback are persisted as part of the Django session framework.
 :user: The Django User instance.
 
 The ``DashApp`` model instance can also be configured to persist itself on any change. This is discussed
 in the :ref:`models_and_state` section.
+
+The ``callback_context`` argument is provided in addition to the ``dash.callback_context`` global variable. As a rule, the use of
+global variables should generally be avoided. The context provided by ``django-plotly-dash`` is not the same as the one
+provided by the underlying ``Dash`` library, although its property values are the same and code that uses the content of this
+variable should work unchanged. The use of
+this global variable in any asychronous or multithreaded application is not
+supported, and the use of the callback argument is strongly recommended for all use cases.
 
 
 .. _using_session_state:
