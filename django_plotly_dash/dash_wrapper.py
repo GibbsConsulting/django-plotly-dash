@@ -29,7 +29,8 @@ import json
 import inspect
 
 from dash import Dash
-from dash._utils import split_callback_id
+from dash._utils import split_callback_id, inputs_to_dict
+
 from flask import Flask
 
 from django.urls import reverse
@@ -511,8 +512,23 @@ class WrappedDash(Dash):
     def dispatch_with_args(self, body, argMap):
         'Perform callback dispatching, with enhanced arguments and recording of response'
         inputs = body.get('inputs', [])
-        state = body.get('state', [])
+        input_values = inputs_to_dict(inputs)
+        states = body.get('state', [])
         output = body['output']
+        outputs_list = body.get('outputs') or split_callback_id(output)
+        changed_props = body.get('changedPropIds', [])
+        triggered_inputs = [{"prop_id": x, "value": input_values.get(x)} for x in changed_props]
+
+        callback_context = {
+            'inputs_list': inputs,
+            'inputs': input_values,
+            'states_list': states,
+            'states': inputs_to_dict(states),
+            'outputs_list': outputs_list,
+            'outputs': outputs_list,
+            'triggered': triggered_inputs,
+            }
+        argMap['callback_context'] = callback_context
 
         outputs = []
         try:
