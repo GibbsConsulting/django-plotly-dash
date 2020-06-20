@@ -45,6 +45,7 @@ The additional arguments, which are reported as the ``kwargs`` content in this e
 :dash_app: For stateful applications, the ``DashApp`` model instance
 :dash_app_id: The application identifier. For stateless applications, this is the (slugified) name given to the ``DjangoDash`` constructor.
               For stateful applications, it is the (slugified) unique identifier for the associated model instance.
+:request: The Django request object.
 :session_state: A dictionary of information, unique to this user session. Any changes made to its content during the
                 callback are persisted as part of the Django session framework.
 :user: The Django User instance.
