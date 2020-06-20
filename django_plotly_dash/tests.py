@@ -198,7 +198,7 @@ def test_injection_updating_multiple_callbacks(client):
         resp_detail = resp['response']
         assert 'output-two' in resp_detail
         assert 'children' in resp_detail['output-two']
-        assert resp_detail['output-two']['children'] == "Output 2: 10 purple-ish yellow with a hint of greeny orange"
+        assert resp_detail['output-two']['children'] == "Output 2: 10 purple-ish yellow with a hint of greeny orange []"
 
 
 @pytest.mark.django_db
