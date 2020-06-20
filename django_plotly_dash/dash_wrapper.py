@@ -528,7 +528,12 @@ class WrappedDash(Dash):
             'outputs': outputs_list,
             'triggered': triggered_inputs,
             }
-        argMap['callback_context'] = callback_context
+
+        # Overload dash global variable
+
+        # Add context to arg map, if extended callbacks in use
+        if len(argMap) > 0:
+            argMap['callback_context'] = callback_context
 
         outputs = []
         try:
