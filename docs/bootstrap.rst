@@ -11,6 +11,8 @@ a checkist of the required confiuration steps.
 
 - install the package as descrbed in the :ref:`installation <installation>` section
 
+- install the static support package with ``pip install dpd-static-support``
+
 - add the various settings in the :ref:`configuration <configuration>` section, particularly
   the STATICFILES_FINDERS, PLOTLY_COMPONENTS and MIDDLEWARE ones.
 
