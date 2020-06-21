@@ -38,7 +38,7 @@ Then, add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings.py` 
         ]
 
 The application's routes need to be registered within the routing structure by an appropriate ``include`` statement in
-a ``urls.py`` file::
+a ``urls.py`` file:
 
     urlpatterns = [
         ...
@@ -48,11 +48,15 @@ a ``urls.py`` file::
 The name within the URL is not important and can be changed.
 
 For the final installation step, a migration is needed to update the
-database::
+database:
 
     ./manage.py migrate
 
-Note that this package requires version 2.0 or greater of Django, due to the use of the `path` function for registering routes.
+If using version 3.0 or later of Django, then the use of frames within
+HTML documents has to be enabled by adding to the ``settings.py`` file:
+
+    X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 
 Further configuration, including live updating to share application
 state, is described in the [online documentation](https://django-plotly-dash.readthedocs.io/en/latest/).
