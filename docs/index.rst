@@ -24,6 +24,7 @@ Contents
    dash_components
    configuration
    local_assets
+   bootstrap
    demo_notes
    access_control
    faq

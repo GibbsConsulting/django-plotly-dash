@@ -98,6 +98,9 @@ available options are detailed in the :ref:`configuration <configuration>` secti
 
 This includes arranging for Dash assets to be served using the Django ``staticfiles`` functionality.
 
+A checklist for using ``dash-bootstrap-components`` can be found
+in the :ref:`bootstrap <bootstrap>` section.
+
 Source code and demo
 --------------------
 
