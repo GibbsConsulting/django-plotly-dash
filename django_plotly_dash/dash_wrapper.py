@@ -626,7 +626,7 @@ class WrappedDash(Dash):
                         da.update_current_state(c['id'], c['property'], v)
 
         for component_registration in self.callback_map[target_id]['state']:
-            for c in state:
+            for c in states:
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
                     v = c.get('value', None)
                     args.append(v)
