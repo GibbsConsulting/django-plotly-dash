@@ -35,3 +35,5 @@ Thanks to the following people:
 [vladdoster](https://github.com/vladdoster)
 
 [gurcke](https://github.com/gurcke)
+
+[CaseGuide](https://github.com/CaseGuide)
