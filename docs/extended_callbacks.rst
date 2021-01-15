@@ -5,9 +5,12 @@ Extended callback syntax
 
 The ``DjangoDash`` class allows callbacks to request extra arguments when registered.
 
-To do this, simply replace ``callback`` with ``expanded_callback`` when registering any callback. This will cause **all** of the callbacks
-registered with this application
-to receive extra ``kwargs`` in addition to the callback parameters.
+To do this, simply replace ``callback`` with ``expanded_callback`` when registering any callback. This will cause these expanded callbacks
+registered with this application to receive extra parameters in addition to the callback parameters.
+
+If you specify a ``kwargs`` in your callback, it will receive all possible extra parameters (see below for a list).
+If you specify, after the usual parameters for your ``Input`` and ``State``,
+some extra parameters from the list below, only these will be passed to your callback.
 
 For example, the ``plotly_apps.py`` example contains this dash application:
 
@@ -32,10 +35,9 @@ For example, the ``plotly_apps.py`` example contains this dash application:
       dash.dependencies.Output('output-one','children'),
       [dash.dependencies.Input('dropdown-one','value')]
       )
-
   def callback_c(*args,**kwargs):
       da = kwargs['dash_app']
-      return "Args are [%s] and kwargs are %s" %(",".join(args),str(kwargs))
+      return "Args are [%s] and kwargs are %s" %(",".join(args), kwargs)
 
 The additional arguments, which are reported as the ``kwargs`` content in this example, include
 
@@ -49,6 +51,25 @@ The additional arguments, which are reported as the ``kwargs`` content in this e
 :session_state: A dictionary of information, unique to this user session. Any changes made to its content during the
                 callback are persisted as part of the Django session framework.
 :user: The Django User instance.
+
+Possible alternatives to ``kwargs``
+
+.. code-block:: python
+
+  @a2.expanded_callback(
+      dash.dependencies.Output('output-one','children'),
+      [dash.dependencies.Input('dropdown-one','value')]
+      )
+  def callback_c(*args, dash_app):
+      return "Args are [%s] and the extra parameter dash_app is %s" %(",".join(args), dash_app)
+
+  @a2.expanded_callback(
+      dash.dependencies.Output('output-one','children'),
+      [dash.dependencies.Input('dropdown-one','value')]
+      )
+  def callback_c(*args, dash_app, **kwargs):
+      return "Args are [%s], the extra parameter dash_app is %s and kwargs are %s" %(",".join(args), dash_app, kwargs)
+
 
 The ``DashApp`` model instance can also be configured to persist itself on any change. This is discussed
 in the :ref:`models_and_state` section.

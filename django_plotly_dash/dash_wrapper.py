@@ -287,14 +287,32 @@ class DjangoDash:
 
         return rd
 
-    def callback(self, output, inputs=None, state=None, events=None):
-        'Form a callback function by wrapping, in the same way as the underlying Dash application would'
+    def callback(self, output, inputs=None, state=None, events=None, add_expanded_arguments=False):
+        '''Form a callback function by wrapping, in the same way as the underlying Dash application would
+
+        If add_expanded_arguments is True, it will inspect the signature of the function to
+        ensure only relevant expanded argument are passed to the callback.
+        '''
         callback_set = {'output':output,
                         'inputs':inputs and inputs or dict(),
                         'state':state and state or dict(),
                         'events':events and events or dict()}
+
         def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value, missing-docstring
             callback_sets.append((callback_set, func))
+            # add an expanded attribute to the function with the information to use in dispatch_with_args
+            # to inject properly only the expanded arguments the function can accept
+            if add_expanded_arguments:
+                parameters = inspect.getfullargspec(func)
+                if parameters.varkw:
+                    # there is some **kwargs, do not filter argMap later
+                    func.expanded = None
+                else:
+                    # there is no **kwargs, filter argMap to take only func.expanded
+                    func.expanded = parameters.args + parameters.kwonlyargs + ["outputs_list"]
+            else:
+                # send only the outputs_list as it is not an expanded_callback
+                func.expanded = ["outputs_list"]
             return func
         return wrap_func
 
@@ -306,7 +324,7 @@ class DjangoDash:
         callbacks are passed the enhanced arguments.
         '''
         self._expanded_callbacks = True
-        return self.callback(output, inputs, state, events)
+        return self.callback(output, inputs, state, events, add_expanded_arguments=True)
 
     def clientside_callback(self, clientside_function, output, inputs=None, state=None):
         'Form a callback function by wrapping, in the same way as the underlying Dash application would'
@@ -614,7 +632,9 @@ class WrappedDash(Dash):
 
         da = argMap.get('dash_app', None)
 
-        for component_registration in self.callback_map[target_id]['inputs']:
+        callback_info = self.callback_map[target_id]
+
+        for component_registration in callback_info['inputs']:
             for c in inputs:
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
                     v = c.get('value', None)
@@ -622,7 +642,7 @@ class WrappedDash(Dash):
                     if da:
                         da.update_current_state(c['id'], c['property'], v)
 
-        for component_registration in self.callback_map[target_id]['state']:
+        for component_registration in callback_info['state']:
             for c in states:
                 if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
                     v = c.get('value', None)
@@ -638,10 +658,15 @@ class WrappedDash(Dash):
         # This happens when a propery has been updated with a pipe component
         # TODO see if this can be attacked from the client end
 
-        if len(args) < len(self.callback_map[target_id]['inputs']):
+        if len(args) < len(callback_info['inputs']):
             return 'EDGECASEEXIT'
 
-        res = self.callback_map[target_id]['callback'](*args, **argMap)
+        callback = callback_info["callback"]
+        # smart injection of parameters if .expanded is defined
+        if callback.expanded:
+            res = callback(*args, **{k:v for k,v in argMap.items() if k in callback.expanded})
+        else:
+            res = callback(*args, **argMap)
         if da:
             if single_case and da.have_current_state_entry(output_id, output_property):
                 response = json.loads(res.data.decode('utf-8'))
