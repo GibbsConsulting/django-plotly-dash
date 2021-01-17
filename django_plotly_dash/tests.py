@@ -221,10 +221,10 @@ def test_injection_updating(client):
 
         rStart = b'{"response": {"test-output-div": {"children": [{"props": {"id": "line-area-graph2"'
 
-        assert response.content[:len(rStart)] == rStart
+        assert response.content.startswith(rStart)
         assert response.status_code == 200
 
-        # New variant of output has a string used to name the properties
+        # Single output callback, output=="component_id.component_prop"
         response = client.post(url, json.dumps({'output':'test-output-div.children',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
@@ -233,49 +233,61 @@ def test_injection_updating(client):
 
         rStart = b'{"response": {"test-output-div": {"children": [{"props": {"id": "line-area-graph2"'
 
-        assert response.content[:len(rStart)] == rStart
+        assert response.content.startswith(rStart)
         assert response.status_code == 200
 
-        # Second variant has a single-entry mulitple property output
-        response = client.post(url, json.dumps({'output':'..test-output-div.children..',
+        # Single output callback, fails if output=="..component_id.component_prop.."
+        with pytest.raises(KeyError, match="..test-output-div.children.."):
+            client.post(url, json.dumps({'output':'..test-output-div.children..',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"test-output-div": {"children": {"props": {"id": "line-area-graph2"'
 
-        assert response.content[:len(rStart)] == rStart
+        # Multiple output callback, fails if output=="component_id.component_prop"
+        with pytest.raises(KeyError, match="test-output-div3.children"):
+            client.post(url, json.dumps({'output':'test-output-div3.children',
+                                                'inputs':[{'id':'my-dropdown1',
+                                                           'property':'value',
+                                                           'value':'TestIt'},
+                                                         ]}), content_type="application/json")
+
+
+        # Multiple output callback, output=="..component_id.component_prop.."
+        response = client.post(url, json.dumps({'output':'..test-output-div3.children..',
+                                                'inputs':[{'id':'my-dropdown1',
+                                                           'property':'value',
+                                                           'value':'TestIt'},
+                                                         ]}), content_type="application/json")
+
+        rStart = b'{"response": {"test-output-div3": {"children": [{"props": {"id": "line-area-graph2"'
+
+        assert response.content.startswith(rStart)
         assert response.status_code == 200
 
-        have_thrown = False
-
-        try:
+        with pytest.raises(KeyError, match="django_to_dash_context"):
             client.post(url, json.dumps({'output': 'test-output-div2.children',
                                          'inputs':[{'id':'my-dropdown2',
                                                     'property':'value',
                                                     'value':'TestIt'},
                                                   ]}), content_type="application/json")
-        except:
-            have_thrown = True
-
-        assert have_thrown
 
         session = client.session
         session['django_plotly_dash'] = {'django_to_dash_context': 'Test 789 content'}
         session.save()
 
-        response3 = client.post(url, json.dumps({'output': 'test-output-div2.children',
+        response = client.post(url, json.dumps({'output': 'test-output-div2.children',
                                                  'inputs':[{'id':'my-dropdown2',
                                                             'property':'value',
                                                             'value':'TestIt'},
                                                           ]}), content_type="application/json")
-        rStart3 = b'{"response": {"test-output-div2": {"children": [{"props": {"children": ["You have '
+        rStart = b'{"response": {"test-output-div2": {"children": [{"props": {"children": ["You have '
 
-        assert response3.content[:len(rStart3)] == rStart3
-        assert response3.status_code == 200
+        assert response.content.startswith(rStart)
+        assert response.status_code == 200
 
-        assert response3.content.find(b'Test 789 content') > 0
+        assert response.content.find(b'Test 789 content') > 0
 
 
 @pytest.mark.django_db
