@@ -633,13 +633,15 @@ class WrappedDash(Dash):
 
         res = callback_info['callback'](*args, **argMap)
         if da:
-            if single_case and da.have_current_state_entry(output_id, output_property):
-                response = json.loads(res.data.decode('utf-8'))
-                value = response.get('response', {}).get('props', {}).get(output_property, None)
+            response = json.loads(res)
+            root_value = json.loads(res).get('response', {})
+
+            # not sure this is needed anymore as in the single_case, Dash appears to return the same response
+            # as the multi_case with "multi: true" in the JSON
+            if single_case and not response.get("multi", False) and da.have_current_state_entry(output_id, output_property):
+                value = root_value['props'].get(output_property, None)
                 da.update_current_state(output_id, output_property, value)
 
-            response = json.loads(res)
-            root_value = response.get('response', {})
             for output_item in outputs:
                 if isinstance(output_item, str):
                     output_id, output_property = output_item.split('.')
