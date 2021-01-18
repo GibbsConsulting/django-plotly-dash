@@ -679,6 +679,9 @@ class WrappedDash(Dash):
                     if da.have_current_state_entry(output_id, output_property):
                         value = root_value.get(output_id,{}).get(output_property, None)
                         da.update_current_state(output_id, output_property, value)
+                else:
+                    # todo: implement saving of state for pattern matching ouputs
+                    raise NotImplementedError("Updating state for dict keys (pattern matching) is not yet implemented")
 
         return res
 
