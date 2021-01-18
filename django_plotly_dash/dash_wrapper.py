@@ -302,14 +302,18 @@ class DjangoDash:
             callback_sets.append((callback_set, func))
             # add an expanded attribute to the function with the information to use in dispatch_with_args
             # to inject properly only the expanded arguments the function can accept
+            # if .expanded is None => inject all
+            # if .expanded is a list => inject only
             if add_expanded_arguments:
-                parameters = inspect.getfullargspec(func)
-                if parameters.varkw:
+                parameters = inspect.signature(func).parameters
+
+                if any(p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters.values()):
                     # there is some **kwargs, do not filter argMap later
                     func.expanded = None
                 else:
-                    # there is no **kwargs, filter argMap to take only func.expanded
-                    func.expanded = parameters.args + parameters.kwonlyargs + ["outputs_list"]
+                    # there is no **kwargs, filter argMap to take only the keyword arguments
+                    KEYWORD_TYPES = {inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY}
+                    func.expanded = [k for k, p in parameters.items() if p.kind in KEYWORD_TYPES] + ["outputs_list"]
             else:
                 # send only the outputs_list as it is not an expanded_callback
                 func.expanded = ["outputs_list"]
