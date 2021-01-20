@@ -31,6 +31,9 @@ import pytest
 import json
 
 #pylint: disable=bare-except
+from dash.dependencies import Input
+
+from django_plotly_dash import DjangoDash
 
 
 def test_dash_app():
@@ -444,3 +447,46 @@ def test_app_loading(client):
     assert response.status_code == 302
 
 
+def test_callback_decorator():
+    inputs = [Input("one", "value"),
+              Input("two", "value"),
+              ]
+    states = [Input("three", "value"),
+              Input("four", "value"),
+              ]
+
+    def callback_standard(one, two, three, four):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_standard, inputs, states) == []
+
+    def callback_standard(one, two, three, four, extra_1):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_standard, inputs, states) == ['extra_1']
+
+    def callback_args(one, *args):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_args, inputs, states) == []
+
+    def callback_args_extra(one, *args, extra_1):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_args_extra, inputs, states) == ['extra_1' ]
+
+    def callback_args_extra_star(one, *, extra_1):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_args_extra_star, inputs, states) == ['extra_1' ]
+
+
+    def callback_kwargs(one, two, three, four, extra_1, **kwargs):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_kwargs, inputs, states) == None
+
+    def callback_kwargs(one, two, three, four, *, extra_1, **kwargs, ):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_kwargs, inputs, states) == None

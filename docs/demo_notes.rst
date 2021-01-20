@@ -87,10 +87,10 @@ are used to form the layout::
         ]
     )
 
-Within the :ref:`expanded callback <extended_callbacks>`, the session state is passed as an extra
+Within the :ref:`extended callback <extended_callbacks>`, the session state is passed as an extra
 argument compared to the standard ``Dash`` callback::
 
-    @dis.expanded_callback(
+    @dis.callback(
         dash.dependencies.Output("danger-alert", 'children'),
         [dash.dependencies.Input('update-button', 'n_clicks'),]
         )

@@ -403,11 +403,11 @@ def exp_callback_kwargs(button_clicks, **kwargs):
 @flexible_expanded_callbacks.expanded_callback(
     dash.dependencies.Output('output-two', 'children'),
     [dash.dependencies.Input('button', 'n_clicks')])
-def exp_callback_kwargs(button_clicks):
+def exp_callback_standard(button_clicks):
     return "ok"
 
 @flexible_expanded_callbacks.expanded_callback(
     dash.dependencies.Output('output-three', 'children'),
     [dash.dependencies.Input('button', 'n_clicks')])
-def exp_callback_kwargs(button_clicks, dash_app_id):
+def exp_callback_dash_app_id(button_clicks, dash_app_id):
     return dash_app_id

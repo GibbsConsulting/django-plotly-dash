@@ -81,27 +81,16 @@ def _update(request, ident, stateless=False, **kwargs):
 
     request_body = json.loads(request.body.decode('utf-8'))
 
-    if app.use_dash_dispatch():
-        # Force call through dash
-        view_func = app.locate_endpoint_function('dash-update-component')
-
-        import flask
-        with app.test_request_context():
-            # Fudge request object
-            # pylint: disable=protected-access
-            flask.request._cached_json = (request_body, flask.request._cached_json[True])
-            resp = view_func()
-    else:
-        # Use direct dispatch with extra arguments in the argMap
-        app_state = request.session.get("django_plotly_dash", dict())
-        arg_map = {'dash_app_id': ident,
-                   'dash_app': dash_app,
-                   'user': request.user,
-                   'request':request,
-                   'session_state': app_state}
-        resp = app.dispatch_with_args(request_body, arg_map)
-        request.session['django_plotly_dash'] = app_state
-        dash_app.handle_current_state()
+    # Use direct dispatch with extra arguments in the argMap
+    app_state = request.session.get("django_plotly_dash", dict())
+    arg_map = {'dash_app_id': ident,
+               'dash_app': dash_app,
+               'user': request.user,
+               'request':request,
+               'session_state': app_state}
+    resp = app.dispatch_with_args(request_body, arg_map)
+    request.session['django_plotly_dash'] = app_state
+    dash_app.handle_current_state()
 
     # Special for ws-driven edge case
     if str(resp) == 'EDGECASEEXIT':
