@@ -293,10 +293,10 @@ class DjangoDash:
         If add_expanded_arguments is True, it will inspect the signature of the function to
         ensure only relevant expanded argument are passed to the callback.
         '''
-        callback_set = {'output':output,
-                        'inputs':inputs and inputs or dict(),
-                        'state':state and state or dict(),
-                        'events':events and events or dict()}
+        callback_set = {'output': output,
+                        'inputs': inputs or dict(),
+                        'state': state or dict(),
+                        'events': events or dict()}
 
         def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value, missing-docstring
             callback_sets.append((callback_set, func))
