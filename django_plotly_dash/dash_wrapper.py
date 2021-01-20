@@ -298,8 +298,8 @@ class DjangoDash:
                         'state': state or dict(),
                         'events': events or dict()}
 
-        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value, missing-docstring
-            callback_sets.append((callback_set, func))
+        def wrap_func(func):
+            self._callback_sets.append((callback_set, func))
             # add an expanded attribute to the function with the information to use in dispatch_with_args
             # to inject properly only the expanded arguments the function can accept
             # if .expanded is None => inject all
