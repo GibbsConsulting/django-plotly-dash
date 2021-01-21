@@ -50,7 +50,8 @@ dash_example1.layout = html.Div(id='main',
                                         className='col-md-12',
                                     ),
 
-                                    html.Div(id='test-output-div2')
+                                    html.Div(id='test-output-div2'),
+                                    html.Div(id='test-output-div3')
 
                                     ]) # end of 'main'
 
@@ -100,3 +101,35 @@ def callback_test2(*args, **kwargs):
                 html.Div(["The session context message is '%s'" %(kwargs['session_state']['django_to_dash_context'])])]
 
     return children
+
+@dash_example1.expanded_callback(
+    [dash.dependencies.Output('test-output-div3', 'children')],
+    [dash.dependencies.Input('my-dropdown1', 'value')])
+def callback_test(*args, **kwargs): #pylint: disable=unused-argument
+    'Callback to generate test data on each change of the dropdown'
+
+    # Creating a random Graph from a Plotly example:
+    N = 500
+    random_x = np.linspace(0, 1, N)
+    random_y = np.random.randn(N)
+
+    # Create a trace
+    trace = go.Scatter(x=random_x,
+                       y=random_y)
+
+    data = [trace]
+
+    layout = dict(title='',
+                  yaxis=dict(zeroline=False, title='Total Expense (£)',),
+                  xaxis=dict(zeroline=False, title='Date', tickangle=0),
+                  margin=dict(t=20, b=50, l=50, r=40),
+                  height=350,
+                 )
+
+
+    fig = dict(data=data, layout=layout)
+    line_graph = dcc.Graph(id='line-area-graph2', figure=fig, style={'display':'inline-block', 'width':'100%',
+                                                                     'height':'100%;'})
+    children = [line_graph]
+
+    return [children]
