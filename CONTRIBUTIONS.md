@@ -39,3 +39,6 @@ Thanks to the following people:
 [CaseGuide](https://github.com/CaseGuide)
 
 [manish-podugu](https://github.com/manish-podugu)
+
+[sdementen](https://github.com/sdementen)
+
