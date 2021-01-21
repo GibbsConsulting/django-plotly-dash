@@ -307,8 +307,6 @@ class DjangoDash:
             expanded = parameter_types.get(inspect.Parameter.POSITIONAL_OR_KEYWORD, [])[
                        n_dash_parameters:] + parameter_types.get(inspect.Parameter.KEYWORD_ONLY, [])
 
-        print(func, parameter_types, "->",expanded)
-
         return expanded
 
     def callback(self, output, inputs=None, state=None, events=None):
