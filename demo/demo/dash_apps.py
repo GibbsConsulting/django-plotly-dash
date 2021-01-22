@@ -15,12 +15,12 @@ import numpy as np
 from django_plotly_dash import DjangoDash
 
 #from .urls import app_name
-app_name = "DPD demo application"
+# app_name = "DPD demo application"
 
 dashboard_name1 = 'dash_example_1'
 dash_example1 = DjangoDash(name=dashboard_name1,
                            serve_locally=True,
-                           app_name=app_name
+                           # app_name=app_name
                           )
 
 # Below is a random Dash app.

@@ -165,6 +165,9 @@ class DjangoDash:
                  suppress_callback_exceptions=False,
                  **kwargs): # pylint: disable=unused-argument, too-many-arguments
 
+        # store extra arguments to pass them later to the WrappedDash instance
+        self._kwargs = kwargs
+
         if name is None:
             global uid_counter # pylint: disable=global-statement
             uid_counter += 1
@@ -271,7 +274,8 @@ class DjangoDash:
                          expanded_callbacks=self._expanded_callbacks,
                          replacements=replacements,
                          ndid=ndid,
-                         serve_locally=self._serve_locally)
+                         serve_locally=self._serve_locally,
+                         **self._kwargs)
 
         rd.layout = self.layout
         rd.config['suppress_callback_exceptions'] = self._suppress_callback_exceptions
