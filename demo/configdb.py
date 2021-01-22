@@ -8,6 +8,7 @@ UserModel = get_user_model()
 name="admin"
 password="admin"
 
+# trying to get username
 try:
     UserModel.objects.get(username=name)
 except:

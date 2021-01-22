@@ -612,32 +612,19 @@ class WrappedDash(Dash):
         if len(argMap) > 0:
             argMap['callback_context'] = callback_context
 
-        outputs = []
-        try:
-            if output[:2] == '..' and output[-2:] == '..':
-                # Multiple outputs
-                outputs = output[2:-2].split('...')
-                target_id = output
-        except:
-            pass
-
-        single_case = False
-        if len(outputs) < 1:
-            try:
-                output_id = output['id']
-                output_property = output['property']
-                target_id = "%s.%s" %(output_id, output_property)
-            except:
-                target_id = output
-                output_id, output_property = output.split(".")
-            single_case = True
-            outputs = [output,]
+        single_case = not(output.startswith('..') and output.endswith('..'))
+        if single_case:
+            # single Output (not in a list)
+            outputs = [output]
+        else:
+            # multiple outputs in a list (the list could contain a single item)
+            outputs = output[2:-2].split('...')
 
         args = []
 
         da = argMap.get('dash_app', None)
 
-        callback_info = self.callback_map[target_id]
+        callback_info = self.callback_map[output]
 
         for component_registration in callback_info['inputs']:
             for c in inputs:
@@ -660,7 +647,7 @@ class WrappedDash(Dash):
         argMap['outputs_list'] = outputs_list
 
         # Special: intercept case of insufficient arguments
-        # This happens when a propery has been updated with a pipe component
+        # This happens when a property has been updated with a pipe component
         # TODO see if this can be attacked from the client end
 
         if len(args) < len(callback_info['inputs']):
@@ -673,14 +660,10 @@ class WrappedDash(Dash):
             res = callback(*args, **{k: v for k, v in argMap.items() if k in parameters_to_inject})
         else:
             res = callback(*args, **argMap)
-        if da:
-            if single_case and da.have_current_state_entry(output_id, output_property):
-                response = json.loads(res.data.decode('utf-8'))
-                value = response.get('response', {}).get('props', {}).get(output_property, None)
-                da.update_current_state(output_id, output_property, value)
 
-            response = json.loads(res)
-            root_value = response.get('response', {})
+        if da:
+            root_value = json.loads(res).get('response', {})
+
             for output_item in outputs:
                 if isinstance(output_item, str):
                     output_id, output_property = output_item.split('.')

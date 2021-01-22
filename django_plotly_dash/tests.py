@@ -279,7 +279,7 @@ def test_injection_updating(client):
         assert response.content.startswith(rStart)
         assert response.status_code == 200
 
-        # New variant of output has a string used to name the properties
+        # Single output callback, output=="component_id.component_prop"
         response = client.post(url, json.dumps({'output':'test-output-div.children',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
@@ -291,7 +291,7 @@ def test_injection_updating(client):
         assert response.content.startswith(rStart)
         assert response.status_code == 200
 
-        # Second variant has a single-entry multiple property output => should fail as should not happen if single output)
+        # Single output callback, fails if output=="..component_id.component_prop.."
         with pytest.raises(KeyError, match="..test-output-div.children.."):
             client.post(url, json.dumps({'output':'..test-output-div.children..',
                                                 'inputs':[{'id':'my-dropdown1',
@@ -300,7 +300,7 @@ def test_injection_updating(client):
                                                          ]}), content_type="application/json")
 
 
-        # New variant of output has a string used to name the properties => should fail as should not happen if list of single output)
+        # Multiple output callback, fails if output=="component_id.component_prop"
         with pytest.raises(KeyError, match="test-output-div3.children"):
             client.post(url, json.dumps({'output':'test-output-div3.children',
                                                 'inputs':[{'id':'my-dropdown1',
@@ -308,8 +308,7 @@ def test_injection_updating(client):
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-
-        # Second variant has a single-entry multiple property output
+        # Multiple output callback, output=="..component_id.component_prop.."
         response = client.post(url, json.dumps({'output':'..test-output-div3.children..',
                                                 'inputs':[{'id':'my-dropdown1',
                                                            'property':'value',
