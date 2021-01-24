@@ -3,7 +3,7 @@
 from django_plotly_dash import DjangoDash
 from django.utils.module_loading import import_string
 
-from demo.plotly_apps import multiple_callbacks
+from demo.plotly_apps import multiple_callbacks, flexible_expanded_callbacks
 
 def stateless_app_loader(app_name):
 

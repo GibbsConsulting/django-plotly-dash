@@ -2,4 +2,4 @@
 #
 source env/bin/activate
 #
-pylint django_plotly_dash
+pylint django_plotly_dash --rcfile=pylintrc
