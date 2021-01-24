@@ -102,7 +102,6 @@ _stateless_app_lookup_func = None
 
 def add_usable_app(name, app):
     'Add app to local registry by name'
-    name = slugify(name)
     global usable_apps # pylint: disable=global-statement
     usable_apps[name] = app
     return name
@@ -120,8 +119,6 @@ def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
-    name = slugify(name)
-
     sa = usable_apps.get(name, None)
 
     if not sa:
