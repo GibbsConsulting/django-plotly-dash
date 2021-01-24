@@ -389,6 +389,10 @@ def compare(id_python, id_dash):
     return id_python == id_dash
 
 
+def convert2dash(id_python):
+    return json.dumps(id_python) if isinstance(id_python, dict) else id_python
+
+
 class WrappedDash(Dash):
     'Wrapper around the Plotly Dash application instance'
     # pylint: disable=too-many-arguments, too-many-instance-attributes
@@ -465,6 +469,7 @@ class WrappedDash(Dash):
                 self.walk_tree_and_extract(data.get(key, None), target)
             ident = data.get('id', None)
             if ident is not None:
+                ident = convert2dash(ident)
                 idVals = target.get(ident, {})
                 for key, value in data.items():
                     if key not in ['props', 'options', 'children', 'id']:

@@ -34,6 +34,8 @@ import json
 from dash.dependencies import Input
 
 from django_plotly_dash import DjangoDash
+from django_plotly_dash.dash_wrapper import get_local_stateless_list, get_local_stateless_by_name
+from django_plotly_dash.models import DashApp, find_stateless_by_name
 
 
 def test_dash_app():
@@ -45,6 +47,73 @@ def test_dash_app():
     assert stateless_a
     assert stateless_a.app_name
     assert str(stateless_a) == stateless_a.app_name
+
+
+@pytest.mark.django_db
+def test_dash_stateful_app():
+    'Test the state management of a DashApp'
+
+    from django_plotly_dash.models import StatelessApp
+    from dash_html_components import Div
+    from dash_core_components import Checklist
+
+    ddash = DjangoDash(name="DDash")
+    ddash.layout = Div(id="foo", children=[Checklist(id="checklist",
+                                                     options=[
+                                                         {'label': 'New York City', 'value': 'NYC'},
+                                                         {'label': 'Montréal', 'value': 'MTL'},
+                                                         {'label': 'San Francisco', 'value': 'SF'}
+                                                     ],
+                                                     value=['NYC', 'MTL']
+                                                     ),
+                                           Checklist(id={"_id": "checklist", "_type": "checklist"},
+                                                     options=[
+                                                         {'label': 'New York City', 'value': 'NYC'},
+                                                         {'label': 'Montréal', 'value': 'MTL'},
+                                                         {'label': 'San Francisco', 'value': 'SF'}
+                                                     ],
+                                                     value=['NYC', 'MTL']
+                                                     )
+                                           ])
+    stateless_a = StatelessApp(app_name="DDash")
+    stateless_a.save()
+    state_a = DashApp(stateless_app=stateless_a,
+                      instance_name="Some name",
+                      slug="my-app", save_on_change=True)
+    state_a.save()
+
+    # check app can be found back
+    assert "DDash" in get_local_stateless_list()
+    assert get_local_stateless_by_name("DDash") == ddash
+    assert find_stateless_by_name("DDash") == ddash
+
+    assert state_a.current_state() == {}
+
+    # search for state values in dash layout
+    state_a.populate_values()
+    assert state_a.current_state() == {'checklist': {'value': ['NYC', 'MTL']},
+                                       '{"_id": "checklist", "_type": "checklist"}': {'value': ['NYC', 'MTL']}}
+    assert state_a.have_current_state_entry("checklist", "value")
+    assert not state_a.have_current_state_entry("checklist", "other-prop")
+
+    # update a non existent state => no effect on current_state
+    state_a.update_current_state("foo", "value", "random")
+    assert state_a.current_state() == {'checklist': {'value': ['NYC', 'MTL']},
+                                       '{"_id": "checklist", "_type": "checklist"}': {'value': ['NYC', 'MTL']}}
+
+    # update an existent state => update current_state
+    state_a.update_current_state('{"_id": "checklist", "_type": "checklist"}', "value", ["other"])
+    assert state_a.current_state() == {'checklist': {'value': ['NYC', 'MTL']},
+                                       '{"_id": "checklist", "_type": "checklist"}': {'value': ['other']}}
+
+    assert DashApp.objects.get(instance_name="Some name").current_state() == {}
+
+    state_a.handle_current_state()
+
+    assert DashApp.objects.get(instance_name="Some name").current_state() == {
+        'checklist': {'value': ['NYC', 'MTL']},
+        '{"_id": "checklist", "_type": "checklist"}': {
+            'value': ['other']}}
 
 
 def test_util_error_cases(settings):
