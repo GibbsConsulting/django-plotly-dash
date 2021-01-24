@@ -76,7 +76,7 @@ class DashComponentFinder(BaseFinder):
             self.storages[component_name] = storage
             self.components[path] = component_name
 
-        super(DashComponentFinder, self).__init__()
+        super().__init__()
 
     def find(self, path, all=False):
         matches = []
@@ -131,7 +131,7 @@ class DashAppDirectoryFinder(BaseFinder):
                 self.locations.append(app_config.name)
                 self.storages[app_config.name] = storage
 
-        super(DashAppDirectoryFinder, self).__init__()
+        super().__init__()
 
     #pylint: disable=redefined-builtin
     def find(self, path, all=False):
@@ -184,7 +184,7 @@ class DashAssetFinder(BaseFinder):
                 self.locations.append(component_name)
                 self.storages[component_name] = storage
 
-        super(DashAssetFinder, self).__init__()
+        super().__init__()
 
     #pylint: disable=redefined-builtin
     def find(self, path, all=False):

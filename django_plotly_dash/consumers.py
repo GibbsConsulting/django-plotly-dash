@@ -55,7 +55,7 @@ async def async_send_to_pipe_channel(channel_name,
 class MessageConsumer(WebsocketConsumer):
     'Websocket handler for pipe to dash component'
     def __init__(self, *args, **kwargs):
-        super(MessageConsumer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.channel_maps = {}
 
@@ -67,7 +67,7 @@ class MessageConsumer(WebsocketConsumer):
         for _, pipe_group_name in self.channel_maps.items():
             async_to_sync(self.channel_layer.group_discard)(pipe_group_name, self.channel_name)
 
-        return super(MessageConsumer, self).disconnect(reason)
+        return super().disconnect(reason)
 
     def pipe_value(self, message):
         'Send a new value into the ws pipe'

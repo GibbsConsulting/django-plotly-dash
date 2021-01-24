@@ -50,7 +50,7 @@ try:
     from dataclasses import dataclass
     from typing import Dict, List
 
-    @dataclass(frozen-True)
+    @dataclass(frozen=True)
     class CallbackContext:
         inputs_list : List
         inputs: Dict
@@ -412,8 +412,7 @@ class WrappedDash(Dash):
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
 
-        super(WrappedDash, self).__init__(__name__,
-                                          **kwargs)
+        super().__init__(__name__, **kwargs)
 
         self.css.config.serve_locally = serve_locally
         self.scripts.config.serve_locally = serve_locally
@@ -581,9 +580,9 @@ class WrappedDash(Dash):
         else:
             fixed_outputs = self._fix_callback_item(output)
 
-        return super(WrappedDash, self).callback(fixed_outputs,
-                                                 [self._fix_callback_item(x) for x in inputs],
-                                                 [self._fix_callback_item(x) for x in state])
+        return super().callback(fixed_outputs,
+                                [self._fix_callback_item(x) for x in inputs],
+                                [self._fix_callback_item(x) for x in state])
 
     def clientside_callback(self, clientside_function, output, inputs=[], state=[]): # pylint: disable=dangerous-default-value
         'Invoke callback, adjusting variable names as needed'
@@ -593,10 +592,10 @@ class WrappedDash(Dash):
         else:
             fixed_outputs = self._fix_callback_item(output)
 
-        return super(WrappedDash, self).clientside_callback(clientside_function,
-                                                            fixed_outputs,
-                                                            [self._fix_callback_item(x) for x in inputs],
-                                                            [self._fix_callback_item(x) for x in state])
+        return super().clientside_callback(clientside_function,
+                                           fixed_outputs,
+                                           [self._fix_callback_item(x) for x in inputs],
+                                           [self._fix_callback_item(x) for x in state])
 
     def dispatch(self):
         'Perform dispatch, using request embedded within flask global state'
@@ -754,7 +753,7 @@ class WrappedDash(Dash):
     def interpolate_index(self, **kwargs): #pylint: disable=arguments-differ
 
         if not self._return_embedded:
-            resp = super(WrappedDash, self).interpolate_index(**kwargs)
+            resp = super().interpolate_index(**kwargs)
             return resp
 
         self._return_embedded.add_css(kwargs['css'])
