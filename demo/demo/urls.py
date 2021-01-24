@@ -17,7 +17,7 @@ Including another URLconf
 # pylint: disable=wrong-import-position,wrong-import-order
 
 from django.contrib import admin
-from django.urls import include
+from django.urls import include, path
 from django.conf.urls import url
 
 from django.views.generic import TemplateView
@@ -35,21 +35,21 @@ from django_plotly_dash.views import add_to_session
 from .views import dash_example_1_view, session_state_view
 
 urlpatterns = [
-    url('^$', TemplateView.as_view(template_name='index.html'), name="home"),
-    url('^demo-one$', TemplateView.as_view(template_name='demo_one.html'), name="demo-one"),
-    url('^demo-two$', TemplateView.as_view(template_name='demo_two.html'), name="demo-two"),
-    url('^demo-three$', TemplateView.as_view(template_name='demo_three.html'), name="demo-three"),
-    url('^demo-four$', TemplateView.as_view(template_name='demo_four.html'), name="demo-four"),
-    url('^demo-five$', TemplateView.as_view(template_name='demo_five.html'), name="demo-five"),
-    url('^demo-six', dash_example_1_view, name="demo-six"),
-    url('^demo-seven', TemplateView.as_view(template_name='demo_seven.html'), name="demo-seven"),
-    url('^demo-eight', session_state_view, {'template_name':'demo_eight.html'}, name="demo-eight"),
-    url('^demo-nine', TemplateView.as_view(template_name='demo_nine.html'), name="demo-nine"),
-    url('^demo-ten', TemplateView.as_view(template_name='demo_ten.html'), name="demo-ten"),
-    url('^admin/', admin.site.urls),
-    url('^django_plotly_dash/', include('django_plotly_dash.urls')),
+    path('', TemplateView.as_view(template_name='index.html'), name="home"),
+    path('demo-one', TemplateView.as_view(template_name='demo_one.html'), name="demo-one"),
+    path('demo-two', TemplateView.as_view(template_name='demo_two.html'), name="demo-two"),
+    path('demo-three', TemplateView.as_view(template_name='demo_three.html'), name="demo-three"),
+    path('demo-four', TemplateView.as_view(template_name='demo_four.html'), name="demo-four"),
+    path('demo-five', TemplateView.as_view(template_name='demo_five.html'), name="demo-five"),
+    path('demo-six', dash_example_1_view, name="demo-six"),
+    path('demo-seven', TemplateView.as_view(template_name='demo_seven.html'), name="demo-seven"),
+    path('demo-eight', session_state_view, {'template_name':'demo_eight.html'}, name="demo-eight"),
+    path('demo-nine', TemplateView.as_view(template_name='demo_nine.html'), name="demo-nine"),
+    path('demo-ten', TemplateView.as_view(template_name='demo_ten.html'), name="demo-ten"),
+    path('admin/', admin.site.urls),
+    path('django_plotly_dash/', include('django_plotly_dash.urls')),
 
-    url('^demo-session-var$', add_to_session, name="session-variable-example"),
+    path('demo-session-var', add_to_session, name="session-variable-example"),
 ]
 
 # Add in static routes so daphne can serve files; these should
