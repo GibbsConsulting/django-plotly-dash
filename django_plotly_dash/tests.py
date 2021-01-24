@@ -115,6 +115,20 @@ def test_dash_stateful_app():
         '{"_id": "checklist", "_type": "checklist"}': {
             'value': ['other']}}
 
+    # check initial layout serve has the correct values injected
+    dash_instance = state_a.as_dash_instance()
+    resp = dash_instance.serve_layout()
+
+    # initialise layout with app state
+    layout, mimetype = dash_instance.augment_initial_layout(resp, {})
+    assert "other" in layout
+
+    # initialise layout with initial arguments
+    layout, mimetype = dash_instance.augment_initial_layout(resp, {
+        '{"_id": "checklist", "_type": "checklist"}': {"value": "overwritten"}})
+    assert "overwritten" in layout
+    assert "other" not in layout
+
 
 def test_util_error_cases(settings):
     'Test handling of missing settings'
