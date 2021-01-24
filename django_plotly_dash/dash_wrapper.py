@@ -383,6 +383,15 @@ class PseudoFlask(Flask):
     def register_blueprint(self, *args, **kwargs):
         pass
 
+
+def compare(id_python, id_dash):
+    """Compare an id of a dash component as a python object with an id of a component
+    in dash syntax. It handles both id as str or as dict (pattern-matching)"""
+    if isinstance(id_python, dict):
+        return "{" in id_dash and id_python == json.loads(id_dash)
+    return id_python == id_dash
+
+
 class WrappedDash(Dash):
     'Wrapper around the Plotly Dash application instance'
     # pylint: disable=too-many-arguments, too-many-instance-attributes
@@ -436,10 +445,16 @@ class WrappedDash(Dash):
         if initial_arguments:
             if isinstance(initial_arguments, str):
                 initial_arguments = json.loads(initial_arguments)
+        else:
+            initial_arguments = {}
+
+        # Define overrides as self._replacements updated with initial_arguments
+        overrides = dict(self._replacements)
+        overrides.update(initial_arguments)
 
         # Walk tree. If at any point we have an element whose id
         # matches, then replace any named values at this level
-        reworked_data = self.walk_tree_and_replace(baseData, initial_arguments)
+        reworked_data = self.walk_tree_and_replace(baseData, overrides)
 
         response_data = json.dumps(reworked_data,
                                    cls=PlotlyJSONEncoder)
@@ -473,10 +488,15 @@ class WrappedDash(Dash):
             replacements = {}
             # look for id entry
             thisID = data.get('id', None)
-            if thisID is not None:
-                replacements = overrides.get(thisID, None) if overrides else None
-                if not replacements:
-                    replacements = self._replacements.get(thisID, {})
+            if isinstance(thisID, dict):
+                # handle case of thisID being a dict (pattern) => linear search in overrides dict
+                for k, v in overrides.items():
+                    if compare(id_python=thisID, id_dash=k):
+                        replacements = v
+                        break
+            elif thisID is not None:
+                # handle standard case of string thisID => key lookup
+                replacements = overrides.get(thisID, {})
             # walk all keys and replace if needed
             for k, v in data.items():
                 r = replacements.get(k, None)
@@ -628,7 +648,7 @@ class WrappedDash(Dash):
 
         for component_registration in callback_info['inputs']:
             for c in inputs:
-                if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
+                if c['property'] == component_registration['property'] and compare(id_python=c['id'],id_dash=component_registration['id']):
                     v = c.get('value', None)
                     args.append(v)
                     if da:
@@ -636,7 +656,7 @@ class WrappedDash(Dash):
 
         for component_registration in callback_info['state']:
             for c in states:
-                if c['property'] == component_registration['property'] and c['id'] == component_registration['id']:
+                if c['property'] == component_registration['property'] and compare(id_python=c['id'],id_dash=component_registration['id']):
                     v = c.get('value', None)
                     args.append(v)
                     if da:
@@ -670,6 +690,9 @@ class WrappedDash(Dash):
                     if da.have_current_state_entry(output_id, output_property):
                         value = root_value.get(output_id,{}).get(output_property, None)
                         da.update_current_state(output_id, output_property, value)
+                else:
+                    # todo: implement saving of state for pattern matching ouputs
+                    raise NotImplementedError("Updating state for dict keys (pattern matching) is not yet implemented")
 
         return res
 
