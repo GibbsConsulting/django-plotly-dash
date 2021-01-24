@@ -24,7 +24,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
-
+import itertools
 import json
 import inspect
 
@@ -160,7 +160,6 @@ class DjangoDash:
     '''
     #pylint: disable=too-many-instance-attributes
     def __init__(self, name=None, serve_locally=None,
-                 expanded_callbacks=False,
                  add_bootstrap_links=False,
                  suppress_callback_exceptions=False,
                  **kwargs): # pylint: disable=unused-argument, too-many-arguments
@@ -186,7 +185,6 @@ class DjangoDash:
         else:
             self._serve_locally = serve_locally
 
-        self._expanded_callbacks = expanded_callbacks
         self._suppress_callback_exceptions = suppress_callback_exceptions
 
         if add_bootstrap_links:
@@ -268,7 +266,6 @@ class DjangoDash:
             ndid = self._uid
 
         rd = WrappedDash(base_pathname=base_pathname,
-                         expanded_callbacks=self._expanded_callbacks,
                          replacements=replacements,
                          ndid=ndid,
                          serve_locally=self._serve_locally)
@@ -287,26 +284,58 @@ class DjangoDash:
 
         return rd
 
+    @staticmethod
+    def get_expanded_arguments(func, inputs, state):
+        """Analyse a callback function signature to detect the expanded arguments to add when called.
+        It uses the inputs and the state information to identify what arguments are already coming from Dash.
+
+        It returns a list of the expanded parameters to inject (can be [] if nothing should be injected)
+         or None if all parameters should be injected."""
+        n_dash_parameters = len(inputs or []) + len(state or [])
+
+        parameter_types = {kind: [p.name for p in parameters] for kind, parameters in
+                           itertools.groupby(inspect.signature(func).parameters.values(), lambda p: p.kind)}
+        if inspect.Parameter.VAR_KEYWORD in parameter_types:
+            # there is some **kwargs, inject all parameters
+            expanded = None
+        elif inspect.Parameter.VAR_POSITIONAL in parameter_types:
+            # there is a *args, assume all parameters afterwards (KEYWORD_ONLY) are to be injected
+            # some of these parameters may not be expanded arguments but that is ok
+            expanded = parameter_types.get(inspect.Parameter.KEYWORD_ONLY, [])
+        else:
+            # there is no **kwargs, filter argMap to take only the keyword arguments
+            expanded = parameter_types.get(inspect.Parameter.POSITIONAL_OR_KEYWORD, [])[
+                       n_dash_parameters:] + parameter_types.get(inspect.Parameter.KEYWORD_ONLY, [])
+
+        return expanded
+
     def callback(self, output, inputs=None, state=None, events=None):
-        'Form a callback function by wrapping, in the same way as the underlying Dash application would'
-        callback_set = {'output':output,
-                        'inputs':inputs and inputs or dict(),
-                        'state':state and state or dict(),
-                        'events':events and events or dict()}
-        def wrap_func(func, callback_set=callback_set, callback_sets=self._callback_sets): # pylint: disable=dangerous-default-value, missing-docstring
-            callback_sets.append((callback_set, func))
+        '''Form a callback function by wrapping, in the same way as the underlying Dash application would
+        but handling extra arguments provided by dpd.
+
+        It will inspect the signature of the function to ensure only relevant expanded arguments are passed to the callback.
+
+        If the function accepts a **kwargs => all expanded arguments are sent to the function in the kwargs.
+        If the function has a *args => expanded arguments matching parameters after the *args are injected.
+        Otherwise, take all arguments beyond the one provided by Dash (based on the Inputs/States provided).
+
+        '''
+        callback_set = {'output': output,
+                        'inputs': inputs or [],
+                        'state': state or [],
+                        'events': events or []}
+
+        def wrap_func(func):
+            self._callback_sets.append((callback_set, func))
+            # add an expanded attribute to the function with the information to use in dispatch_with_args
+            # to inject properly only the expanded arguments the function can accept
+            # if .expanded is None => inject all
+            # if .expanded is a list => inject only
+            func.expanded = DjangoDash.get_expanded_arguments(func, inputs, state)
             return func
         return wrap_func
 
-    def expanded_callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
-        '''
-        Form an expanded callback.
-
-        This function registers the callback function, and sets an internal flag that mandates that all
-        callbacks are passed the enhanced arguments.
-        '''
-        self._expanded_callbacks = True
-        return self.callback(output, inputs, state, events)
+    expanded_callback = callback
 
     def clientside_callback(self, clientside_function, output, inputs=None, state=None):
         'Form a callback function by wrapping, in the same way as the underlying Dash application would'
@@ -358,8 +387,7 @@ class WrappedDash(Dash):
     'Wrapper around the Plotly Dash application instance'
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
-                 base_pathname=None, replacements=None, ndid=None,
-                 expanded_callbacks=False, serve_locally=False,
+                 base_pathname=None, replacements=None, ndid=None, serve_locally=False,
                  **kwargs):
 
         self._uid = ndid
@@ -378,7 +406,6 @@ class WrappedDash(Dash):
         self.scripts.config.serve_locally = serve_locally
 
         self._adjust_id = False
-        self._dash_dispatch = not expanded_callbacks
         if replacements:
             self._replacements = replacements
         else:
@@ -386,10 +413,6 @@ class WrappedDash(Dash):
         self._use_dash_layout = len(self._replacements) < 1
 
         self._return_embedded = False
-
-    def use_dash_dispatch(self):
-        'Indicate if dispatch is using underlying dash code or the wrapped code'
-        return self._dash_dispatch
 
     def use_dash_layout(self):
         '''
@@ -630,7 +653,14 @@ class WrappedDash(Dash):
         if len(args) < len(callback_info['inputs']):
             return 'EDGECASEEXIT'
 
-        res = callback_info['callback'](*args, **argMap)
+        callback = callback_info["callback"]
+        # smart injection of parameters if .expanded is defined
+        if callback.expanded is not None:
+            parameters_to_inject = {*callback.expanded, 'outputs_list'}
+            res = callback(*args, **{k: v for k, v in argMap.items() if k in parameters_to_inject})
+        else:
+            res = callback(*args, **argMap)
+
         if da:
             root_value = json.loads(res).get('response', {})
 

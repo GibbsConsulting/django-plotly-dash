@@ -53,7 +53,7 @@ dash_example1.layout = html.Div(id='main',
                                     html.Div(id='test-output-div2'),
                                     html.Div(id='test-output-div3')
 
-                                    ]) # end of 'main'
+                                ]) # end of 'main'
 
 @dash_example1.expanded_callback(
     dash.dependencies.Output('test-output-div', 'children'),
@@ -93,9 +93,6 @@ def callback_test(*args, **kwargs): #pylint: disable=unused-argument
     [dash.dependencies.Input('my-dropdown2', 'value')])
 def callback_test2(*args, **kwargs):
     'Callback to exercise session functionality'
-
-    print(args)
-    print(kwargs)
 
     children = [html.Div(["You have selected %s." %(args[0])]),
                 html.Div(["The session context message is '%s'" %(kwargs['session_state']['django_to_dash_context'])])]

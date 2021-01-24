@@ -31,6 +31,9 @@ import pytest
 import json
 
 #pylint: disable=bare-except
+from dash.dependencies import Input
+
+from django_plotly_dash import DjangoDash
 
 
 def test_dash_app():
@@ -202,6 +205,58 @@ def test_injection_updating_multiple_callbacks(client):
 
 
 @pytest.mark.django_db
+def test_flexible_expanded_callbacks(client):
+    'Check updating of an app using demo test data for flexible expanded callbacks'
+
+    from django.urls import reverse
+
+    route_name = 'update-component'
+
+    for prefix, arg_map in [('app-', {'ident':'flexible_expanded_callbacks'}),]:
+        url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+        # output contains all arguments of the expanded_callback
+        response = client.post(url, json.dumps({'output':'output-one.children',
+                                                'inputs':[
+            {'id':'button',
+             'property':'n_clicks',
+             'value':'10'},
+                                                         ]}), content_type="application/json")
+
+        assert response.status_code == 200
+
+        resp = json.loads(response.content.decode('utf-8'))
+        for key in ["dash_app_id", "dash_app", "callback_context"]:
+            assert key in resp["response"]['output-one']['children']
+
+        # output contains all arguments of the expanded_callback
+        response = client.post(url, json.dumps({'output':'output-two.children',
+                                                'inputs':[
+            {'id':'button',
+             'property':'n_clicks',
+             'value':'10'},
+                                                         ]}), content_type="application/json")
+
+        assert response.status_code == 200
+
+        resp = json.loads(response.content.decode('utf-8'))
+        assert resp["response"]=={'output-two': {'children': 'ok'}}
+
+
+        # output contains all arguments of the expanded_callback
+        response = client.post(url, json.dumps({'output':'output-three.children',
+                                                'inputs':[
+            {'id':'button',
+             'property':'n_clicks',
+             'value':'10'},
+                                                         ]}), content_type="application/json")
+
+        assert response.status_code == 200
+
+        resp = json.loads(response.content.decode('utf-8'))
+        assert resp["response"]=={"output-three": {"children": "flexible_expanded_callbacks"}}
+
+@pytest.mark.django_db
 def test_injection_updating(client):
     'Check updating of an app using demo test data'
 
@@ -252,7 +307,6 @@ def test_injection_updating(client):
                                                            'property':'value',
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
-
 
         # Multiple output callback, output=="..component_id.component_prop.."
         response = client.post(url, json.dumps({'output':'..test-output-div3.children..',
@@ -392,3 +446,46 @@ def test_app_loading(client):
     assert response.status_code == 302
 
 
+def test_callback_decorator():
+    inputs = [Input("one", "value"),
+              Input("two", "value"),
+              ]
+    states = [Input("three", "value"),
+              Input("four", "value"),
+              ]
+
+    def callback_standard(one, two, three, four):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_standard, inputs, states) == []
+
+    def callback_standard(one, two, three, four, extra_1):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_standard, inputs, states) == ['extra_1']
+
+    def callback_args(one, *args):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_args, inputs, states) == []
+
+    def callback_args_extra(one, *args, extra_1):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_args_extra, inputs, states) == ['extra_1' ]
+
+    def callback_args_extra_star(one, *, extra_1):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_args_extra_star, inputs, states) == ['extra_1' ]
+
+
+    def callback_kwargs(one, two, three, four, extra_1, **kwargs):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_kwargs, inputs, states) == None
+
+    def callback_kwargs(one, two, three, four, *, extra_1, **kwargs, ):
+        return
+
+    assert DjangoDash.get_expanded_arguments(callback_kwargs, inputs, states) == None

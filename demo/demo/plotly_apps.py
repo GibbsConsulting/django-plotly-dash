@@ -377,3 +377,37 @@ def multiple_callbacks_two(button_clicks, color_choice, **kwargs):
             "Output 2: %s %s %s" % (button_clicks, color_choice, kwargs['callback_context'].triggered),
             "Output 3: %s %s [%s]" % (button_clicks, color_choice, kwargs)
             ]
+
+
+flexible_expanded_callbacks = DjangoDash("FlexibleExpandedCallbacks")
+
+flexible_expanded_callbacks.layout = html.Div([
+    html.Button("Press Me",
+                id="button"),
+    dcc.RadioItems(id='dropdown-color',
+                   options=[{'label': c, 'value': c.lower()} for c in ['Red', 'Green', 'Blue']],
+                   value='red'
+                   ),
+    html.Div(id="output-one"),
+    html.Div(id="output-two"),
+    html.Div(id="output-three")
+    ])
+
+@flexible_expanded_callbacks.expanded_callback(
+    dash.dependencies.Output('output-one', 'children'),
+    [dash.dependencies.Input('button', 'n_clicks')])
+def exp_callback_kwargs(button_clicks, **kwargs):
+    return str(kwargs)
+
+
+@flexible_expanded_callbacks.expanded_callback(
+    dash.dependencies.Output('output-two', 'children'),
+    [dash.dependencies.Input('button', 'n_clicks')])
+def exp_callback_standard(button_clicks):
+    return "ok"
+
+@flexible_expanded_callbacks.expanded_callback(
+    dash.dependencies.Output('output-three', 'children'),
+    [dash.dependencies.Input('button', 'n_clicks')])
+def exp_callback_dash_app_id(button_clicks, dash_app_id):
+    return dash_app_id
