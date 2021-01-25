@@ -34,6 +34,7 @@ import pandas as pd
 from django.core.cache import cache
 
 import dash
+from dash.dependencies import MATCH, ALL
 import dash_core_components as dcc
 import dash_html_components as html
 
