@@ -50,7 +50,7 @@ try:
     from dataclasses import dataclass
     from typing import Dict, List
 
-    @dataclass(frozen-True)
+    @dataclass(frozen=True)
     class CallbackContext:
         inputs_list : List
         inputs: Dict
@@ -441,10 +441,7 @@ class WrappedDash(Dash):
         baseData = json.loads(baseDataInBytes.decode('utf-8'))
 
         # Also add in any initial arguments
-        if initial_arguments:
-            if isinstance(initial_arguments, str):
-                initial_arguments = json.loads(initial_arguments)
-        else:
+        if not initial_arguments:
             initial_arguments = {}
 
         # Define overrides as self._replacements updated with initial_arguments
