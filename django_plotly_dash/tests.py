@@ -92,19 +92,20 @@ def test_dash_stateful_app():
     # search for state values in dash layout
     state_a.populate_values()
     assert state_a.current_state() == {'checklist': {'value': ['NYC', 'MTL']},
-                                       '{"_id": "checklist", "_type": "checklist"}': {'value': ['NYC', 'MTL']}}
+                                       '{"_id":"checklist","_type":"checklist"}': {'value': ['NYC', 'MTL']}}
     assert state_a.have_current_state_entry("checklist", "value")
+    assert state_a.have_current_state_entry({"_id": "checklist", "_type": "checklist"}, "value")
     assert not state_a.have_current_state_entry("checklist", "other-prop")
 
     # update a non existent state => no effect on current_state
     state_a.update_current_state("foo", "value", "random")
     assert state_a.current_state() == {'checklist': {'value': ['NYC', 'MTL']},
-                                       '{"_id": "checklist", "_type": "checklist"}': {'value': ['NYC', 'MTL']}}
+                                       '{"_id":"checklist","_type":"checklist"}': {'value': ['NYC', 'MTL']}}
 
     # update an existent state => update current_state
-    state_a.update_current_state('{"_id": "checklist", "_type": "checklist"}', "value", ["other"])
+    state_a.update_current_state('{"_id":"checklist","_type":"checklist"}', "value", ["other"])
     assert state_a.current_state() == {'checklist': {'value': ['NYC', 'MTL']},
-                                       '{"_id": "checklist", "_type": "checklist"}': {'value': ['other']}}
+                                       '{"_id":"checklist","_type":"checklist"}': {'value': ['other']}}
 
     assert DashApp.objects.get(instance_name="Some name").current_state() == {}
 
@@ -112,7 +113,7 @@ def test_dash_stateful_app():
 
     assert DashApp.objects.get(instance_name="Some name").current_state() == {
         'checklist': {'value': ['NYC', 'MTL']},
-        '{"_id": "checklist", "_type": "checklist"}': {
+        '{"_id":"checklist","_type":"checklist"}': {
             'value': ['other']}}
 
     # check initial layout serve has the correct values injected
@@ -125,7 +126,7 @@ def test_dash_stateful_app():
 
     # initialise layout with initial arguments
     layout, mimetype = dash_instance.augment_initial_layout(resp, {
-        '{"_id": "checklist", "_type": "checklist"}': {"value": "overwritten"}})
+        '{"_id":"checklist","_type":"checklist"}': {"value": "overwritten"}})
     assert "overwritten" in layout
     assert "other" not in layout
 
@@ -338,6 +339,49 @@ def test_flexible_expanded_callbacks(client):
 
         resp = json.loads(response.content.decode('utf-8'))
         assert resp["response"]=={"output-three": {"children": "flexible_expanded_callbacks"}}
+
+@pytest.mark.django_db
+def test_pattern_state_callbacks(client):
+    'Check updating of an app using demo test data for pattern state callbacks'
+
+    from django.urls import reverse
+
+    route_name = 'update-component'
+
+    for prefix, arg_map in [('app-', {'ident':'PatternStateCallbacks'}),
+                            ('', {'ident':'pattern-state-callback'}),]:
+        url = reverse('the_django_plotly_dash:%s%s' % (prefix, route_name), kwargs=arg_map)
+
+        # output contains all arguments of the expanded_callback
+        response = client.post(url, json.dumps({'output': '{"_id":["MATCH"],"_type":"div"}.children',
+                                                'outputs': {'id': {'_id': 'output-three', '_type': 'div'},
+                                                            'property': 'children'},
+                                                'inputs': [{'id': {'_id': 'output-three', '_type': 'div'}, 'property': 'n_clicks', 'value':10}],
+                                                'changedPropIds': []},
+                                               ), content_type="application/json")
+
+        assert response.status_code == 200
+
+        resp = json.loads(response.content.decode('utf-8'))
+        assert resp["response"] == {'{"_id":"output-three","_type":"div"}': {'children': '10'}}
+
+        # output contains all arguments of the expanded_callback
+        response = client.post(url, json.dumps({'output': '{"_id":"output-one","_type":"divo"}.children',
+                                                'outputs': {'id': {'_id': 'output-one', '_type': 'divo'},
+                                                            'property': 'children'},
+                                                'inputs': [
+                                                    [{'id': {'_id': 'output-two', '_type': 'div'}, 'property': 'children', 'value': '10'},
+                                                     {'id': {'_id': 'output-three', '_type': 'div'}, 'property': 'children', 'value': '11'}]],
+                                                'changedPropIds': ['{"_id":"output-three","_type":"div"}.children',
+                                                                   '{"_id":"output-two","_type":"div"}.children']}),
+                               content_type="application/json")
+
+        assert response.status_code == 200
+
+        resp = json.loads(response.content.decode('utf-8'))
+        assert resp["response"] == {'{"_id":"output-one","_type":"divo"}': {'children': "['10', '11']"}}
+
+
 
 @pytest.mark.django_db
 def test_injection_updating(client):

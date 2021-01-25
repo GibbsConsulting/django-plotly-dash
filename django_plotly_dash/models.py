@@ -158,7 +158,7 @@ class DashApp(models.Model):
     def have_current_state_entry(self, wid, key):
         'Return True if there is a cached current state for this app'
         cscoll = self.current_state()
-        c_state = cscoll.get(wid, {})
+        c_state = cscoll.get(wid2str(wid), {})
         return key in c_state
 
     def update_current_state(self, wid, key, value):
@@ -168,7 +168,7 @@ class DashApp(models.Model):
         If the key does not represent an existing entry, then ignore it
         '''
         cscoll = self.current_state()
-        c_state = cscoll.get(wid, {})
+        c_state = cscoll.get(wid2str(wid), {})
         if key in c_state:
             current_value = c_state.get(key, None)
             if current_value != value:

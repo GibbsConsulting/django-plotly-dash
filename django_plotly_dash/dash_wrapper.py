@@ -381,16 +381,14 @@ class PseudoFlask(Flask):
         pass
 
 
-def compare(id_python, id_dash):
-    """Compare an id of a dash component as a python object with an id of a component
-    in dash syntax. It handles both id as str or as dict (pattern-matching)"""
-    if isinstance(id_python, dict):
-        return "{" in id_dash and id_python == json.loads(id_dash)
-    return id_python == id_dash
+def wid2str(wid):
+    """Convert an python id (str or dict) into its Dash representation.
 
-
-def convert2dash(id_python):
-    return json.dumps(id_python) if isinstance(id_python, dict) else id_python
+    see https://github.com/plotly/dash/blob/c5ba38f0ae7b7f8c173bda10b4a8ddd035f1d867/dash-renderer/src/actions/dependencies.js#L114"""
+    if isinstance(wid, str):
+        return wid
+    data = ",".join(f"{json.dumps(k)}:{json.dumps(v)}" for k, v in sorted(wid.items()))
+    return f"{{{data}}}"
 
 
 class WrappedDash(Dash):
@@ -465,11 +463,11 @@ class WrappedDash(Dash):
     def walk_tree_and_extract(self, data, target):
         'Walk tree of properties and extract identifiers and associated values'
         if isinstance(data, dict):
-            for key in ['children', 'props',]:
+            for key in ['children', 'props']:
                 self.walk_tree_and_extract(data.get(key, None), target)
             ident = data.get('id', None)
             if ident is not None:
-                ident = convert2dash(ident)
+                ident = wid2str(ident)
                 idVals = target.get(ident, {})
                 for key, value in data.items():
                     if key not in ['props', 'options', 'children', 'id']:
@@ -492,8 +490,9 @@ class WrappedDash(Dash):
             thisID = data.get('id', None)
             if isinstance(thisID, dict):
                 # handle case of thisID being a dict (pattern) => linear search in overrides dict
+                thisID = wid2str(thisID)
                 for k, v in overrides.items():
-                    if compare(id_python=thisID, id_dash=k):
+                    if thisID == k:
                         replacements = v
                         break
             elif thisID is not None:
@@ -640,27 +639,26 @@ class WrappedDash(Dash):
             # multiple outputs in a list (the list could contain a single item)
             outputs = output[2:-2].split('...')
 
-        args = []
 
         da = argMap.get('dash_app', None)
 
         callback_info = self.callback_map[output]
 
-        for component_registration in callback_info['inputs']:
-            for c in inputs:
-                if c['property'] == component_registration['property'] and compare(id_python=c['id'],id_dash=component_registration['id']):
-                    v = c.get('value', None)
-                    args.append(v)
-                    if da:
-                        da.update_current_state(c['id'], c['property'], v)
+        args = []
 
-        for component_registration in callback_info['state']:
-            for c in states:
-                if c['property'] == component_registration['property'] and compare(id_python=c['id'],id_dash=component_registration['id']):
-                    v = c.get('value', None)
-                    args.append(v)
-                    if da:
-                        da.update_current_state(c['id'], c['property'], v)
+        for c in inputs + states:
+            if isinstance(c, list):  # ALL, ALLSMALLER
+                v = [ci.get("value") for ci in c]
+            else:
+                v = c.get("value")
+            args.append(v)
+            if da:
+                if isinstance(c, list):  # ALL, ALLSMALLER
+                    for ci in c:
+                        da.update_current_state(ci['id'], ci['property'], v)
+                else:
+                    da.update_current_state(c['id'], c['property'], v)
+
 
         # Dash 1.11 introduces a set of outputs
         outputs_list = body.get('outputs') or split_callback_id(output)
