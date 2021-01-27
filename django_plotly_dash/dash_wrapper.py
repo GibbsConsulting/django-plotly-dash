@@ -592,12 +592,6 @@ class WrappedDash(Dash):
                                                             [self._fix_callback_item(x) for x in inputs],
                                                             [self._fix_callback_item(x) for x in state])
 
-    def dispatch(self):
-        'Perform dispatch, using request embedded within flask global state'
-        import flask
-        body = flask.request.get_json()
-        return self.dispatch_with_args(body, argMap=dict())
-
     #pylint: disable=too-many-locals
     def dispatch_with_args(self, body, argMap):
         'Perform callback dispatching, with enhanced arguments and recording of response'
