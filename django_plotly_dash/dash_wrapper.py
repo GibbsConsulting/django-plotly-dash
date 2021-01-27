@@ -640,15 +640,15 @@ class WrappedDash(Dash):
         for c in inputs + states:
             if isinstance(c, list):  # ALL, ALLSMALLER
                 v = [ci.get("value") for ci in c]
+                if da:
+                    for ci, vi in zip(c, v):
+                        da.update_current_state(ci['id'], ci['property'], vi)
             else:
                 v = c.get("value")
-            args.append(v)
-            if da:
-                if isinstance(c, list):  # ALL, ALLSMALLER
-                    for ci in c:
-                        da.update_current_state(ci['id'], ci['property'], v)
-                else:
+                if da:
                     da.update_current_state(c['id'], c['property'], v)
+
+            args.append(v)
 
 
         # Dash 1.11 introduces a set of outputs
