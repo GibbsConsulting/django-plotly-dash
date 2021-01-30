@@ -26,7 +26,7 @@ SOFTWARE.
 '''
 import itertools
 import json
-import inspect
+import warnings
 
 import dash
 from dash import Dash
@@ -162,10 +162,17 @@ class DjangoDash:
     def __init__(self, name=None, serve_locally=None,
                  add_bootstrap_links=False,
                  suppress_callback_exceptions=False,
-                 **kwargs): # pylint: disable=unused-argument, too-many-arguments
+                 external_stylesheets=None,
+                 external_scripts=None,
+                 **kwargs):  # pylint: disable=unused-argument, too-many-arguments
 
-        # store extra arguments to pass them later to the WrappedDash instance
+        # store arguments to pass them later to the WrappedDash instance
+        self.external_stylesheets = external_stylesheets or []
+        self.external_scripts = external_scripts or []
         self._kwargs = kwargs
+        if kwargs:
+            warnings.warn("You are passing extra arguments {kwargs} that will be passed to Dash(...) "
+                          "but may not be properly handled by django-plotly-dash.".format(kwargs=kwargs))
 
         if name is None:
             global uid_counter # pylint: disable=global-statement
@@ -272,6 +279,8 @@ class DjangoDash:
                          replacements=replacements,
                          ndid=ndid,
                          serve_locally=self._serve_locally,
+                         external_stylesheets=self.external_stylesheets,
+                         external_scripts=self.external_scripts,
                          **self._kwargs)
 
         rd.layout = self.layout
