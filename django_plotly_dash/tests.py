@@ -29,6 +29,7 @@ SOFTWARE.
 
 import pytest
 import json
+from unittest.mock import patch
 
 #pylint: disable=bare-except
 from dash.dependencies import Input
@@ -169,6 +170,7 @@ def test_injection_app_access(client):
                 did_fail = True
 
             assert did_fail
+
 
 
 @pytest.mark.django_db
@@ -445,6 +447,23 @@ def test_app_loading(client):
     # This view redirects to the main admin
     assert response.status_code == 302
 
+
+@pytest.mark.django_db
+def test_external_scripts_stylesheets(client):
+    'Check external_stylesheets and external_scripts ends up in index'
+
+    from demo.plotly_apps import external_scripts_stylesheets
+    dash = external_scripts_stylesheets.as_dash_instance()
+
+    with patch.object(dash, "interpolate_index") as mock:
+        dash.index()
+
+    _, kwargs = mock.call_args
+    assert "https://codepen.io/chriddyp/pen/bWLwgP.css" in kwargs["css"]
+    assert "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" in kwargs["css"]
+    assert "https://www.google-analytics.com/analytics.js" in kwargs["scripts"]
+    assert "https://cdn.polyfill.io/v2/polyfill.min.js" in kwargs["scripts"]
+    assert "https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.core.js" in kwargs["scripts"]
 
 def test_callback_decorator():
     inputs = [Input("one", "value"),

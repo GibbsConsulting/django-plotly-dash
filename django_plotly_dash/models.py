@@ -57,7 +57,7 @@ class StatelessApp(models.Model):
             exist_count = StatelessApp.objects.filter(slug__startswith=self.slug).count()
             if exist_count > 0:
                 self.slug = self.slug + str(exist_count+1)
-        return super(StatelessApp, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def as_dash_app(self):
         '''
@@ -141,7 +141,7 @@ class DashApp(models.Model):
             self.instance_name = "%s-%i" %(self.stateless_app.app_name, existing_count+1) # pylint: disable=no-member
         if not self.slug or len(self.slug) < 2:
             self.slug = slugify(self.instance_name)
-        super(DashApp, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def handle_current_state(self):
         '''
