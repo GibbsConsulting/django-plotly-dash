@@ -27,14 +27,18 @@ SOFTWARE.
 
 '''
 
-import pytest
 import json
 from unittest.mock import patch
 
-#pylint: disable=bare-except
+import pytest
+# pylint: disable=bare-except
 from dash.dependencies import Input
+from django.urls import reverse
 
 from django_plotly_dash import DjangoDash
+from django_plotly_dash.dash_wrapper import get_local_stateless_list, get_local_stateless_by_name
+from django_plotly_dash.models import DashApp, find_stateless_by_name
+from django_plotly_dash.tests_dash_contract import fill_in_test_app, dash_contract_data
 
 
 def test_dash_app():
@@ -46,6 +50,156 @@ def test_dash_app():
     assert stateless_a
     assert stateless_a.app_name
     assert str(stateless_a) == stateless_a.app_name
+
+
+@pytest.mark.django_db
+def test_dash_stateful_app_client_contract(client):
+    'Test the state management of a DashApp as well as the contract between the client and the Dash app'
+
+    from django_plotly_dash.models import StatelessApp
+
+    # create a DjangoDash, StatelessApp and DashApp
+    ddash = DjangoDash(name="DDash")
+    fill_in_test_app(ddash, write=False)
+
+    stateless_a = StatelessApp(app_name="DDash")
+    stateless_a.save()
+    stateful_a = DashApp(stateless_app=stateless_a,
+                         instance_name="Some name",
+                         slug="my-app", save_on_change=True)
+    stateful_a.save()
+
+    # check app can be found back
+    assert "DDash" in get_local_stateless_list()
+    assert get_local_stateless_by_name("DDash") == ddash
+    assert find_stateless_by_name("DDash") == ddash
+
+    # check the current_state is empty
+    assert stateful_a.current_state() == {}
+
+    # set the initial expected state
+    expected_state = {'inp1': {'n_clicks': 0, 'n_clicks_timestamp': 1611733453854},
+                      'inp2': {'n_clicks': 5, 'n_clicks_timestamp': 1611733454354},
+                      'out1-0': {'n_clicks': 1, 'n_clicks_timestamp': 1611733453954},
+                      'out1-1': {'n_clicks': 2, 'n_clicks_timestamp': 1611733454054},
+                      'out1-2': {'n_clicks': 3, 'n_clicks_timestamp': 1611733454154},
+                      'out1-3': {'n_clicks': 4, 'n_clicks_timestamp': 1611733454254},
+                      'out2-0': {'n_clicks': 6, 'n_clicks_timestamp': 1611733454454},
+                      'out3': {'n_clicks': 10, 'n_clicks_timestamp': 1611733454854},
+                      'out4': {'n_clicks': 14, 'n_clicks_timestamp': 1611733455254},
+                      'out5': {'n_clicks': 18, 'n_clicks_timestamp': 1611733455654},
+                      '{"_id":"inp-0","_type":"btn3"}': {'n_clicks': 7,
+                                                         'n_clicks_timestamp': 1611733454554},
+                      '{"_id":"inp-0","_type":"btn4"}': {'n_clicks': 11,
+                                                         'n_clicks_timestamp': 1611733454954},
+                      '{"_id":"inp-0","_type":"btn5"}': {'n_clicks': 15,
+                                                         'n_clicks_timestamp': 1611733455354},
+                      '{"_id":"inp-1","_type":"btn3"}': {'n_clicks': 8,
+                                                         'n_clicks_timestamp': 1611733454654},
+                      '{"_id":"inp-1","_type":"btn4"}': {'n_clicks': 12,
+                                                         'n_clicks_timestamp': 1611733455054},
+                      '{"_id":"inp-1","_type":"btn5"}': {'n_clicks': 16,
+                                                         'n_clicks_timestamp': 1611733455454},
+                      '{"_id":"inp-2","_type":"btn3"}': {'n_clicks': 9,
+                                                         'n_clicks_timestamp': 1611733454754},
+                      '{"_id":"inp-2","_type":"btn4"}': {'n_clicks': 13,
+                                                         'n_clicks_timestamp': 1611733455154},
+                      '{"_id":"inp-2","_type":"btn5"}': {'n_clicks': 17,
+                                                         'n_clicks_timestamp': 1611733455554}}
+
+    ########## test state management of the app and conversion of components ids
+    # search for state values in dash layout
+    stateful_a.populate_values()
+    assert stateful_a.current_state() == expected_state
+    assert stateful_a.have_current_state_entry("inp1", "n_clicks")
+    assert stateful_a.have_current_state_entry({"_type": "btn3", "_id": "inp-0"}, "n_clicks_timestamp")
+    assert stateful_a.have_current_state_entry('{"_id":"inp-0","_type":"btn3"}', "n_clicks_timestamp")
+    assert not stateful_a.have_current_state_entry("checklist", "other-prop")
+
+    # update a non existent state => no effect on current_state
+    stateful_a.update_current_state("foo", "value", "random")
+    assert stateful_a.current_state() == expected_state
+
+    # update an existent state => update current_state
+    stateful_a.update_current_state('{"_id":"inp-2","_type":"btn5"}', "n_clicks", 100)
+    expected_state['{"_id":"inp-2","_type":"btn5"}'] = {'n_clicks': 100, 'n_clicks_timestamp': 1611733455554}
+    assert stateful_a.current_state() == expected_state
+
+    assert DashApp.objects.get(instance_name="Some name").current_state() == {}
+
+    stateful_a.handle_current_state()
+
+    assert DashApp.objects.get(instance_name="Some name").current_state() == expected_state
+
+    # check initial layout serve has the correct values injected
+    dash_instance = stateful_a.as_dash_instance()
+    resp = dash_instance.serve_layout()
+
+    # initialise layout with app state
+    layout, mimetype = dash_instance.augment_initial_layout(resp, {})
+    assert '"n_clicks": 100' in layout
+
+    # initialise layout with initial arguments
+    layout, mimetype = dash_instance.augment_initial_layout(resp, {
+        '{"_id":"inp-2","_type":"btn5"}': {"n_clicks": 200}})
+    assert '"n_clicks": 100' not in layout
+    assert '"n_clicks": 200' in layout
+
+    ########### test contract between client and app by replaying interactions recorded in tests_dash_contract.json
+    # get update component route
+    url = reverse('the_django_plotly_dash:update-component', kwargs={'ident': 'my-app'})
+
+    # for all interactions in the tests_dash_contract.json
+    for scenario in json.load(dash_contract_data.open("r")):
+        body = scenario["body"]
+
+        response = client.post(url, json.dumps(body), content_type="application/json")
+
+        assert response.status_code == 200
+
+        response = json.loads(response.content)
+
+        # compare first item in response with first result
+        result = scenario["result"]
+        if isinstance(result, list):
+            result = result[0]
+        content = response["response"].popitem()[1].popitem()[1]
+        assert content == result
+
+        # handle state
+        stateful_a.handle_current_state()
+
+    # check final state has been changed accordingly
+    final_state = {'inp1': {'n_clicks': 1, 'n_clicks_timestamp': 1611736145932},
+                   'inp2': {'n_clicks': 6, 'n_clicks_timestamp': 1611736146875},
+                   'out1-0': {'n_clicks': 1, 'n_clicks_timestamp': 1611733453954},
+                   'out1-1': {'n_clicks': 2, 'n_clicks_timestamp': 1611733454054},
+                   'out1-2': {'n_clicks': 3, 'n_clicks_timestamp': 1611733454154},
+                   'out1-3': {'n_clicks': 4, 'n_clicks_timestamp': 1611733454254},
+                   'out2-0': {'n_clicks': 6, 'n_clicks_timestamp': 1611733454454},
+                   'out3': {'n_clicks': 10, 'n_clicks_timestamp': 1611733454854},
+                   'out4': {'n_clicks': 14, 'n_clicks_timestamp': 1611733455254},
+                   'out5': {'n_clicks': 18, 'n_clicks_timestamp': 1611733455654},
+                   '{"_id":"inp-0","_type":"btn3"}': {'n_clicks': 8,
+                                                      'n_clicks_timestamp': 1611736147644},
+                   '{"_id":"inp-0","_type":"btn4"}': {'n_clicks': 12,
+                                                      'n_clicks_timestamp': 1611733454954},
+                   '{"_id":"inp-0","_type":"btn5"}': {'n_clicks': 16,
+                                                      'n_clicks_timestamp': 1611733455354},
+                   '{"_id":"inp-1","_type":"btn3"}': {'n_clicks': 9,
+                                                      'n_clicks_timestamp': 1611736148172},
+                   '{"_id":"inp-1","_type":"btn4"}': {'n_clicks': 13,
+                                                      'n_clicks_timestamp': 1611733455054},
+                   '{"_id":"inp-1","_type":"btn5"}': {'n_clicks': 18,
+                                                      'n_clicks_timestamp': 1611733455454},
+                   '{"_id":"inp-2","_type":"btn3"}': {'n_clicks': 10,
+                                                      'n_clicks_timestamp': 1611736149140},
+                   '{"_id":"inp-2","_type":"btn4"}': {'n_clicks': 13,
+                                                      'n_clicks_timestamp': 1611733455154},
+                   '{"_id":"inp-2","_type":"btn5"}': {'n_clicks': 19,
+                                                      'n_clicks_timestamp': 1611733455554}}
+
+    assert DashApp.objects.get(instance_name="Some name").current_state() == final_state
 
 
 def test_util_error_cases(settings):
@@ -257,6 +411,7 @@ def test_flexible_expanded_callbacks(client):
 
         resp = json.loads(response.content.decode('utf-8'))
         assert resp["response"]=={"output-three": {"children": "flexible_expanded_callbacks"}}
+
 
 @pytest.mark.django_db
 def test_injection_updating(client):

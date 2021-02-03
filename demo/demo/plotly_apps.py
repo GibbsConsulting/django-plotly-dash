@@ -34,6 +34,7 @@ import pandas as pd
 from django.core.cache import cache
 
 import dash
+from dash.dependencies import MATCH, ALL
 import dash_core_components as dcc
 import dash_html_components as html
 
@@ -436,3 +437,26 @@ def exp_callback_standard(button_clicks):
     [dash.dependencies.Input('button', 'n_clicks')])
 def exp_callback_dash_app_id(button_clicks, dash_app_id):
     return dash_app_id
+
+
+pattern_state_callbacks = DjangoDash("PatternStateCallbacks")
+
+pattern_state_callbacks.layout = html.Div([
+    html.Div(id={"_id": "output-one", "_type": "divo"}),
+    html.Div(id={"_id": "output-two", "_type": "div"}),
+    html.Div(id={"_id": "output-three", "_type": "div"})
+])
+
+
+@pattern_state_callbacks.callback(
+    dash.dependencies.Output({"_type": "div", "_id": MATCH}, 'children'),
+    [dash.dependencies.Input({"_type": "div", "_id": MATCH}, 'n_clicks')])
+def pattern_match(values):
+    return str(values)
+
+
+@pattern_state_callbacks.callback(
+    dash.dependencies.Output({"_type": "divo", "_id": "output-one"}, 'children'),
+    [dash.dependencies.Input({"_type": "div", "_id": ALL}, 'children')])
+def pattern_all(values):
+    return str(values)

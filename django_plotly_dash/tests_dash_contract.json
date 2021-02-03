@@ -1,0 +1,1337 @@
+[
+  {
+    "body": {
+      "output": "out1-0.children",
+      "outputs": {
+        "id": "out1-0",
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": "inp1",
+          "property": "n_clicks_timestamp",
+          "value": 1611733453854
+        }
+      ],
+      "changedPropIds": [],
+      "state": [
+        {
+          "id": "inp1",
+          "property": "n_clicks",
+          "value": 0
+        }
+      ]
+    },
+    "args": [
+      1611733453854,
+      0
+    ],
+    "kwargs": {},
+    "result": "single - (1611733453854, 0)"
+  },
+  {
+    "body": {
+      "output": "..out1-1.children..",
+      "outputs": [
+        {
+          "id": "out1-1",
+          "property": "children"
+        }
+      ],
+      "inputs": [
+        {
+          "id": "inp1",
+          "property": "n_clicks_timestamp",
+          "value": 1611733453854
+        }
+      ],
+      "changedPropIds": [],
+      "state": [
+        {
+          "id": "inp1",
+          "property": "n_clicks",
+          "value": 0
+        }
+      ]
+    },
+    "args": [
+      1611733453854,
+      0
+    ],
+    "kwargs": {},
+    "result": [
+      "single in list - (1611733453854, 0)"
+    ]
+  },
+  {
+    "body": {
+      "output": "..out1-2.children...out1-3.children..",
+      "outputs": [
+        {
+          "id": "out1-2",
+          "property": "children"
+        },
+        {
+          "id": "out1-3",
+          "property": "children"
+        }
+      ],
+      "inputs": [
+        {
+          "id": "inp1",
+          "property": "n_clicks_timestamp",
+          "value": 1611733453854
+        }
+      ],
+      "changedPropIds": [],
+      "state": [
+        {
+          "id": "inp1",
+          "property": "n_clicks",
+          "value": 0
+        }
+      ]
+    },
+    "args": [
+      1611733453854,
+      0
+    ],
+    "kwargs": {},
+    "result": [
+      "multi in list - (1611733453854, 0)",
+      "multi in list - (1611733453854, 0)"
+    ]
+  },
+  {
+    "body": {
+      "output": "out2-0.children",
+      "outputs": {
+        "id": "out2-0",
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": "inp2",
+          "property": "n_clicks_timestamp",
+          "value": 1611733454354
+        },
+        {
+          "id": "inp2",
+          "property": "n_clicks",
+          "value": 5
+        }
+      ],
+      "changedPropIds": []
+    },
+    "args": [
+      1611733454354,
+      5
+    ],
+    "kwargs": {},
+    "result": "multi triggered - (1611733454354, 5) - []"
+  },
+  {
+    "body": {
+      "output": "out3.children",
+      "outputs": {
+        "id": "out3",
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611733454554
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611733454654
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611733454754
+          }
+        ]
+      ],
+      "changedPropIds": [],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 7
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 8
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 9
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        1611733454554,
+        1611733454654,
+        1611733454754
+      ],
+      [
+        7,
+        8,
+        9
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALL - ([1611733454554, 1611733454654, 1611733454754], [7, 8, 9])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn4\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-0",
+          "_type": "btn4"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        []
+      ],
+      "changedPropIds": [],
+      "state": [
+        []
+      ]
+    },
+    "args": [
+      [],
+      []
+    ],
+    "kwargs": {},
+    "result": "pattern ALLSMALLER - ([], [])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn4\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-1",
+          "_type": "btn4"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 11
+          }
+        ]
+      ],
+      "changedPropIds": [],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            }
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        11
+      ],
+      [
+        {
+          "_id": "inp-0",
+          "_type": "btn4"
+        }
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALLSMALLER - ([11], [{'_id': 'inp-0', '_type': 'btn4'}])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn4\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-2",
+          "_type": "btn4"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 11
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 12
+          }
+        ]
+      ],
+      "changedPropIds": [],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            }
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            }
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        11,
+        12
+      ],
+      [
+        {
+          "_id": "inp-0",
+          "_type": "btn4"
+        },
+        {
+          "_id": "inp-1",
+          "_type": "btn4"
+        }
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALLSMALLER - ([11, 12], [{'_id': 'inp-0', '_type': 'btn4'}, {'_id': 'inp-1', '_type': 'btn4'}])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-0",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-0",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 15
+        }
+      ],
+      "changedPropIds": [],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-0",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-0",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      15,
+      {
+        "_id": "inp-0",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (15, {'_id': 'inp-0', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-1",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 16
+        }
+      ],
+      "changedPropIds": [],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      16,
+      {
+        "_id": "inp-1",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (16, {'_id': 'inp-1', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-2",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 17
+        }
+      ],
+      "changedPropIds": [],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      17,
+      {
+        "_id": "inp-2",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (17, {'_id': 'inp-2', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "out1-0.children",
+      "outputs": {
+        "id": "out1-0",
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": "inp1",
+          "property": "n_clicks_timestamp",
+          "value": 1611736145932
+        }
+      ],
+      "changedPropIds": [
+        "inp1.n_clicks_timestamp"
+      ],
+      "state": [
+        {
+          "id": "inp1",
+          "property": "n_clicks",
+          "value": 1
+        }
+      ]
+    },
+    "args": [
+      1611736145932,
+      1
+    ],
+    "kwargs": {},
+    "result": "single - (1611736145932, 1)"
+  },
+  {
+    "body": {
+      "output": "..out1-1.children..",
+      "outputs": [
+        {
+          "id": "out1-1",
+          "property": "children"
+        }
+      ],
+      "inputs": [
+        {
+          "id": "inp1",
+          "property": "n_clicks_timestamp",
+          "value": 1611736145932
+        }
+      ],
+      "changedPropIds": [
+        "inp1.n_clicks_timestamp"
+      ],
+      "state": [
+        {
+          "id": "inp1",
+          "property": "n_clicks",
+          "value": 1
+        }
+      ]
+    },
+    "args": [
+      1611736145932,
+      1
+    ],
+    "kwargs": {},
+    "result": [
+      "single in list - (1611736145932, 1)"
+    ]
+  },
+  {
+    "body": {
+      "output": "..out1-2.children...out1-3.children..",
+      "outputs": [
+        {
+          "id": "out1-2",
+          "property": "children"
+        },
+        {
+          "id": "out1-3",
+          "property": "children"
+        }
+      ],
+      "inputs": [
+        {
+          "id": "inp1",
+          "property": "n_clicks_timestamp",
+          "value": 1611736145932
+        }
+      ],
+      "changedPropIds": [
+        "inp1.n_clicks_timestamp"
+      ],
+      "state": [
+        {
+          "id": "inp1",
+          "property": "n_clicks",
+          "value": 1
+        }
+      ]
+    },
+    "args": [
+      1611736145932,
+      1
+    ],
+    "kwargs": {},
+    "result": [
+      "multi in list - (1611736145932, 1)",
+      "multi in list - (1611736145932, 1)"
+    ]
+  },
+  {
+    "body": {
+      "output": "out2-0.children",
+      "outputs": {
+        "id": "out2-0",
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": "inp2",
+          "property": "n_clicks_timestamp",
+          "value": 1611736146875
+        },
+        {
+          "id": "inp2",
+          "property": "n_clicks",
+          "value": 6
+        }
+      ],
+      "changedPropIds": [
+        "inp2.n_clicks",
+        "inp2.n_clicks_timestamp"
+      ]
+    },
+    "args": [
+      1611736146875,
+      6
+    ],
+    "kwargs": {},
+    "result": "multi triggered - (1611736146875, 6) - [{'prop_id': 'inp2.n_clicks', 'value': 6}, {'prop_id': 'inp2.n_clicks_timestamp', 'value': 1611736146875}]"
+  },
+  {
+    "body": {
+      "output": "out3.children",
+      "outputs": {
+        "id": "out3",
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611736147644
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611733454654
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611733454754
+          }
+        ]
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-0\",\"_type\":\"btn3\"}.n_clicks_timestamp"
+      ],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 8
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 8
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 9
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        1611736147644,
+        1611733454654,
+        1611733454754
+      ],
+      [
+        8,
+        8,
+        9
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALL - ([1611736147644, 1611733454654, 1611733454754], [8, 8, 9])"
+  },
+  {
+    "body": {
+      "output": "out3.children",
+      "outputs": {
+        "id": "out3",
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611736147644
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611736148172
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611733454754
+          }
+        ]
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-1\",\"_type\":\"btn3\"}.n_clicks_timestamp"
+      ],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 8
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 9
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 9
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        1611736147644,
+        1611736148172,
+        1611733454754
+      ],
+      [
+        8,
+        9,
+        9
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALL - ([1611736147644, 1611736148172, 1611733454754], [8, 9, 9])"
+  },
+  {
+    "body": {
+      "output": "out3.children",
+      "outputs": {
+        "id": "out3",
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611736147644
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611736148172
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks_timestamp",
+            "value": 1611736149140
+          }
+        ]
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-2\",\"_type\":\"btn3\"}.n_clicks_timestamp"
+      ],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 8
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 9
+          },
+          {
+            "id": {
+              "_id": "inp-2",
+              "_type": "btn3"
+            },
+            "property": "n_clicks",
+            "value": 10
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        1611736147644,
+        1611736148172,
+        1611736149140
+      ],
+      [
+        8,
+        9,
+        10
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALL - ([1611736147644, 1611736148172, 1611736149140], [8, 9, 10])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn4\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-1",
+          "_type": "btn4"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 12
+          }
+        ]
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-0\",\"_type\":\"btn4\"}.n_clicks"
+      ],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            }
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        12
+      ],
+      [
+        {
+          "_id": "inp-0",
+          "_type": "btn4"
+        }
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALLSMALLER - ([12], [{'_id': 'inp-0', '_type': 'btn4'}])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn4\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-2",
+          "_type": "btn4"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 12
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 12
+          }
+        ]
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-0\",\"_type\":\"btn4\"}.n_clicks"
+      ],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            }
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            }
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        12,
+        12
+      ],
+      [
+        {
+          "_id": "inp-0",
+          "_type": "btn4"
+        },
+        {
+          "_id": "inp-1",
+          "_type": "btn4"
+        }
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALLSMALLER - ([12, 12], [{'_id': 'inp-0', '_type': 'btn4'}, {'_id': 'inp-1', '_type': 'btn4'}])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn4\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-2",
+          "_type": "btn4"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 12
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            },
+            "property": "n_clicks",
+            "value": 13
+          }
+        ]
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-1\",\"_type\":\"btn4\"}.n_clicks"
+      ],
+      "state": [
+        [
+          {
+            "id": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-0",
+              "_type": "btn4"
+            }
+          },
+          {
+            "id": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            },
+            "property": "id",
+            "value": {
+              "_id": "inp-1",
+              "_type": "btn4"
+            }
+          }
+        ]
+      ]
+    },
+    "args": [
+      [
+        12,
+        13
+      ],
+      [
+        {
+          "_id": "inp-0",
+          "_type": "btn4"
+        },
+        {
+          "_id": "inp-1",
+          "_type": "btn4"
+        }
+      ]
+    ],
+    "kwargs": {},
+    "result": "pattern ALLSMALLER - ([12, 13], [{'_id': 'inp-0', '_type': 'btn4'}, {'_id': 'inp-1', '_type': 'btn4'}])"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-0",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-0",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 16
+        }
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-0\",\"_type\":\"btn5\"}.n_clicks"
+      ],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-0",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-0",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      16,
+      {
+        "_id": "inp-0",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (16, {'_id': 'inp-0', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-1",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 17
+        }
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-1\",\"_type\":\"btn5\"}.n_clicks"
+      ],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      17,
+      {
+        "_id": "inp-1",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (17, {'_id': 'inp-1', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-1",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 18
+        }
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-1\",\"_type\":\"btn5\"}.n_clicks"
+      ],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-1",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      18,
+      {
+        "_id": "inp-1",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (18, {'_id': 'inp-1', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-2",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 18
+        }
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-2\",\"_type\":\"btn5\"}.n_clicks"
+      ],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      18,
+      {
+        "_id": "inp-2",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (18, {'_id': 'inp-2', '_type': 'btn5'})"
+  },
+  {
+    "body": {
+      "output": "{\"_id\":[\"MATCH\"],\"_type\":\"btn5\"}.children",
+      "outputs": {
+        "id": {
+          "_id": "inp-2",
+          "_type": "btn5"
+        },
+        "property": "children"
+      },
+      "inputs": [
+        {
+          "id": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          },
+          "property": "n_clicks",
+          "value": 19
+        }
+      ],
+      "changedPropIds": [
+        "{\"_id\":\"inp-2\",\"_type\":\"btn5\"}.n_clicks"
+      ],
+      "state": [
+        {
+          "id": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          },
+          "property": "id",
+          "value": {
+            "_id": "inp-2",
+            "_type": "btn5"
+          }
+        }
+      ]
+    },
+    "args": [
+      19,
+      {
+        "_id": "inp-2",
+        "_type": "btn5"
+      }
+    ],
+    "kwargs": {},
+    "result": "pattern MATCH - (19, {'_id': 'inp-2', '_type': 'btn5'})"
+  }
+]

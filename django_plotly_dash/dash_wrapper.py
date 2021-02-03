@@ -103,7 +103,6 @@ _stateless_app_lookup_func = None
 
 def add_usable_app(name, app):
     'Add app to local registry by name'
-    name = slugify(name)
     global usable_apps # pylint: disable=global-statement
     usable_apps[name] = app
     return name
@@ -121,8 +120,6 @@ def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
-    name = slugify(name)
-
     sa = usable_apps.get(name, None)
 
     if not sa:
@@ -398,12 +395,14 @@ class PseudoFlask(Flask):
         pass
 
 
-def compare(id_python, id_dash):
-    """Compare an id of a dash component as a python object with an id of a component
-    in dash syntax. It handles both id as str or as dict (pattern-matching)"""
-    if isinstance(id_python, dict):
-        return "{" in id_dash and id_python == json.loads(id_dash)
-    return id_python == id_dash
+def wid2str(wid):
+    """Convert an python id (str or dict) into its Dash representation.
+
+    see https://github.com/plotly/dash/blob/c5ba38f0ae7b7f8c173bda10b4a8ddd035f1d867/dash-renderer/src/actions/dependencies.js#L114"""
+    if isinstance(wid, str):
+        return wid
+    data = ",".join(f"{json.dumps(k)}:{json.dumps(v)}" for k, v in sorted(wid.items()))
+    return f"{{{data}}}"
 
 
 class WrappedDash(Dash):
@@ -455,10 +454,7 @@ class WrappedDash(Dash):
         baseData = json.loads(baseDataInBytes.decode('utf-8'))
 
         # Also add in any initial arguments
-        if initial_arguments:
-            if isinstance(initial_arguments, str):
-                initial_arguments = json.loads(initial_arguments)
-        else:
+        if not initial_arguments:
             initial_arguments = {}
 
         # Define overrides as self._replacements updated with initial_arguments
@@ -477,10 +473,11 @@ class WrappedDash(Dash):
     def walk_tree_and_extract(self, data, target):
         'Walk tree of properties and extract identifiers and associated values'
         if isinstance(data, dict):
-            for key in ['children', 'props',]:
+            for key in ['children', 'props']:
                 self.walk_tree_and_extract(data.get(key, None), target)
             ident = data.get('id', None)
             if ident is not None:
+                ident = wid2str(ident)
                 idVals = target.get(ident, {})
                 for key, value in data.items():
                     if key not in ['props', 'options', 'children', 'id']:
@@ -503,8 +500,9 @@ class WrappedDash(Dash):
             thisID = data.get('id', None)
             if isinstance(thisID, dict):
                 # handle case of thisID being a dict (pattern) => linear search in overrides dict
+                thisID = wid2str(thisID)
                 for k, v in overrides.items():
-                    if compare(id_python=thisID, id_dash=k):
+                    if thisID == k:
                         replacements = v
                         break
             elif thisID is not None:
@@ -607,12 +605,6 @@ class WrappedDash(Dash):
                                            [self._fix_callback_item(x) for x in inputs],
                                            [self._fix_callback_item(x) for x in state])
 
-    def dispatch(self):
-        'Perform dispatch, using request embedded within flask global state'
-        import flask
-        body = flask.request.get_json()
-        return self.dispatch_with_args(body, argMap=dict())
-
     #pylint: disable=too-many-locals
     def dispatch_with_args(self, body, argMap):
         'Perform callback dispatching, with enhanced arguments and recording of response'
@@ -651,27 +643,26 @@ class WrappedDash(Dash):
             # multiple outputs in a list (the list could contain a single item)
             outputs = output[2:-2].split('...')
 
-        args = []
 
         da = argMap.get('dash_app', None)
 
         callback_info = self.callback_map[output]
 
-        for component_registration in callback_info['inputs']:
-            for c in inputs:
-                if c['property'] == component_registration['property'] and compare(id_python=c['id'],id_dash=component_registration['id']):
-                    v = c.get('value', None)
-                    args.append(v)
-                    if da:
-                        da.update_current_state(c['id'], c['property'], v)
+        args = []
 
-        for component_registration in callback_info['state']:
-            for c in states:
-                if c['property'] == component_registration['property'] and compare(id_python=c['id'],id_dash=component_registration['id']):
-                    v = c.get('value', None)
-                    args.append(v)
-                    if da:
-                        da.update_current_state(c['id'], c['property'], v)
+        for c in inputs + states:
+            if isinstance(c, list):  # ALL, ALLSMALLER
+                v = [ci.get("value") for ci in c]
+                if da:
+                    for ci, vi in zip(c, v):
+                        da.update_current_state(ci['id'], ci['property'], vi)
+            else:
+                v = c.get("value")
+                if da:
+                    da.update_current_state(c['id'], c['property'], v)
+
+            args.append(v)
+
 
         # Dash 1.11 introduces a set of outputs
         outputs_list = body.get('outputs') or split_callback_id(output)

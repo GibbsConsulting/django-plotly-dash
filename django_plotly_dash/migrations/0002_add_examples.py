@@ -83,6 +83,17 @@ def addExamples(apps, schema_editor):
 
     da5.save()
 
+    sa6 = StatelessApp(app_name="PatternStateCallbacks",
+                       slug="pattern-state-callback")
+
+    sa6.save()
+
+    da6 = DashApp(stateless_app=sa6,
+                  instance_name="Pattern and State saving Example",
+                  slug="pattern-state-callback")
+
+    da6.save()
+
 
 def remExamples(apps, schema_editor):
 

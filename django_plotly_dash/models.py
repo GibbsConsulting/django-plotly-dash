@@ -30,8 +30,7 @@ from django.contrib import admin
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 
-from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list
-
+from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list, wid2str
 
 logger = logging.getLogger(__name__)
 
@@ -158,7 +157,7 @@ class DashApp(models.Model):
     def have_current_state_entry(self, wid, key):
         'Return True if there is a cached current state for this app'
         cscoll = self.current_state()
-        c_state = cscoll.get(wid, {})
+        c_state = cscoll.get(wid2str(wid), {})
         return key in c_state
 
     def update_current_state(self, wid, key, value):
@@ -168,7 +167,7 @@ class DashApp(models.Model):
         If the key does not represent an existing entry, then ignore it
         '''
         cscoll = self.current_state()
-        c_state = cscoll.get(wid, {})
+        c_state = cscoll.get(wid2str(wid), {})
         if key in c_state:
             current_value = c_state.get(key, None)
             if current_value != value:
