@@ -32,7 +32,7 @@ from unittest.mock import patch
 
 import pytest
 # pylint: disable=bare-except
-from dash.dependencies import Input
+from dash.dependencies import Input, State, Output
 from django.urls import reverse
 
 from django_plotly_dash import DjangoDash
@@ -200,6 +200,56 @@ def test_dash_stateful_app_client_contract(client):
                                                       'n_clicks_timestamp': 1611733455554}}
 
     assert DashApp.objects.get(instance_name="Some name").current_state() == final_state
+
+
+
+def test_dash_callback_arguments():
+    'Test the flexibility of the callback arguments order (handling of inputs/outputs/states)'
+
+    # create a DjangoDash
+    ddash = DjangoDash(name="DashCallbackArguments")
+
+    # add a callback with the new flexible order of dependencies
+    @ddash.callback(
+        Output("one", "foo"),
+        Output("two", "foo"),
+        Input("one", "baz"),
+        Input("two", "baz"),
+        Input("three", "baz"),
+        State("one", "bil"),
+    )
+    def new():
+        pass
+
+    # add a callback with the old/classical flexible order of dependencies
+    @ddash.callback(
+        [Output("one", "foo"),
+         Output("two", "foo")],
+        [Input("one", "baz"),
+         Input("two", "baz"),
+         Input("three", "baz")],
+        [State("one", "bil")]
+    )
+    def old():
+        pass
+
+    assert ddash._callback_sets == [({'inputs': [Input("one", "baz"),
+                                                 Input("two", "baz"),
+                                                 Input("three", "baz"), ],
+                                      'output': [Output("one", "foo"),
+                                                 Output("two", "foo")],
+                                      'prevent_initial_call': None,
+                                      'state': [State("one", "bil"), ]},
+                                     new),
+                                    ({'inputs': [Input("one", "baz"),
+                                                 Input("two", "baz"),
+                                                 Input("three", "baz"), ],
+                                      'output': [Output("one", "foo"),
+                                                 Output("two", "foo")],
+                                      'prevent_initial_call': None,
+                                      'state': [State("one", "bil"), ]},
+                                     old)
+                                    ]
 
 
 def test_util_error_cases(settings):

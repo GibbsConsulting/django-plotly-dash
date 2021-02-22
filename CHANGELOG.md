@@ -2,6 +2,10 @@
 
 All notable changes should be documented in this file.
 
+## [dev] - TBD
+
+Align dpd callback signature to Dash one (no need to group Outputs, Inputs and States into list).  
+
 ## [1.6.1] - 2021-02-06
 
 Added a stub for `use_dash_dispatch` for backwards compatibility.
