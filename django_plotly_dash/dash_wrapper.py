@@ -30,7 +30,7 @@ import inspect
 import warnings
 
 import dash
-from dash import Dash
+from dash import Dash, dependencies
 from dash._utils import split_callback_id, inputs_to_dict
 
 from flask import Flask
@@ -320,7 +320,7 @@ class DjangoDash:
 
         return expanded
 
-    def callback(self, output, inputs=None, state=None, events=None):
+    def callback(self, *_args, **_kwargs):
         '''Form a callback function by wrapping, in the same way as the underlying Dash application would
         but handling extra arguments provided by dpd.
 
@@ -331,10 +331,15 @@ class DjangoDash:
         Otherwise, take all arguments beyond the one provided by Dash (based on the Inputs/States provided).
 
         '''
+
+        output, inputs, state, prevent_initial_call = dependencies.handle_callback_args(
+            _args, _kwargs
+        )
+
         callback_set = {'output': output,
-                        'inputs': inputs or [],
-                        'state': state or [],
-                        'events': events or []}
+                        'inputs': inputs,
+                        'state': state,
+                        'prevent_initial_call': prevent_initial_call}
 
         def wrap_func(func):
             self._callback_sets.append((callback_set, func))
@@ -348,12 +353,17 @@ class DjangoDash:
 
     expanded_callback = callback
 
-    def clientside_callback(self, clientside_function, output, inputs=None, state=None):
+    def clientside_callback(self, clientside_function,  *_args, **_kwargs):
         'Form a callback function by wrapping, in the same way as the underlying Dash application would'
+        output, inputs, state, prevent_initial_call = dependencies.handle_callback_args(
+            _args, _kwargs
+        )
+
         callback_set = { 'clientside_function': clientside_function,
                          'output': output,
-                         'inputs': inputs and inputs or dict(),
-                         'state': state and state or dict() }
+                         'inputs': inputs,
+                         'state': state,
+                         'prevent_initial_call': prevent_initial_call}
 
         self._clientside_callback_sets.append(callback_set)
 
@@ -589,7 +599,7 @@ class WrappedDash(Dash):
         item.component_id = self._fix_id(item.component_id)
         return item
 
-    def callback(self, output, inputs=[], state=[], events=[]): # pylint: disable=dangerous-default-value
+    def callback(self, output, inputs, state, prevent_initial_call):
         'Invoke callback, adjusting variable names as needed'
 
         if isinstance(output, (list, tuple)):
@@ -599,9 +609,10 @@ class WrappedDash(Dash):
 
         return super().callback(fixed_outputs,
                                 [self._fix_callback_item(x) for x in inputs],
-                                [self._fix_callback_item(x) for x in state])
+                                [self._fix_callback_item(x) for x in state],
+                                prevent_initial_call=prevent_initial_call)
 
-    def clientside_callback(self, clientside_function, output, inputs=[], state=[]): # pylint: disable=dangerous-default-value
+    def clientside_callback(self, clientside_function, output, inputs, state, prevent_initial_call): # pylint: disable=dangerous-default-value
         'Invoke callback, adjusting variable names as needed'
 
         if isinstance(output, (list, tuple)):
@@ -612,7 +623,8 @@ class WrappedDash(Dash):
         return super().clientside_callback(clientside_function,
                                            fixed_outputs,
                                            [self._fix_callback_item(x) for x in inputs],
-                                           [self._fix_callback_item(x) for x in state])
+                                           [self._fix_callback_item(x) for x in state],
+                                           prevent_initial_call=prevent_initial_call)
 
     #pylint: disable=too-many-locals
     def dispatch_with_args(self, body, argMap):
