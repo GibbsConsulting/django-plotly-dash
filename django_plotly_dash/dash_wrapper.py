@@ -28,6 +28,7 @@ import inspect
 import itertools
 import json
 import warnings
+from typing import Dict, List, Callable
 
 import dash
 from dash import Dash, dependencies
@@ -45,8 +46,6 @@ from .util import static_asset_path
 
 try:
     from dataclasses import dataclass
-    from typing import Dict, List, Callable
-
 
     @dataclass(frozen=True)
     class CallbackContext:
