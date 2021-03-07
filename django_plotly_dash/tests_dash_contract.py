@@ -92,6 +92,21 @@ def fill_in_test_app(app: Union[DjangoDash, Dash], write=False):
         def test_multi_output(*args):
             return [f"multi in list - {args}"] * 2
 
+    def add_update_state_in_output():
+        inp1b = html.Button("Input-update-output-state", id="inp1b")
+        out1b = html.A(href="http://www.example.com/null", id="out1b")
+
+        app.layout.children.append(html.Div([inp1b, out1b]))
+
+        @app.callback(
+            [Output(out1b.id, "href"), Output(out1b.id, "children"), ],
+            [Input(inp1b.id, "n_clicks_timestamp")],
+        )
+        @log_body_response
+        def test_update_output_state(n_clicks_timestamp):
+            return f"http://www.example.com/{n_clicks_timestamp}", f"http://www.example.com/{n_clicks_timestamp}"
+
+
     def add_multi_triggered():
         """Test a callback getting more than one element in the triggered context"""
         inp1 = html.Button("Multiple triggered", id="inp2")
@@ -178,6 +193,7 @@ def fill_in_test_app(app: Union[DjangoDash, Dash], write=False):
 
     app.layout = html.Div([])
     add_outputs_multi()
+    add_update_state_in_output()
     add_multi_triggered()
     add_pattern_all()
     add_pattern_allsmaller()

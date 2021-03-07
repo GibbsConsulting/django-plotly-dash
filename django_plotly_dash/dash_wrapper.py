@@ -705,7 +705,17 @@ class WrappedDash(Dash):
             res = callback(*args, **argMap)
 
         if da:
-            root_value = json.loads(res).get('response', {})
+            class LazyJson:
+                def __init__(self, func):
+                    self._func = func
+                    self._root_value = None
+
+                def get(self, item, default):
+                    if self._root_value is None:
+                        self._root_value = self._func()
+                    return self._root_value.get(item, default)
+
+            root_value = LazyJson(lambda: json.loads(res).get('response', {}))
 
             for output_item in outputs:
                 if isinstance(output_item, str):
