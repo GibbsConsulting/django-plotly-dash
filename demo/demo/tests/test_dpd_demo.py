@@ -22,10 +22,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 '''
+import re
 
 import pytest
-
 from django.urls import reverse
+
 
 @pytest.mark.django_db
 def test_template_tag_use(client):
@@ -38,6 +39,11 @@ def test_template_tag_use(client):
 
         assert response.content
         assert response.status_code == 200
+
+        for src in re.findall('iframe src="(.*?)"', response.content.decode("utf-8")):
+            response = client.get(src + "_dash-layout")
+            assert response.status_code == 200, ""
+
 
 @pytest.mark.django_db
 def test_add_to_session(client):

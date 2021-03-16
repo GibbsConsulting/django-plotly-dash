@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 '''
-
+import json
 import uuid
 
 from django.conf import settings
@@ -74,6 +74,10 @@ def store_initial_arguments(request, initial_arguments=None):
 
     if initial_arguments is None:
         return None
+
+    # convert to dict is json string
+    if isinstance(initial_arguments, str):
+        initial_arguments = json.loads(initial_arguments)
 
     # Generate a cache id
     cache_id = "dpd-initial-args-%s" % str(uuid.uuid4()).replace('-', '')
