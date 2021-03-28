@@ -24,32 +24,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
+import inspect
 import itertools
 import json
-import inspect
 import warnings
+from typing import Dict, List, Callable
 
 import dash
 from dash import Dash, dependencies
 from dash._utils import split_callback_id, inputs_to_dict
-
-from flask import Flask
-
 from django.urls import reverse
 from django.utils.text import slugify
-
+from flask import Flask
 from plotly.utils import PlotlyJSONEncoder
 
 from .app_name import app_name, main_view_label
 from .middleware import EmbeddedHolder
-
-from .util import static_asset_path
 from .util import serve_locally as serve_locally_setting
 from .util import stateless_app_lookup_hook
+from .util import static_asset_path
 
 try:
     from dataclasses import dataclass
-    from typing import Dict, List
 
     @dataclass(frozen=True)
     class CallbackContext:
@@ -201,7 +197,6 @@ class DjangoDash:
 
             if self._serve_locally:
                 # Ensure package is loaded; if not present then pip install dpd-static-support
-                import dpd_static_support
                 hard_coded_package_name = "dpd_static_support"
                 base_file_name = bootstrap_source.split('/')[-1]
 
@@ -705,7 +700,20 @@ class WrappedDash(Dash):
             res = callback(*args, **argMap)
 
         if da:
-            root_value = json.loads(res).get('response', {})
+            class LazyJson:
+                """A class to allow delayed the evaluation of a dict (returned by `func`)
+                 till the first get(...) is called on the dict."""
+
+                def __init__(self, func):
+                    self._root_value = func
+
+                def get(self, item, default):
+                    if isinstance(self._root_value, Callable):
+                        self._root_value = self._root_value()
+                    return self._root_value.get(item, default)
+
+            # wraps the json parsing of the response into LazyJson to avoid unnecessary parsing
+            root_value = LazyJson(lambda: json.loads(res).get('response', {}))
 
             for output_item in outputs:
                 if isinstance(output_item, str):

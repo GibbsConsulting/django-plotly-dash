@@ -79,33 +79,37 @@ def test_dash_stateful_app_client_contract(client):
 
     # set the initial expected state
     expected_state = {'inp1': {'n_clicks': 0, 'n_clicks_timestamp': 1611733453854},
-                      'inp2': {'n_clicks': 5, 'n_clicks_timestamp': 1611733454354},
+                      'inp1b': {'n_clicks': 5, 'n_clicks_timestamp': 1611733454354},
+                      'inp2': {'n_clicks': 7, 'n_clicks_timestamp': 1611733454554},
                       'out1-0': {'n_clicks': 1, 'n_clicks_timestamp': 1611733453954},
                       'out1-1': {'n_clicks': 2, 'n_clicks_timestamp': 1611733454054},
                       'out1-2': {'n_clicks': 3, 'n_clicks_timestamp': 1611733454154},
                       'out1-3': {'n_clicks': 4, 'n_clicks_timestamp': 1611733454254},
-                      'out2-0': {'n_clicks': 6, 'n_clicks_timestamp': 1611733454454},
-                      'out3': {'n_clicks': 10, 'n_clicks_timestamp': 1611733454854},
-                      'out4': {'n_clicks': 14, 'n_clicks_timestamp': 1611733455254},
-                      'out5': {'n_clicks': 18, 'n_clicks_timestamp': 1611733455654},
-                      '{"_id":"inp-0","_type":"btn3"}': {'n_clicks': 7,
-                                                         'n_clicks_timestamp': 1611733454554},
-                      '{"_id":"inp-0","_type":"btn4"}': {'n_clicks': 11,
-                                                         'n_clicks_timestamp': 1611733454954},
-                      '{"_id":"inp-0","_type":"btn5"}': {'n_clicks': 15,
-                                                         'n_clicks_timestamp': 1611733455354},
-                      '{"_id":"inp-1","_type":"btn3"}': {'n_clicks': 8,
-                                                         'n_clicks_timestamp': 1611733454654},
-                      '{"_id":"inp-1","_type":"btn4"}': {'n_clicks': 12,
-                                                         'n_clicks_timestamp': 1611733455054},
-                      '{"_id":"inp-1","_type":"btn5"}': {'n_clicks': 16,
-                                                         'n_clicks_timestamp': 1611733455454},
-                      '{"_id":"inp-2","_type":"btn3"}': {'n_clicks': 9,
+                      'out1b': {'href': 'http://www.example.com/null',
+                                'n_clicks': 6,
+                                'n_clicks_timestamp': 1611733454454},
+                      'out2-0': {'n_clicks': 8, 'n_clicks_timestamp': 1611733454654},
+                      'out3': {'n_clicks': 12, 'n_clicks_timestamp': 1611733455054},
+                      'out4': {'n_clicks': 16, 'n_clicks_timestamp': 1611733455454},
+                      'out5': {'n_clicks': 20, 'n_clicks_timestamp': 1611733455854},
+                      '{"_id":"inp-0","_type":"btn3"}': {'n_clicks': 9,
                                                          'n_clicks_timestamp': 1611733454754},
-                      '{"_id":"inp-2","_type":"btn4"}': {'n_clicks': 13,
+                      '{"_id":"inp-0","_type":"btn4"}': {'n_clicks': 13,
                                                          'n_clicks_timestamp': 1611733455154},
-                      '{"_id":"inp-2","_type":"btn5"}': {'n_clicks': 17,
-                                                         'n_clicks_timestamp': 1611733455554}}
+                      '{"_id":"inp-0","_type":"btn5"}': {'n_clicks': 17,
+                                                         'n_clicks_timestamp': 1611733455554},
+                      '{"_id":"inp-1","_type":"btn3"}': {'n_clicks': 10,
+                                                         'n_clicks_timestamp': 1611733454854},
+                      '{"_id":"inp-1","_type":"btn4"}': {'n_clicks': 14,
+                                                         'n_clicks_timestamp': 1611733455254},
+                      '{"_id":"inp-1","_type":"btn5"}': {'n_clicks': 18,
+                                                         'n_clicks_timestamp': 1611733455654},
+                      '{"_id":"inp-2","_type":"btn3"}': {'n_clicks': 11,
+                                                         'n_clicks_timestamp': 1611733454954},
+                      '{"_id":"inp-2","_type":"btn4"}': {'n_clicks': 15,
+                                                         'n_clicks_timestamp': 1611733455354},
+                      '{"_id":"inp-2","_type":"btn5"}': {'n_clicks': 19,
+                                                         'n_clicks_timestamp': 1611733455754}}
 
     ########## test state management of the app and conversion of components ids
     # search for state values in dash layout
@@ -122,7 +126,7 @@ def test_dash_stateful_app_client_contract(client):
 
     # update an existent state => update current_state
     stateful_a.update_current_state('{"_id":"inp-2","_type":"btn5"}', "n_clicks", 100)
-    expected_state['{"_id":"inp-2","_type":"btn5"}'] = {'n_clicks': 100, 'n_clicks_timestamp': 1611733455554}
+    expected_state['{"_id":"inp-2","_type":"btn5"}'] = {'n_clicks': 100, 'n_clicks_timestamp': 1611733455754}
     assert stateful_a.current_state() == expected_state
 
     assert DashApp.objects.get(instance_name="Some name").current_state() == {}
@@ -170,34 +174,38 @@ def test_dash_stateful_app_client_contract(client):
         stateful_a.handle_current_state()
 
     # check final state has been changed accordingly
-    final_state = {'inp1': {'n_clicks': 1, 'n_clicks_timestamp': 1611736145932},
-                   'inp2': {'n_clicks': 6, 'n_clicks_timestamp': 1611736146875},
+    final_state = {'inp1': {'n_clicks': 1, 'n_clicks_timestamp': 1615103027288},
+                   'inp1b': {'n_clicks': 5, 'n_clicks_timestamp': 1615103033482},
+                   'inp2': {'n_clicks': 8, 'n_clicks_timestamp': 1615103036591},
                    'out1-0': {'n_clicks': 1, 'n_clicks_timestamp': 1611733453954},
                    'out1-1': {'n_clicks': 2, 'n_clicks_timestamp': 1611733454054},
                    'out1-2': {'n_clicks': 3, 'n_clicks_timestamp': 1611733454154},
                    'out1-3': {'n_clicks': 4, 'n_clicks_timestamp': 1611733454254},
-                   'out2-0': {'n_clicks': 6, 'n_clicks_timestamp': 1611733454454},
-                   'out3': {'n_clicks': 10, 'n_clicks_timestamp': 1611733454854},
-                   'out4': {'n_clicks': 14, 'n_clicks_timestamp': 1611733455254},
-                   'out5': {'n_clicks': 18, 'n_clicks_timestamp': 1611733455654},
-                   '{"_id":"inp-0","_type":"btn3"}': {'n_clicks': 8,
-                                                      'n_clicks_timestamp': 1611736147644},
-                   '{"_id":"inp-0","_type":"btn4"}': {'n_clicks': 12,
-                                                      'n_clicks_timestamp': 1611733454954},
-                   '{"_id":"inp-0","_type":"btn5"}': {'n_clicks': 16,
-                                                      'n_clicks_timestamp': 1611733455354},
-                   '{"_id":"inp-1","_type":"btn3"}': {'n_clicks': 9,
-                                                      'n_clicks_timestamp': 1611736148172},
-                   '{"_id":"inp-1","_type":"btn4"}': {'n_clicks': 13,
-                                                      'n_clicks_timestamp': 1611733455054},
-                   '{"_id":"inp-1","_type":"btn5"}': {'n_clicks': 18,
-                                                      'n_clicks_timestamp': 1611733455454},
-                   '{"_id":"inp-2","_type":"btn3"}': {'n_clicks': 10,
-                                                      'n_clicks_timestamp': 1611736149140},
-                   '{"_id":"inp-2","_type":"btn4"}': {'n_clicks': 13,
+                   'out1b': {'href': 'http://www.example.com/1615103033482',
+                             'n_clicks': 6,
+                             'n_clicks_timestamp': 1611733454454},
+                   'out2-0': {'n_clicks': 8, 'n_clicks_timestamp': 1611733454654},
+                   'out3': {'n_clicks': 12, 'n_clicks_timestamp': 1611733455054},
+                   'out4': {'n_clicks': 16, 'n_clicks_timestamp': 1611733455454},
+                   'out5': {'n_clicks': 20, 'n_clicks_timestamp': 1611733455854},
+                   '{"_id":"inp-0","_type":"btn3"}': {'n_clicks': 10,
+                                                      'n_clicks_timestamp': 1615103039030},
+                   '{"_id":"inp-0","_type":"btn4"}': {'n_clicks': 14,
                                                       'n_clicks_timestamp': 1611733455154},
-                   '{"_id":"inp-2","_type":"btn5"}': {'n_clicks': 19,
-                                                      'n_clicks_timestamp': 1611733455554}}
+                   '{"_id":"inp-0","_type":"btn5"}': {'n_clicks': 18,
+                                                      'n_clicks_timestamp': 1611733455554},
+                   '{"_id":"inp-1","_type":"btn3"}': {'n_clicks': 11,
+                                                      'n_clicks_timestamp': 1615103039496},
+                   '{"_id":"inp-1","_type":"btn4"}': {'n_clicks': 15,
+                                                      'n_clicks_timestamp': 1611733455254},
+                   '{"_id":"inp-1","_type":"btn5"}': {'n_clicks': 19,
+                                                      'n_clicks_timestamp': 1611733455654},
+                   '{"_id":"inp-2","_type":"btn3"}': {'n_clicks': 12,
+                                                      'n_clicks_timestamp': 1615103040528},
+                   '{"_id":"inp-2","_type":"btn4"}': {'n_clicks': 15,
+                                                      'n_clicks_timestamp': 1611733455354},
+                   '{"_id":"inp-2","_type":"btn5"}': {'n_clicks': 20,
+                                                      'n_clicks_timestamp': 1611733455754}}
 
     assert DashApp.objects.get(instance_name="Some name").current_state() == final_state
 
