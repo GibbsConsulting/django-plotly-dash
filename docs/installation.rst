@@ -15,7 +15,7 @@ Then, add ``django_plotly_dash`` to ``INSTALLED_APPS`` in the Django ``settings.
         ...
         'django_plotly_dash.apps.DjangoPlotlyDashConfig',
         ...
-        ]
+    ]
 
 The project directory name ``django_plotly_dash`` can also be used on its own if preferred, but this will stop the use of readable application names in
 the Django admin interface.
@@ -49,9 +49,15 @@ database::
 
     ./manage.py migrate
 
-The ``plotly_app`` tag in the ``plotly_dash`` tag library can then be used to render any registered dash component. See :ref:`simple_use` for a simple example.
+It is important to ensure that any applications are registered using the ``DjangoDash`` class. This means that any python module containing the registration code has to be known to Django and loaded at the appropriate time.
 
-It is important to ensure that any applications are registered using the ``DjangoDash`` class. This means that any python module containing the registration code has to be known to Django and loaded at the appropriate time. An easy way to ensure this is to import these modules into a standard Django file loaded at registration time.
+.. note::
+    An easy way to ensure the Plotly app is to import it into ``views.py`` or ``urls.py`` as in the following example,
+    which assumes the ``plotly_app`` module (``plotly_app.py``) is located in the same folder as ``views.py``::
+
+    from . import plotly_app
+
+Once your Plotly app is registered, ``plotly_app`` tag in the ``plotly_dash`` tag library can then be used to render it as a dash component. See :ref:`simple_use` for a simple example.
 
 Extra steps for live state
 --------------------------
