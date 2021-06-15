@@ -52,10 +52,10 @@ database::
 It is important to ensure that any applications are registered using the ``DjangoDash`` class. This means that any python module containing the registration code has to be known to Django and loaded at the appropriate time.
 
 .. note::
-    An easy way to ensure the Plotly app is to import it into ``views.py`` or ``urls.py`` as in the following example,
+    An easy way to register the Plotly app is to import it into ``views.py`` or ``urls.py`` as in the following example,
     which assumes the ``plotly_app`` module (``plotly_app.py``) is located in the same folder as ``views.py``::
 
-    from . import plotly_app
+    ``from . import plotly_app``
 
 Once your Plotly app is registered, ``plotly_app`` tag in the ``plotly_dash`` tag library can then be used to render it as a dash component. See :ref:`simple_use` for a simple example.
 
