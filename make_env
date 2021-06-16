@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 #
-# Create a virtualenv. Note that python 3.6 is the minimal requirement
+# Create a virtualenv. Note that python 3.6 is currently the minimal requirement
 #
-virtualenv -p python3.6 env
+# Stop on error, rather than continue and trash the environment
+set -e
+#
+# Default to 3.6 but allow override
+DEFAULT_PYTHON_VER=3.6
+PYTHON_VER=${1:-$DEFAULT_PYTHON_VER}
+#
+virtualenv -p python${PYTHON_VER} env
 #
 source env/bin/activate
 #
