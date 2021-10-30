@@ -105,3 +105,4 @@ TOKENS
 
 # testing
 .pytest_cache/
+demo/
