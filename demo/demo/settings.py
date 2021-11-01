@@ -13,10 +13,18 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+import json
+from pathlib import Path
+
+HOME = os.environ['HOME']
+HOME_PATH = Path(HOME)
+
+with open(HOME_PATH/'wa/auth/sentry_url.json') as fhin:
+    dsn_json = json.load(fhin)
 
 
 sentry_sdk.init(
-    dsn="https://6b4d2f8c2982454b90eb3225574da10e@o1055797.ingest.sentry.io/6041946",
+    dsn=dsn_json['dsn'],
     integrations=[DjangoIntegration()],
 
     # Set traces_sample_rate to 1.0 to capture 100%
