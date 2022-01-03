@@ -43,6 +43,6 @@ http_routes = [
 http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
 
 application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer.as_asgi()),])),
+    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer),])),
     'http': AuthMiddlewareStack(URLRouter(http_routes)),
     })
