@@ -1,17 +1,16 @@
 dash>=1.11,<1.21.0
-
 dash-core-components
 dash-html-components
 dash-renderer
 plotly
 dpd-components
-
 dash-bootstrap-components
-
 channels<3.0
 Django>=2.2
 Flask>=1.0.2
 
+
+gunicorn
 
 asgiref
 attrs==19.3.0
