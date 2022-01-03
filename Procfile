@@ -1,1 +1,1 @@
-web: python manage.py runserver --nostatic
+web: python demo/manage.py runserver --nostatic
