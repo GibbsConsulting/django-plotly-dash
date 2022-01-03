@@ -26,7 +26,7 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from channels.http import AsgiHandler
 
-from django.conf.urls import url
+#from django.conf.urls import url
 from django.urls import re_path
 
 from .consumers import MessageConsumer, PokePipeConsumer
