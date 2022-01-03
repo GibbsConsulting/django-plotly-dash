@@ -40,7 +40,7 @@ http_routes = [
 if http_poke_endpoint_enabled():
     http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer.as_asgi()))
 
-http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
+http_routes.append(re_path("^", AsgiHandler.as_view())) # AsgiHandler is 'the normal Django view handlers'
 
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer),])),
