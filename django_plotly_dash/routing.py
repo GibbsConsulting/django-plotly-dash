@@ -37,8 +37,8 @@ from .util import pipe_ws_endpoint_name, http_endpoint, http_poke_endpoint_enabl
 http_routes = [
     ]
 
-#if http_poke_endpoint_enabled():
-#    http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer.as_asgi()))
+if http_poke_endpoint_enabled():
+    http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer.as_asgi()))
 
 http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
 
