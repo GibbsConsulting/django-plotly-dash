@@ -1,6 +1,6 @@
 dash>=1.11,<1.21.0
 bootstrap4
-dpd_static_support
+dpd-static-support
 dash-core-components
 dash-html-components
 dash-renderer
