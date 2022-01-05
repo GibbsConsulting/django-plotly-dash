@@ -32,7 +32,7 @@ below.
       "cache_arguments": True,
 
       # Flag controlling local serving of assets
-      "serve_locally': False,
+      "serve_locally": False,
   }
 
 Defaults are inserted for missing values. It is also permissible to not have any ``PLOTLY_DASH`` entry in
