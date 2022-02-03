@@ -36,13 +36,17 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
     'django.contrib.staticfiles',
 
-    'channels',
+    # 'whitenoise.runserver_nostatic',
     'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'dpd_static_support',
+
+    'channels',
+    'channels_redis',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +65,7 @@ MIDDLEWARE = [
 
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'demo.urls'
 
@@ -132,7 +137,7 @@ USE_TZ = True
 # Plotly dash settings
 
 PLOTLY_DASH = {
-    "ws_route" : "ws/channel",
+    "ws_route" : "ws/channel", # Route used for the message pipe websocket connection
 
     "insert_demo_migrations" : True,  # Insert model instances used by the demo
 
@@ -140,9 +145,11 @@ PLOTLY_DASH = {
 
     "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
 
+    # "cache_timeout_initial_arguments": 60, # Timeout for caching of initial arguments in seconds
+
     "cache_arguments" : True, # True for cache, False for session-based argument propagation
 
-    #"serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
+    # "serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
 
     "stateless_loader" : "demo.scaffold.stateless_app_loader",
     }
@@ -156,6 +163,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'demo', 'static'),
     ]
+
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Caching - demo uses redis as this is present due to channels use
 
@@ -198,6 +209,8 @@ STATICFILES_FINDERS = [
 PLOTLY_COMPONENTS = [
     'dash_core_components',
     'dash_html_components',
+    # 'dash.dcc',
+    # 'dash.html',
     'dash_bootstrap_components',
     'dash_renderer',
     'dpd_components',

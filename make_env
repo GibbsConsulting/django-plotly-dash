@@ -6,7 +6,7 @@
 set -e
 #
 # Default to 3.6 but allow override
-DEFAULT_PYTHON_VER=3.6
+DEFAULT_PYTHON_VER=3.8
 PYTHON_VER=${1:-$DEFAULT_PYTHON_VER}
 #
 virtualenv -p python${PYTHON_VER} env
