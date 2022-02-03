@@ -47,6 +47,10 @@ from dash.exceptions import PreventUpdate
 from django_plotly_dash import DjangoDash
 from django_plotly_dash.consumers import send_to_pipe_channel
 
+from django.conf import settings
+
+STATIC_URL = settings.STATIC_URL # for serving static files in development. 
+
 #pylint: disable=too-many-arguments, unused-argument, unused-variable
 
 app = DjangoDash('SimpleExample')
@@ -318,8 +322,10 @@ def callback_show_timeseries(internal_state_string, state_uid, **kwargs):
 localState = DjangoDash("LocalState",
                         serve_locally=True)
 
-localState.layout = html.Div([html.Img(src=localState.get_asset_url('image_one.png')),
-                              html.Img(src='assets/image_two.png'),
+localState.layout = html.Div([
+                              html.Img(src=localState.get_asset_url(STATIC_URL + 'assets/plotly_apps/image_one.png')),
+                            #   html.Img(src=STATIC_URL + 'assets/plotly_apps/image_one.png'),
+                              html.Img(src=STATIC_URL + 'assets/plotly_apps/image_two.png'),
                               ])
 
 multiple_callbacks = DjangoDash("MultipleCallbackValues")

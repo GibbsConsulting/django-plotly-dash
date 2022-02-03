@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
     'django.contrib.staticfiles',
 
+    # 'whitenoise.runserver_nostatic',
     'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
@@ -143,9 +145,11 @@ PLOTLY_DASH = {
 
     "view_decorator" : None, # Specify a function to be used to wrap each of the dpd view functions
 
+    # "cache_timeout_initial_arguments": 60, # Timeout for caching of initial arguments in seconds
+
     "cache_arguments" : True, # True for cache, False for session-based argument propagation
 
-    #"serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
+    # "serve_locally" : True, # True to serve assets locally, False to use their unadulterated urls (eg a CDN)
 
     "stateless_loader" : "demo.scaffold.stateless_app_loader",
     }
@@ -160,7 +164,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'demo', 'static'),
     ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Caching - demo uses redis as this is present due to channels use
 
@@ -203,6 +209,8 @@ STATICFILES_FINDERS = [
 PLOTLY_COMPONENTS = [
     'dash_core_components',
     'dash_html_components',
+    # 'dash.dcc',
+    # 'dash.html',
     'dash_bootstrap_components',
     'dash_renderer',
     'dpd_components',
