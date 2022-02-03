@@ -22,11 +22,37 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 '''
 
+# from channels.routing import ProtocolTypeRouter, URLRouter
+# from channels.auth import AuthMiddlewareStack
+# from channels.http import AsgiHandler
+
+# #from django.conf.urls import url
+# from django.urls import re_path
+
+# from .consumers import MessageConsumer, PokePipeConsumer
+# from .util import pipe_ws_endpoint_name, http_endpoint, http_poke_endpoint_enabled
+
+# # TODO document this and discuss embedding with other routes
+
+# http_routes = [
+#     ]
+
+# if http_poke_endpoint_enabled():
+#     http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer.as_asgi()))
+
+# http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
+
+# application = ProtocolTypeRouter({
+#     'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer),])),
+#     'http': AuthMiddlewareStack(URLRouter(http_routes)),
+#     })
+
+
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from channels.http import AsgiHandler
+# from channels.http import AsgiHandler
+from django.core.asgi import get_asgi_application
 
-#from django.conf.urls import url
 from django.urls import re_path
 
 from .consumers import MessageConsumer, PokePipeConsumer
@@ -40,9 +66,10 @@ http_routes = [
 if http_poke_endpoint_enabled():
     http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer.as_asgi()))
 
-http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
+http_routes.append(re_path("^", get_asgi_application())) # AsgiHandler is 'the normal Django view handlers'
 
 application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer),])),
+    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer.as_asgi()),])),
     'http': AuthMiddlewareStack(URLRouter(http_routes)),
     })
+

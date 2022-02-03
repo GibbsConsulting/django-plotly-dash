@@ -38,11 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'channels',
     'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'dpd_static_support',
+
+    'channels',
+    'channels_redis',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +63,7 @@ MIDDLEWARE = [
 
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'demo.urls'
 
@@ -132,7 +135,7 @@ USE_TZ = True
 # Plotly dash settings
 
 PLOTLY_DASH = {
-    "ws_route" : "ws/channel",
+    "ws_route" : "ws/channel", # Route used for the message pipe websocket connection
 
     "insert_demo_migrations" : True,  # Insert model instances used by the demo
 
@@ -156,6 +159,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'demo', 'static'),
     ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Caching - demo uses redis as this is present due to channels use
 
