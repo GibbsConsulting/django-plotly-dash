@@ -180,7 +180,15 @@ var ReconnectingWebsocket = function (url, protocols, options) {
         }
     };
     this.send = function (data) {
-        ws.send(data);
+        if (ws.readyState == WebSocket.OPEN){
+            ws.send(data);
+        } else {
+            // The websocket is not ready, so delay and try again
+            // See: https://github.com/GibbsConsulting/django-plotly-dash/issues/385
+            setTimeout(() => {
+                this.send(data);
+            }, 100);
+        }
     };
     this.addEventListener = function (type, listener, options) {
         if (Array.isArray(listeners[type])) {
