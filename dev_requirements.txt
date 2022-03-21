@@ -4,7 +4,7 @@ coveralls>=1.6.0
 channels>=2.0
 channels-redis
 daphne
-dash-bootstrap-components
+dash-bootstrap-components<1
 Django>=2.0
 django-bootstrap4
 django-redis
