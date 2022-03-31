@@ -8,5 +8,5 @@ dpd-components
 dash-bootstrap-components
 
 channels<3.0
-Django>=2.2
+Django>=2.2,<4.0.0
 Flask>=1.0.2
