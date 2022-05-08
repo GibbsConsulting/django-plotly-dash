@@ -47,3 +47,5 @@ Thanks to the following people:
 [sorenwacker](https://github.com/sorenwacker)
 
 [jmcarcell](https://github.com/jmcarcell)
+
+[gdalmau](https://github.com/gdalmau)
