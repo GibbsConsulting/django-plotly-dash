@@ -42,3 +42,8 @@ Thanks to the following people:
 
 [sdementen](https://github.com/sdementen)
 
+[JulianOrteil](https://github.com/JulianOrteil)
+
+[sorenwacker](https://github.com/sorenwacker)
+
+[jmcarcell](https://github.com/jmcarcell)
