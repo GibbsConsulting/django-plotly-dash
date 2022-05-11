@@ -5,7 +5,7 @@ dash-renderer
 plotly
 dpd-components
 
-dash-bootstrap-components
+dash-bootstrap-components<1
 
 channels<3.0
 Django>=2.2,<4.0.0
