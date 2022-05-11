@@ -46,8 +46,13 @@ setup(
                         'dash-html-components',
                         'dash-renderer',
                         'dpd-components',
-                        'Django>=2.2',
-                        'Flask>=1.0.2'],
+
+                        'dash-bootstrap-components<1',
+                        'channels<3.0',
+                        'Django>=2.2,<4.0.0',
+                        'Flask>=1.0.2',
+                        'Werkzeug>=2.0,<2.1',
+    ],
     python_requires=">=3.6",
     )
 
