@@ -349,7 +349,7 @@ def test_updating(client):
                                                            'value':'medium'},
                                                          ]}), content_type="application/json")
 
-        assert response.content == b'{"response": {"output-size": {"children": "The chosen T-shirt is a medium blue one."}}, "multi": true}'
+        assert response.content == b'{"response":{"output-size":{"children":"The chosen T-shirt is a medium blue one."}},"multi":true}'
         assert response.status_code == 200
 
 
@@ -489,7 +489,7 @@ def test_injection_updating(client):
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"test-output-div": {"children": [{"props": {"id": "line-area-graph2"'
+        rStart = b'{"response":{"test-output-div":{"children":[{"props":{"id":"line-area-graph2"'
 
         assert response.content.startswith(rStart)
         assert response.status_code == 200
@@ -501,7 +501,7 @@ def test_injection_updating(client):
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"test-output-div": {"children": [{"props": {"id": "line-area-graph2"'
+        rStart = b'{"response":{"test-output-div":{"children":[{"props":{"id":"line-area-graph2"'
 
         assert response.content.startswith(rStart)
         assert response.status_code == 200
@@ -530,7 +530,7 @@ def test_injection_updating(client):
                                                            'value':'TestIt'},
                                                          ]}), content_type="application/json")
 
-        rStart = b'{"response": {"test-output-div3": {"children": [{"props": {"id": "line-area-graph2"'
+        rStart = b'{"response":{"test-output-div3":{"children":[{"props":{"id":"line-area-graph2"'
 
         assert response.content.startswith(rStart)
         assert response.status_code == 200
@@ -551,7 +551,7 @@ def test_injection_updating(client):
                                                             'property':'value',
                                                             'value':'TestIt'},
                                                           ]}), content_type="application/json")
-        rStart = b'{"response": {"test-output-div2": {"children": [{"props": {"children": ["You have '
+        rStart = b'{"response":{"test-output-div2":{"children":[{"props":{"children":["You have '
 
         assert response.content.startswith(rStart)
         assert response.status_code == 200

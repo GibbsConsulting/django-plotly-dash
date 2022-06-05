@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Union
 
 import dash
-import dash_html_components as html
+from dash import html
 import flask
 from dash import Dash, no_update
 from dash.dependencies import MATCH, ALL, ALLSMALLER, Input, Output, State

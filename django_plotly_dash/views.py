@@ -123,15 +123,28 @@ def component_component_suites(request, resource=None, component=None, **kwargs)
                             extra_element="_components/",
                             **kwargs)
 
-def component_suites(request, resource=None, component=None, extra_element="", **kwargs):
+
+def component_suites_build(request, resource=None, component=None, extra_element="", cpe2=None, **kwargs):
     'Return part of a client-side component, served locally for some reason'
+    return component_suites(request,
+                            resource=resource,
+                            component=component,
+                            extra_element=extra_element,
+                            cpe2=f"{cpe2}/build",
+                            **kwargs)
+
+
+def component_suites(request, resource=None, component=None, extra_element="", cpe2=None, **kwargs):
+    'Return part of a client-side component, served locally for some reason'
+
+    extra_path_part = f"{cpe2}/" if cpe2 else ""
 
     get_params = request.GET.urlencode()
     if get_params and False:
-        redone_url = static_path("dash/component/%s/%s%s?%s" %(component, extra_element, resource, get_params))
+        redone_url = static_path("dash/component/%s/%s%s%s?%s" %(component, extra_path_part, extra_element, resource, get_params))
     else:
         resource, _fingerprint = check_fingerprint(resource)
-        redone_url = static_path("dash/component/%s/%s%s" % (component, extra_element, resource))
+        redone_url = static_path("dash/component/%s/%s%s%s" % (component, extra_path_part, extra_element, resource))
 
     return HttpResponseRedirect(redirect_to=redone_url)
 

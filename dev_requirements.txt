@@ -18,6 +18,7 @@ pytest-cov
 python-coveralls
 pytz
 redis
+setuptools
 sphinx
 sphinx-autobuild
 sphinx_rtd_theme
