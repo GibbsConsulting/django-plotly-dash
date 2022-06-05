@@ -90,8 +90,7 @@ Taking a very simple example inspired by the excellent [getting started](https:/
 
 ```python
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
 
 from django_plotly_dash import DjangoDash
 
