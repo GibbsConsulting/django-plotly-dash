@@ -3,9 +3,14 @@
 FAQ
 ===
 
+* What Dash versions are supported?
+
+Dash v2.0 onwards is supported. The non-backwards-compatible changes of Dash make supporting earlier versions hard.
+Note that v1.7.2 is the last version to support (and require) Dash versions prior to v2.0
+
 * What environment versions are supported?
 
-At least v3.5 of Python, and v2.0 of Django, are needed.
+At least v3.8 of Python, and v2.2 of Django, are needed.
 
 * Is a ``virtualenv`` mandatory?
 

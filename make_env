@@ -5,14 +5,15 @@
 # Stop on error, rather than continue and trash the environment
 set -e
 #
-# Default to 3.6 but allow override
-DEFAULT_PYTHON_VER=3.6
+# Default to 3.8 but allow override
+DEFAULT_PYTHON_VER=3.8
 PYTHON_VER=${1:-$DEFAULT_PYTHON_VER}
 #
 python${PYTHON_VER} -m venv env
 #
 source env/bin/activate
 #
+pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 pip install -r dev_requirements.txt
 #

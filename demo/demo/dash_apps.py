@@ -7,8 +7,7 @@ TODO attribution here
 #pylint: disable=no-member
 
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc, html
 import plotly.graph_objs as go
 #import dpd_components as dpd
 import numpy as np

@@ -2,14 +2,14 @@
 
 from setuptools import setup
 
-#import django_plotly_dash as dpd
-#VERSION = dpd.__version__
 
 with open('django_plotly_dash/version.py') as f:
     exec(f.read())
 
+
 with open('README.md') as f:
     long_description = f.read()
+
 
 setup(
     name="django-plotly-dash",
@@ -28,7 +28,7 @@ setup(
     ],
     include_package_data=True,
     classifiers = [
-    'Development Status :: 3 - Alpha',
+    'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
@@ -41,18 +41,16 @@ setup(
     'Documentation': 'http://django-plotly-dash.readthedocs.io/',
     },
     install_requires = ['plotly',
-                        'dash>=1.11,<1.21.0',
-                        'dash-core-components',
-                        'dash-html-components',
-                        'dash-renderer',
+                        'dash>=2.0',
                         'dpd-components',
 
                         'dash-bootstrap-components<1',
+
                         'channels<3.0',
                         'Django>=2.2,<4.0.0',
                         'Flask>=1.0.2',
                         'Werkzeug>=2.0,<2.1',
     ],
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     )
 

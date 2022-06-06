@@ -56,10 +56,20 @@ class DashComponentFinder(BaseFinder):
         except:
             components = []
 
+        built_ins = [('dash', ['dcc', 'html', 'dash_table', 'deps', 'dash-renderer', 'dash-renderer/build']), ]
+
         for component_name in components:
 
-            module = importlib.import_module(component_name)
-            path_directory = os.path.dirname(module.__file__)
+            split_name = component_name.split('/')
+            try:
+                module_name = ".".join(split_name)
+                module = importlib.import_module(module_name)
+                path_directory = os.path.dirname(module.__file__)
+            except:
+                module_name = ".".join(split_name[:-1])
+                module = importlib.import_module(module_name)
+                path_directory = os.path.join(os.path.dirname(module.__file__),
+                                              split_name[-1])
 
             root = path_directory
             storage = FileSystemStorage(location=root)
@@ -75,6 +85,29 @@ class DashComponentFinder(BaseFinder):
 
             self.storages[component_name] = storage
             self.components[path] = component_name
+
+        for module_name, component_list in built_ins:
+
+            module = importlib.import_module(module_name)
+
+            for specific_component in component_list:
+
+                path_directory = os.path.join(os.path.dirname(module.__file__),
+                                              specific_component)
+
+                root = path_directory
+                component_name = f"{module_name}/{specific_component}"
+                path = f"dash/component/{component_name}"
+
+                if path not in self.components:
+
+                    storage = FileSystemStorage(location=root)
+                    storage.prefix = path
+
+                    self.locations.append(component_name)
+
+                    self.storages[component_name] = storage
+                    self.components[path] = component_name
 
         super().__init__()
 

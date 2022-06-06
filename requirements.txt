@@ -1,11 +1,8 @@
-dash>=1.11,<1.21.0
-dash-core-components
-dash-html-components
-dash-renderer
+dash>=2.0
 plotly
 dpd-components
 
-dash-bootstrap-components<1
+dash-bootstrap-components<1.0
 
 channels<3.0
 Django>=2.2,<4.0.0

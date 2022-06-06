@@ -65,10 +65,7 @@ and also providing a list of components used
 
   PLOTLY_COMPONENTS = [
 
-      # Common components
-      'dash_core_components',
-      'dash_html_components',
-      'dash_renderer',
+      # Common components (ie within dash itself) are automatically added
 
       # django-plotly-dash components
       'dpd_components',
@@ -80,7 +77,9 @@ and also providing a list of components used
   ]
 
 This list should be extended with any additional components that the applications
-use, where the components have files that have to be served locally.
+use, where the components have files that have to be served locally. The components that
+are part of the core ``dash`` package are automatically included and do not need to be
+provided in this list.
 
 Furthermore, middleware should be added for redirection of external assets from
 underlying packages, such as ``dash-bootstrap-components``. With the standard

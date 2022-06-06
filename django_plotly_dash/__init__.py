@@ -29,3 +29,7 @@ SOFTWARE.
 from .version import __version__
 
 from .dash_wrapper import DjangoDash
+
+# Monkeypatching
+
+import django_plotly_dash._callback
