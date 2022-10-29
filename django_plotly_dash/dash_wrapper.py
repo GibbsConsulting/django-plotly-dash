@@ -36,13 +36,12 @@ from dash._utils import split_callback_id, inputs_to_dict
 from django.urls import reverse
 from django.utils.text import slugify
 from flask import Flask
-from plotly.utils import PlotlyJSONEncoder
 
 from .app_name import app_name, main_view_label
 from .middleware import EmbeddedHolder
 from .util import serve_locally as serve_locally_setting
 from .util import stateless_app_lookup_hook
-from .util import static_asset_path
+from .util import static_asset_path, DjangoPlotlyJSONEncoder
 
 try:
     from dataclasses import dataclass
@@ -480,7 +479,7 @@ class WrappedDash(Dash):
         reworked_data = self.walk_tree_and_replace(baseData, overrides)
 
         response_data = json.dumps(reworked_data,
-                                   cls=PlotlyJSONEncoder)
+                                   cls=DjangoPlotlyJSONEncoder)
 
         return response_data, base_response.mimetype
 

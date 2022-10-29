@@ -25,9 +25,16 @@ SOFTWARE.
 import json
 import uuid
 
+
+from _plotly_utils.optional_imports import get_module
+
+
 from django.conf import settings
 from django.core.cache import cache
 from django.utils.module_loading import import_string
+
+from django_plotly_dash._patches import DjangoPlotlyJSONEncoder
+
 
 def _get_settings():
     try:
@@ -133,3 +140,5 @@ def stateless_app_lookup_hook():
 
     # Default is no additional lookup
     return lambda _: None
+
+

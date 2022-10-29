@@ -32,6 +32,7 @@ from datetime import datetime
 import pandas as pd
 
 from django.core.cache import cache
+from django.utils.translation import gettext, gettext_lazy
 
 import dash
 from dash import dcc, html
@@ -46,6 +47,7 @@ from dash.exceptions import PreventUpdate
 from django_plotly_dash import DjangoDash
 from django_plotly_dash.consumers import send_to_pipe_channel
 
+
 #pylint: disable=too-many-arguments, unused-argument, unused-variable
 
 app = DjangoDash('SimpleExample')
@@ -59,8 +61,8 @@ app.layout = html.Div([
     html.Div(id='output-color'),
     dcc.RadioItems(
         id='dropdown-size',
-        options=[{'label': i, 'value': j} for i, j in [('L', 'large'),
-                                                       ('M', 'medium'),
+        options=[{'label': i, 'value': j} for i, j in [('L', gettext('large')),
+                                                       ('M', gettext_lazy('medium')),
                                                        ('S', 'small')]],
         value='medium'
     ),
