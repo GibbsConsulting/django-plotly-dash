@@ -6,7 +6,7 @@
 set -e
 #
 # Default to 3.8 but allow override
-DEFAULT_PYTHON_VER=3.8
+DEFAULT_PYTHON_VER=3.10
 PYTHON_VER=${1:-$DEFAULT_PYTHON_VER}
 #
 python${PYTHON_VER} -m venv env
