@@ -35,7 +35,6 @@ from plotly.utils import PlotlyJSONEncoder
 from _plotly_utils.optional_imports import get_module
 from django.utils.encoding import force_text
 from django.utils.functional import Promise
-from django.utils.module_loading import import_string
 
 
 class DjangoPlotlyJSONEncoder(PlotlyJSONEncoder):
