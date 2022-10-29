@@ -31,9 +31,24 @@ from django.contrib.sites.shortcuts import get_current_site
 from django_plotly_dash.models import DashApp
 from django_plotly_dash.util import pipe_ws_endpoint_name, store_initial_arguments
 
+
 register = template.Library()
 
+
 ws_default_url = "/%s" % pipe_ws_endpoint_name()
+
+
+SANDBOX_SETTINGS = ["allow-downloads",
+                    "allow-scripts",
+                    "allow-same-origin",
+                    "allow-modals",
+                    "allow-popups",
+                    "allow-popups-to-escape-sandbox",
+                    ]
+
+
+SANDBOX_STRING = " ".join(SANDBOX_SETTINGS)
+
 
 def _locate_daapp(name, slug, da, cache_id=None):
 
@@ -75,7 +90,10 @@ def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborde
 
     da, app = _locate_daapp(name, slug, da, cache_id=cache_id)
 
+    sandbox_settings = SANDBOX_STRING
+    
     return locals()
+
 
 @register.inclusion_tag("django_plotly_dash/plotly_app_bootstrap.html", takes_context=True)
 def plotly_app_bootstrap(context, name=None, slug=None, da=None, aspect="4by3", initial_arguments=None):
@@ -95,17 +113,22 @@ def plotly_app_bootstrap(context, name=None, slug=None, da=None, aspect="4by3", 
 
     da, app = _locate_daapp(name, slug, da, cache_id=cache_id)
 
+    sandbox_settings = SANDBOX_STRING
+    
     return locals()
+
 
 @register.simple_tag(takes_context=True)
 def plotly_header(context):
     'Insert placeholder for django-plotly-dash header content'
     return context.request.dpd_content_handler.header_placeholder
 
+
 @register.simple_tag(takes_context=True)
 def plotly_footer(context):
     'Insert placeholder for django-plotly-dash footer content'
     return context.request.dpd_content_handler.footer_placeholder
+
 
 @register.inclusion_tag("django_plotly_dash/plotly_direct.html", takes_context=True)
 def plotly_direct(context, name=None, slug=None, da=None):
@@ -130,11 +153,13 @@ def plotly_direct(context, name=None, slug=None, da=None):
 
     return locals()
 
+
 @register.inclusion_tag("django_plotly_dash/plotly_messaging.html", takes_context=True)
 def plotly_message_pipe(context, url=None):
     'Insert script for providing background websocket connection'
     url = url if url else ws_default_url
     return locals()
+
 
 @register.simple_tag()
 def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
@@ -148,6 +173,7 @@ def plotly_app_identifier(name=None, slug=None, da=None, postfix=None):
         return "%s-%s" %(slugified_id, postfix)
     return slugified_id
 
+
 @register.simple_tag()
 def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, template_type=None):
     'Return a string of space-separated class names'
@@ -157,6 +183,7 @@ def plotly_class(name=None, slug=None, da=None, prefix=None, postfix=None, templ
     return app.extra_html_properties(prefix=prefix,
                                      postfix=postfix,
                                      template_type=template_type)
+
 
 @register.simple_tag(takes_context=True)
 def site_root_url(context):
