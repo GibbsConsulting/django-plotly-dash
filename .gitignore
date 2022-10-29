@@ -105,3 +105,6 @@ TOKENS
 
 # testing
 .pytest_cache/
+
+# emacs backup files
+**/*~
