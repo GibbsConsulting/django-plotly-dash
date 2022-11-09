@@ -44,7 +44,7 @@ setup(
                         'dash>=2.0',
                         'dpd-components',
 
-                        'dash-bootstrap-components<1',
+                        'dash-bootstrap-components',
 
                         'channels<3.0',
                         'Django>=2.2,<4.0.0',
