@@ -108,7 +108,7 @@ def to_json_django_plotly(plotly_object, pretty=False, engine=None):
 
         return json.dumps(plotly_object, cls=DjangoPlotlyJSONEncoder, **opts)
     elif engine == "orjson":
-        JsonConfig.validate_orjson()
+        config.validate_orjson()
         opts = orjson.OPT_NON_STR_KEYS | orjson.OPT_SERIALIZE_NUMPY
 
         if pretty:
