@@ -29,11 +29,11 @@ SOFTWARE.
 import json
 
 
-from plotly.io._json import config
+from plotly.io._json import config, clean_to_json_compatible
 from plotly.utils import PlotlyJSONEncoder
 
 from _plotly_utils.optional_imports import get_module
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.functional import Promise
 
 
@@ -41,8 +41,28 @@ class DjangoPlotlyJSONEncoder(PlotlyJSONEncoder):
     """Augment the PlotlyJSONEncoder class with Django delayed processing"""
     def default(self, obj):
         if isinstance(obj, Promise):
-            return force_text(obj)
+            return force_str(obj)
         return super().default(obj)
+
+
+def promise_clean_to_json_compatible(obj):
+
+    if isinstance(obj, dict):
+        return {promise_clean_to_json_compatible(k): promise_clean_to_json_compatible(v) for k, v in obj.items()}
+
+    if isinstance(obj, (list, tuple)):
+        if obj:
+            return [promise_clean_to_json_compatible(v) for v in obj]
+
+    if isinstance(obj, Promise):
+        return force_str(obj)
+
+    #try:
+    #    return obj.to_plotly_json()
+    #except AttributeError:
+    #    pass
+
+    return obj
 
 
 def to_json_django_plotly(plotly_object, pretty=False, engine=None):
@@ -115,6 +135,7 @@ def to_json_django_plotly(plotly_object, pretty=False, engine=None):
             opts |= orjson.OPT_INDENT_2
 
         # Plotly
+
         try:
             plotly_object = plotly_object.to_plotly_json()
         except AttributeError:
@@ -132,8 +153,10 @@ def to_json_django_plotly(plotly_object, pretty=False, engine=None):
             datetime_allowed=True,
             modules=modules,
         )
-        return orjson.dumps(cleaned, option=opts).decode("utf8")
 
+        cleaned = promise_clean_to_json_compatible(cleaned)
+
+        return orjson.dumps(cleaned, option=opts).decode("utf8")
 
 import plotly.io.json
 plotly.io.json.to_json_plotly = to_json_django_plotly
