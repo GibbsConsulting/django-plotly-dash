@@ -375,10 +375,12 @@ class DjangoDash:
 class PseudoFlask(Flask):
     'Dummy implementation of a Flask instance, providing stub functionality'
     def __init__(self):
-        self.config = {}
+        self.config = {'DEBUG': False}
         self.endpoints = {}
         self.name = "PseudoFlaskDummyName"
         self.blueprints = {}
+        self._got_first_request = False
+        self.before_request_funcs = {}
 
     # pylint: disable=unused-argument, missing-docstring
 
@@ -424,6 +426,8 @@ class WrappedDash(Dash):
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
+
+        #xkwargs['DEBUG'] = kwargs.get('DEBUG', False)
 
         super().__init__(__name__, **kwargs)
 
