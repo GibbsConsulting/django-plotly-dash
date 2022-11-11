@@ -1,11 +1,9 @@
 asgiref
-attrs==19.3.0
+attrs
 coveralls>=1.6.0
-channels>=2.0
 channels-redis
 daphne
 dash-bootstrap-components
-Django>=2.0
 django-bootstrap4
 django-redis
 dpd-static-support>=0.0.4
