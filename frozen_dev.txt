@@ -31,7 +31,7 @@ dash-renderer==1.9.1
 dash-table==5.0.0
 Deprecated==1.2.13
 dill==0.3.5.1
-Django==3.2.13
+Django==3.2.17
 django-bootstrap4==22.1
 -e git+ssh://git@github.com/delsim/django-plotly-dash.git@9c134318bb94b0e58b6eae46fe21f97c164a9e24#egg=django_plotly_dash
 django-redis==5.2.0
