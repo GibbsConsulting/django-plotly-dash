@@ -38,7 +38,7 @@ Then, add `django_plotly_dash` to `INSTALLED_APPS` in your Django `settings.py` 
         ]
 
 The application's routes need to be registered within the routing structure by an appropriate ``include`` statement in
-a ``urls.py`` file:
+a ``urls.py`` file. Note: `django_plotly_dash` is not a name of your application, it is referencing the inner namespace of this library. Please do not skip this step:
 
     urlpatterns = [
         ...
