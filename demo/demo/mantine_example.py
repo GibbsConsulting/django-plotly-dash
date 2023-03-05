@@ -1,7 +1,7 @@
 '''
 Dash apps for the demonstration of functionality
 
-Copyright (c) 2018 Gibbs Consulting and others - see CONTRIBUTIONS.md
+Copyright (c) 2023 Gibbs Consulting and others - see CONTRIBUTIONS.md
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
