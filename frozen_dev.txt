@@ -29,7 +29,7 @@ dash-mantine-components==0.11.1
 dash-table==5.0.0
 Deprecated==1.2.13
 dill==0.3.6
-Django==3.2.17
+Django==3.2.18
 django-bootstrap4==22.2
 django-plotly-dash==2.1.3
 django-redis==5.2.0
