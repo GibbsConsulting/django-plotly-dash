@@ -1,0 +1,28 @@
+{%extends "base.html"%}
+{%load plotly_dash%}
+
+{%block title%}Demo Eleven - Dash Mantine Components{%endblock%}
+
+{%block content%}
+<h1>Dash Mantine Components</h1>
+<p>
+  This example demonstrates serving Dash Mantine Components within a Dash app.
+</p>
+<p></p>
+<div class="card bg-light border-dark">
+  <div class="card-body">
+    <p><span>{</span>% load plotly_dash %}</p>
+    <p>&lt;div class="<span>{</span>% plotly_class name="MantineExample"%}">
+    <p class="ml-3"><span>{</span>% plotly_app name="MantineExample" ratio=0.3 %}</p>
+    <p>&lt;\div>
+  </div>
+</div>
+<p></p>
+<div class="card border-dark">
+  <div class="card-body">
+    <div class="{%plotly_class name="MantineExample"%}">
+      {%plotly_app name="MantineExample" ratio=0.3 %}
+    </div>
+  </div>
+</div>
+{%endblock%}
