@@ -461,3 +461,5 @@ def pattern_match(values):
     [dash.dependencies.Input({"_type": "div", "_id": ALL}, 'children')])
 def pattern_all(values):
     return str(values)
+
+

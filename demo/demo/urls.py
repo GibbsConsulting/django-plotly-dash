@@ -26,13 +26,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 # Load demo plotly apps - this triggers their registration
-import demo.plotly_apps    # pylint: disable=unused-import
-import demo.dash_apps      # pylint: disable=unused-import
-import demo.bootstrap_app  # pylint: disable=unused-import
+import demo.plotly_apps      # pylint: disable=unused-import
+import demo.dash_apps        # pylint: disable=unused-import
+import demo.bootstrap_app    # pylint: disable=unused-import
+import demo.mantine_example  # pylint: disable=unused-import
+
 
 from django_plotly_dash.views import add_to_session
 
 from .views import dash_example_1_view, session_state_view
+
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='index.html'), name="home"),
@@ -46,11 +49,13 @@ urlpatterns = [
     path('demo-eight', session_state_view, {'template_name':'demo_eight.html'}, name="demo-eight"),
     path('demo-nine', TemplateView.as_view(template_name='demo_nine.html'), name="demo-nine"),
     path('demo-ten', TemplateView.as_view(template_name='demo_ten.html'), name="demo-ten"),
+    path('demo-eleven', TemplateView.as_view(template_name='demo_eleven.html'), name="demo-eleven"),
     path('admin/', admin.site.urls),
     path('django_plotly_dash/', include('django_plotly_dash.urls')),
 
     path('demo-session-var', add_to_session, name="session-variable-example"),
 ]
+
 
 # Add in static routes so daphne can serve files; these should
 # be masked eg with nginx for production use
