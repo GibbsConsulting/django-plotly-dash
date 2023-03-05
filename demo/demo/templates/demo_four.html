@@ -63,7 +63,7 @@ only one press per colour per second is processed.
 </p>
 <div class="card bg-light border-dark">
   <div class="card-body">
-    curl http://{%site_root_url%}/dpd/views/poke/ -d'{"channel_name":"live_button_counter","label":"named_counts","value":{"click_colour":"red"}}'
+    curl -L --post301 --post302 http://{%site_root_url%}/dpd/views/poke/ -d'{"channel_name":"live_button_counter","label":"named_counts","value":{"click_colour":"red"}}'
   </div>
 </div>
 <p></p>
