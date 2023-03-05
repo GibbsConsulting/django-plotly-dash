@@ -51,3 +51,7 @@ Thanks to the following people:
 [gdalmau](https://github.com/gdalmau)
 
 [rosscg](https://github.com/rosscg)
+
+[deniskristak](https://github.com/deniskristak)
+
+[rnestler](https://github.com/rnestler)
