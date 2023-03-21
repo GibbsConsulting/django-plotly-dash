@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -124,8 +126,6 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'America/Vancouver'
 
 USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 

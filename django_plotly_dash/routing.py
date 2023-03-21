@@ -24,9 +24,8 @@ SOFTWARE.
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from channels.http import AsgiHandler
 
-from django.conf.urls import url
+from django.core.asgi import get_asgi_application
 from django.urls import re_path
 
 from .consumers import MessageConsumer, PokePipeConsumer
@@ -38,11 +37,9 @@ http_routes = [
     ]
 
 if http_poke_endpoint_enabled():
-    http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer))
-
-http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
+    http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer.as_asgi()))
 
 application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer),])),
-    'http': AuthMiddlewareStack(URLRouter(http_routes)),
+    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer.as_asgi()),])),
+    'http': get_asgi_application(),
     })
