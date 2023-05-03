@@ -3,7 +3,7 @@
 Installation
 ============
 
-The package requires version 2.2 or greater of Django, and a minimum Python version needed of 3.8.
+The package requires version 3.2 or greater of Django, and a minimum Python version needed of 3.8.
 
 Use ``pip`` to install the package, preferably to a local ``virtualenv``::
 

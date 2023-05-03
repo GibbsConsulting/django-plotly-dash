@@ -52,7 +52,7 @@ database:
 
     ./manage.py migrate
 
-If using version 3.0 or later of Django, then the use of frames within
+The use of frames within
 HTML documents has to be enabled by adding to the ``settings.py`` file:
 
     X_FRAME_OPTIONS = 'SAMEORIGIN'

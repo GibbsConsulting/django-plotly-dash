@@ -24,25 +24,37 @@ SOFTWARE.
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from channels.http import AsgiHandler
 
-from django.conf.urls import url
 from django.urls import re_path
 
 from .consumers import MessageConsumer, PokePipeConsumer
 from .util import pipe_ws_endpoint_name, http_endpoint, http_poke_endpoint_enabled
+
+try:
+    from channels.http import AsgiHandler
+    OLDER_CHANNELS = True
+except:
+    from django.core.asgi import get_asgi_application
+    OLDER_CHANNELS = False
+
 
 # TODO document this and discuss embedding with other routes
 
 http_routes = [
     ]
 
-if http_poke_endpoint_enabled():
-    http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer))
 
-http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
+if http_poke_endpoint_enabled():
+    http_routes.append(re_path(http_endpoint("poke"), PokePipeConsumer if OLDER_CHANNELS else PokePipeConsumer.as_asgi()))
+
+
+if OLDER_CHANNELS:
+    http_routes.append(re_path("^", AsgiHandler)) # AsgiHandler is 'the normal Django view handlers'
+else:
+    http_routes.append(re_path("^", get_asgi_application()))
+
 
 application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer),])),
+    'websocket': AuthMiddlewareStack(URLRouter([re_path(pipe_ws_endpoint_name(), MessageConsumer if OLDER_CHANNELS else MessageConsumer.as_asgi()),])),
     'http': AuthMiddlewareStack(URLRouter(http_routes)),
-    })
+})
