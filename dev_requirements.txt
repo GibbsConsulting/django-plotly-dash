@@ -4,6 +4,7 @@ coveralls>=1.6.0
 channels-redis
 daphne
 dash-bootstrap-components
+dash_mantine_components
 django-bootstrap4
 django-redis
 dpd-static-support>=0.0.4
@@ -21,5 +22,3 @@ sphinx
 sphinx-autobuild
 sphinx_rtd_theme
 twine
-whitenoise
-
