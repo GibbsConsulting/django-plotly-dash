@@ -83,7 +83,7 @@ def _update(request, ident, stateless=False, **kwargs):
     try:
         request_body = json.loads(request.body.decode('utf-8'))
     except (JSONDecodeError, UnicodeDecodeError):
-        return HttpResponse(status=400)
+        return HttpResponse(status=200)
 
     # Use direct dispatch with extra arguments in the argMap
     app_state = request.session.get("django_plotly_dash", dict())
