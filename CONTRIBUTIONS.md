@@ -57,3 +57,7 @@ Thanks to the following people:
 [rnestler](https://github.com/rnestler)
 
 [radusuciu](https://github.com/radusuciu)
+
+[erl987](https://github.com/erl987)
+
+[funkyrailroad](https://github.com/funkyrailroad)
