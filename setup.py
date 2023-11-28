@@ -3,11 +3,11 @@
 from setuptools import setup
 
 
-with open('django_plotly_dash/version.py') as f:
+with open("django_plotly_dash/version.py") as f:
     exec(f.read())
 
 
-with open('README.md') as f:
+with open("README.md") as f:
     long_description = f.read()
 
 
@@ -20,37 +20,35 @@ setup(
     long_description_content_type="text/markdown",
     author="Mark Gibbs",
     author_email="django_plotly_dash@gibbsconsulting.ca",
-    license='MIT',
+    license="MIT",
     packages=[
-    'django_plotly_dash',
-    'django_plotly_dash.migrations',
-    'django_plotly_dash.templatetags',
+        "django_plotly_dash",
+        "django_plotly_dash.migrations",
+        "django_plotly_dash.templatetags",
     ],
     include_package_data=True,
-    classifiers = [
-    'Development Status :: 4 - Beta',
-    'Intended Audience :: Developers',
-    'License :: OSI Approved :: MIT License',
-    'Programming Language :: Python :: 3',
-    'Framework :: Dash',
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Framework :: Dash",
     ],
-    keywords='django plotly plotly-dash dash dashboard',
-    project_urls = {
-    'Source': "https://github.com/GibbsConsulting/django-plotly-dash",
-    'Tracker': "https://github.com/GibbsConsulting/django-plotly-dash/issues",
-    'Documentation': 'http://django-plotly-dash.readthedocs.io/',
+    keywords="django plotly plotly-dash dash dashboard",
+    project_urls={
+        "Source": "https://github.com/GibbsConsulting/django-plotly-dash",
+        "Tracker": "https://github.com/GibbsConsulting/django-plotly-dash/issues",
+        "Documentation": "http://django-plotly-dash.readthedocs.io/",
     },
-    install_requires = ['plotly',
-                        'dash>=2.0,<2.10',
-                        'dpd-components',
-
-                        'dash-bootstrap-components',
-
-                        'channels>=2.0',
-                        'Django>=3.2,<5.0.0',
-                        'Flask>=1.0.2',
-                        'Werkzeug',
+    install_requires=[
+        "plotly",
+        "dash>=2.0,<2.15",
+        "dpd-components",
+        "dash-bootstrap-components",
+        "channels>=2.0",
+        "Django>=3.2,<5.0.0",
+        "Flask>=1.0.2",
+        "Werkzeug",
     ],
     python_requires=">=3.8",
-    )
-
+)
