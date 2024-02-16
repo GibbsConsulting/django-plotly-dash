@@ -25,6 +25,7 @@ SOFTWARE.
  # pylint: disable=unused-argument
 
 import json
+from json import JSONDecodeError
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
@@ -79,7 +80,10 @@ def _update(request, ident, stateless=False, **kwargs):
     'Generate update json response'
     dash_app, app = DashApp.locate_item(ident, stateless)
 
-    request_body = json.loads(request.body.decode('utf-8'))
+    try:
+        request_body = json.loads(request.body.decode('utf-8'))
+    except (JSONDecodeError, UnicodeDecodeError):
+        return HttpResponse(status=200)
 
     # Use direct dispatch with extra arguments in the argMap
     app_state = request.session.get("django_plotly_dash", dict())
