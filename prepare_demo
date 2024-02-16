@@ -8,4 +8,5 @@ cd demo
 #
 # Run debug server. Use the nostatic flag to enable the use of whitenose rather than the standard Django debug handling
 #
-./manage.py runserver --nostatic
+#./manage.py runserver --nostatic
+./manage.py runserver 
