@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'channels',
     'bootstrap4',
 
     'django_plotly_dash.apps.DjangoPlotlyDashConfig',
@@ -82,7 +82,7 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 WSGI_APPLICATION = 'demo.wsgi.application'
 
-ASGI_APPLICATION = 'demo.routing.application'
+ASGI_APPLICATION = 'demo.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases

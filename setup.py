@@ -46,8 +46,8 @@ setup(
 
                         'dash-bootstrap-components',
 
-                        'channels>=2.0',
-                        'Django>=3.2,<5.0.0',
+                        'channels>=4.0',
+                        'Django>=4.0.0',
                         'Flask>=1.0.2',
                         'Werkzeug',
     ],
