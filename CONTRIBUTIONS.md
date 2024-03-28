@@ -18,7 +18,7 @@ Thanks to the following people:
 
 [weber-s](https://github.com/weber-s)
 
-[eddy-obj](https://github.com/eddy-ojb)
+[eddyojb88](https://github.com/eddyojb88)
 
 [brylie](https://github.com/brylie)
 
@@ -61,3 +61,4 @@ Thanks to the following people:
 [erl987](https://github.com/erl987)
 
 [funkyrailroad](https://github.com/funkyrailroad)
+

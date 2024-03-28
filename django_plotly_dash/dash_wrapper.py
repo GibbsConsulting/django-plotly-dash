@@ -191,8 +191,12 @@ class DjangoDash:
         self._suppress_callback_exceptions = suppress_callback_exceptions
 
         if add_bootstrap_links:
-            from bootstrap4.bootstrap import css_url
-            bootstrap_source = css_url()['href']
+            try:
+                from bootstrap4.bootstrap import css_url
+                bootstrap_source = css_url()['href']
+            except:
+                from django_bootstrap5.core import css_url
+                bootstrap_source = css_url()['url']
 
             if self._serve_locally:
                 # Ensure package is loaded; if not present then pip install dpd-static-support
