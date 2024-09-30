@@ -65,18 +65,28 @@ def _locate_daapp(name, slug, da, cache_id=None):
 
     return da, app
 
+
 @register.inclusion_tag("django_plotly_dash/plotly_app.html", takes_context=True)
-def plotly_app(context, name=None, slug=None, da=None, ratio=0.1, use_frameborder=False, initial_arguments=None):
+def plotly_app(context, name=None, slug=None, da=None, ratio=0.1,
+               use_frameborder=False, initial_arguments=None,
+               height=None):
     'Insert a dash application using a html iframe'
 
     fbs = '1' if use_frameborder else '0'
 
-    dstyle = """
-    position: relative;
-    padding-bottom: %s%%;
-    height: 0;
-    overflow:hidden;
-    """ % (ratio*100)
+    if height is None:
+        dstyle = """
+        position: relative;
+        padding-bottom: %s%%;
+        height: 0;
+        overflow:hidden;
+        """ % (ratio*100)
+    else:
+        dstyle = f"""
+        position: relative;
+        height: {height};
+        overflow:hidden;
+        """
 
     istyle = """
     position: absolute;

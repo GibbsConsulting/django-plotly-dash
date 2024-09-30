@@ -31,8 +31,9 @@ import dash_mantine_components as dmc
 mantine_example = DjangoDash("MantineExample")
 
 
-mantine_example.layout = dmc.Alert(
+mantine_example.layout = dmc.MantineProvider(dmc.Alert(
     "Hi from Dash Mantine Components. You can create some great looking dashboards using me!",
     title="Welcome!",
     color="violet",
-)
+))
+
