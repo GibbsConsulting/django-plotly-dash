@@ -21,7 +21,7 @@ coverage==6.5.0
 coveralls==3.3.1
 cryptography==40.0.2
 daphne==4.0.0
-dash==2.15.0
+dash==2.9.3
 dash-bootstrap-components==1.4.1
 dash-core-components==2.0.0
 dash-html-components==2.0.0
