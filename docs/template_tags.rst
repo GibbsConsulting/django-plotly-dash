@@ -30,6 +30,7 @@ The tag arguments are:
 :da = None: An existing ``django_plotly_dash.models.DashApp`` model instance.
 :ratio = 0.1: The ratio of height to width. The container will inherit its width as 100% of its parent, and then rely on
               this ratio to set its height.
+:height = None: Optional direct specification of the container height. If specified, overrides any ``ratio`` setting.
 :use_frameborder = "0": HTML element property of the iframe containing the application.
 :initial_arguments = None: Initial arguments overriding app defaults and saved state.
 
