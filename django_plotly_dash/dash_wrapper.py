@@ -763,7 +763,7 @@ class WrappedDash(Dash):
         scripts = self._generate_scripts_html()
         css = self._generate_css_dist_html()
         config = self._generate_config_html()
-        metas = self._generate_meta_html()
+        metas = self._version_independent_generate_meta()
         renderer = self._generate_renderer()
         title = getattr(self, 'title', 'Dash')
         if self._favicon:
@@ -786,6 +786,19 @@ class WrappedDash(Dash):
             renderer=renderer)
 
         return index
+
+    def _version_independent_generate_meta(self):
+        # Handle renaming of function - for older dash, call the older function if present
+        if hasattr(self, '_generate_meta_html'):
+            meta_str = self._generate_meta_html()
+        else:
+            metas = self._generate_meta()
+            meta_strs = []
+            for meta in metas:
+                contribs = [f'{k}="{v}"' for k, v in meta.items()]
+                meta_strs.append(f'<meta {" ".join(contribs)}>')
+            meta_str = "\n".join(meta_strs)
+        return meta_str
 
     def interpolate_index(self, **kwargs): #pylint: disable=arguments-differ
 
