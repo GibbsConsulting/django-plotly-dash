@@ -23,4 +23,4 @@ SOFTWARE.
 
 '''
 
-__version__ = "2.3.2"
+__version__ = "2.4.0"
