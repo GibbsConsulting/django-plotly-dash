@@ -482,6 +482,9 @@ class WrappedDash(Dash):
         overrides = dict(self._replacements)
         overrides.update(initial_arguments)
 
+        print("Overrides")
+        print(overrides)
+        
         # Walk tree. If at any point we have an element whose id
         # matches, then replace any named values at this level
         reworked_data = self.walk_tree_and_replace(baseData, overrides)
@@ -573,6 +576,9 @@ class WrappedDash(Dash):
     def layout(self, value):
         'Overloaded layout function to fix component names as needed'
 
+        if True:
+            self._extract_component_info(value)
+
         if self._adjust_id:
             self._fix_component_id(value)
         return Dash.layout.fset(self, value)
@@ -583,6 +589,7 @@ class WrappedDash(Dash):
         theID = getattr(component, "id", None)
         if theID is not None:
             setattr(component, "id", self._fix_id(theID))
+
         try:
             for c in component.children:
                 self._fix_component_id(c)
@@ -595,6 +602,17 @@ class WrappedDash(Dash):
             return name
         return "%s_-_%s" %(self._uid,
                            name)
+
+    def _extract_component_info(self, component):
+        self._extract_component_info_item(component)
+        try:
+            for c in component.children:
+                self._extract_component_info_item(c)
+        except: #pylint: disable=bare-except
+            pass
+
+    def _extract_component_info_item(self, component):
+        print(f"Component info from {component}")
 
     def _fix_callback_item(self, item):
         'Update component identifier'
@@ -649,6 +667,11 @@ class WrappedDash(Dash):
             'triggered': triggered_inputs,
             }
 
+        print("Callback info")
+        print(inputs)
+        print(states)
+        print(outputs_list)
+
         callback_context = CallbackContext(**callback_context_info)
 
         # Overload dash global variable
@@ -685,7 +708,6 @@ class WrappedDash(Dash):
                     da.update_current_state(c['id'], c['property'], v)
 
             args.append(v)
-
 
         # Dash 1.11 introduces a set of outputs
         outputs_list = body.get('outputs') or split_callback_id(output)
@@ -732,6 +754,8 @@ class WrappedDash(Dash):
                     # todo: implement saving of state for pattern matching ouputs
                     raise NotImplementedError("Updating state for dict keys (pattern matching) is not yet implemented")
 
+        print("Callback response")
+        print(res)
         return res
 
     def slugified_id(self):
