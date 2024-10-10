@@ -56,7 +56,9 @@ class DashComponentFinder(BaseFinder):
         except:
             components = []
 
-        built_ins = [('dash', ['dcc', 'html', 'dash_table', 'deps', 'dash-renderer', 'dash-renderer/build']), ]
+        built_ins = [('dash', ['dcc', 'html', 'dash_table', 'deps', 'dash-renderer', 'dash-renderer/build']),
+                     ('plotly', ['package_data']),
+                     ]
 
         for component_name in components:
 
