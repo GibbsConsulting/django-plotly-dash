@@ -196,4 +196,5 @@ PLOTLY_COMPONENTS = [
     'dash_bootstrap_components',
     'dpd_components',
     'dpd_static_support',
+    'dash_mantine_components',
 ]
