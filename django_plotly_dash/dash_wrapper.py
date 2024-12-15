@@ -339,6 +339,9 @@ class DjangoDash:
                         'state': state,
                         'prevent_initial_call': prevent_initial_call}
 
+        if 'running' in _kwargs:
+            callback_set['running'] = _kwargs['running']
+
         def wrap_func(func):
             self._callback_sets.append((callback_set, func))
             # add an expanded attribute to the function with the information to use in dispatch_with_args
@@ -601,7 +604,7 @@ class WrappedDash(Dash):
         item.component_id = self._fix_id(item.component_id)
         return item
 
-    def callback(self, output, inputs, state, prevent_initial_call):
+    def callback(self, output, inputs, state, prevent_initial_call, running=None):
         'Invoke callback, adjusting variable names as needed'
 
         if isinstance(output, (list, tuple)):
@@ -609,10 +612,16 @@ class WrappedDash(Dash):
         else:
             fixed_outputs = self._fix_callback_item(output)
 
+        if isinstance(running, list):
+            fixed_running = [(self._fix_callback_item(out), on, off) for out, on, off in running]
+        else:
+            fixed_running = running
+
         return super().callback(fixed_outputs,
                                 [self._fix_callback_item(x) for x in inputs],
                                 [self._fix_callback_item(x) for x in state],
-                                prevent_initial_call=prevent_initial_call)
+                                prevent_initial_call=prevent_initial_call,
+                                running=fixed_running)
 
     def clientside_callback(self, clientside_function, output, inputs, state, prevent_initial_call): # pylint: disable=dangerous-default-value
         'Invoke callback, adjusting variable names as needed'
