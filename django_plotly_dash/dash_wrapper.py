@@ -128,7 +128,7 @@ def get_local_stateless_by_name(name):
 
     if not sa:
         # TODO wrap this in raising a 404 if not found
-        raise KeyError(f"Unable to find stateless DjangoApp called {name}")
+        raise KeyError("Unable to find stateless DjangoApp called %s"%name)
 
     return sa
 
