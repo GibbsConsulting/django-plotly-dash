@@ -58,7 +58,7 @@ class StatelessApp(models.Model):
                 self.slug = self.slug + str(exist_count+1)
         return super().save(*args, **kwargs)
 
-    def as_dash_app(self):
+    def as_dash_app(self) -> DjangoDash:
         '''
         Return a DjangoDash instance of the dash application
         '''
