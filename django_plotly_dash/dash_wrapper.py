@@ -115,6 +115,9 @@ def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
+    if not name:
+        raise ValueError("Unable to find stateless DjangoApp. Name is required")
+    
     sa = usable_apps.get(name, None)
 
     if not sa:
