@@ -30,7 +30,7 @@ from django.contrib import admin
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 
-from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list, wid2str
+from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list, wid2str, DjangoDash
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ class StatelessApp(models.Model):
                 self.slug = self.slug + str(exist_count+1)
         return super().save(*args, **kwargs)
 
-    def as_dash_app(self) -> "django_plotly_dash.dash_wrapper.DjangoDash":
+    def as_dash_app(self) -> DjangoDash:
         '''
         Return a DjangoDash instance of the dash application
         '''
