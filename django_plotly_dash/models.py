@@ -30,7 +30,7 @@ from django.contrib import admin
 from django.utils.text import slugify
 from django.shortcuts import get_object_or_404
 
-from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list, wid2str
+from .dash_wrapper import get_local_stateless_by_name, get_local_stateless_list, wid2str, DjangoDash
 
 logger = logging.getLogger(__name__)
 
