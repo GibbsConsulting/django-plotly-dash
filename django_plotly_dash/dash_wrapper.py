@@ -155,7 +155,9 @@ class DjangoDash:
     To use, construct an instance of DjangoDash() in place of a Dash() one.
     '''
     #pylint: disable=too-many-instance-attributes
-    def __init__(self, name=None, serve_locally=None,
+    def __init__(self, 
+                 name=None, 
+                 serve_locally=None,
                  add_bootstrap_links=False,
                  suppress_callback_exceptions=False,
                  external_stylesheets=None,
