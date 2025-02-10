@@ -424,7 +424,10 @@ class WrappedDash(Dash):
     'Wrapper around the Plotly Dash application instance'
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
-                 base_pathname=None, replacements=None, ndid=None, serve_locally=False,
+                 base_pathname=None, 
+                 replacements=None, 
+                 ndid=None, 
+                 serve_locally=False,
                  **kwargs):
 
         self._uid = ndid
