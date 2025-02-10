@@ -62,11 +62,11 @@ class StatelessApp(models.Model):
         '''
         Return a DjangoDash instance of the dash application
         '''
-        dateless_dash_app = getattr(self, '_stateless_dash_app_instance', None)
-        if not dateless_dash_app:
-            dateless_dash_app = get_stateless_by_name(self.app_name)
-            setattr(self, '_stateless_dash_app_instance', dateless_dash_app)
-        return dateless_dash_app
+        stateless_dash_app = getattr(self, '_stateless_dash_app_instance', None)
+        if not stateless_dash_app:
+            stateless_dash_app = get_stateless_by_name(self.app_name)
+            setattr(self, '_stateless_dash_app_instance', stateless_dash_app)
+        return stateless_dash_app
 
 def find_stateless_by_name(name):
     '''
