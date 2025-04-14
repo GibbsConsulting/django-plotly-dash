@@ -1,4 +1,4 @@
-'''
+"""
 Staticfiles finders for Dash assets
 
 Copyright (c) 2018 Gibbs Consulting and others - see CONTRIBUTIONS.md
@@ -20,7 +20,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
 import os
 import importlib
@@ -38,31 +38,44 @@ from django.apps import apps
 from django_plotly_dash.dash_wrapper import all_apps
 from django_plotly_dash.util import full_asset_path
 
-class DashComponentFinder(BaseFinder):
-    'Find static files in components'
 
-    #pylint: disable=abstract-method, redefined-builtin
+class DashComponentFinder(BaseFinder):
+    "Find static files in components"
+
+    # pylint: disable=abstract-method, redefined-builtin
 
     def __init__(self):
-
         self.locations = []
         self.storages = OrderedDict()
         self.components = {}
 
-        self.ignore_patterns = ["*.py", "*.pyc",]
+        self.ignore_patterns = [
+            "*.py",
+            "*.pyc",
+        ]
 
         try:
             components = settings.PLOTLY_COMPONENTS
         except:
             components = []
 
-        built_ins = [('dash', ['dcc', 'html', 'dash_table', 'deps', 'dash-renderer', 'dash-renderer/build']),
-                     ('plotly', ['package_data']),
-                     ]
+        built_ins = [
+            (
+                "dash",
+                [
+                    "dcc",
+                    "html",
+                    "dash_table",
+                    "deps",
+                    "dash-renderer",
+                    "dash-renderer/build",
+                ],
+            ),
+            ("plotly", ["package_data"]),
+        ]
 
         for component_name in components:
-
-            split_name = component_name.split('/')
+            split_name = component_name.split("/")
             try:
                 module_name = ".".join(split_name)
                 module = importlib.import_module(module_name)
@@ -70,8 +83,9 @@ class DashComponentFinder(BaseFinder):
             except:
                 module_name = ".".join(split_name[:-1])
                 module = importlib.import_module(module_name)
-                path_directory = os.path.join(os.path.dirname(module.__file__),
-                                              split_name[-1])
+                path_directory = os.path.join(
+                    os.path.dirname(module.__file__), split_name[-1]
+                )
 
             root = path_directory
             storage = FileSystemStorage(location=root)
@@ -89,20 +103,18 @@ class DashComponentFinder(BaseFinder):
             self.components[path] = component_name
 
         for module_name, component_list in built_ins:
-
             module = importlib.import_module(module_name)
 
             for specific_component in component_list:
-
-                path_directory = os.path.join(os.path.dirname(module.__file__),
-                                              specific_component)
+                path_directory = os.path.join(
+                    os.path.dirname(module.__file__), specific_component
+                )
 
                 root = path_directory
                 component_name = f"{module_name}/{specific_component}"
                 path = f"dash/component/{component_name}"
 
                 if path not in self.components:
-
                     storage = FileSystemStorage(location=root)
                     storage.prefix = path
 
@@ -113,16 +125,19 @@ class DashComponentFinder(BaseFinder):
 
         super().__init__()
 
-    def find(self, path, all=False):
+    def find(self, path, find_all=False, all=False):
+        all = all or find_all
         matches = []
         for component_name in self.locations:
             storage = self.storages[component_name]
-            location = storage.location # dir on disc
+            location = storage.location  # dir on disc
 
             component_path = "dash/component/%s" % component_name
-            if len(path) > len(component_path) and path[:len(component_path)] == component_path:
-
-                matched_path = os.path.join(location, path[len(component_path)+1:])
+            if (
+                len(path) > len(component_path)
+                and path[: len(component_path)] == component_path
+            ):
+                matched_path = os.path.join(location, path[len(component_path) + 1 :])
                 if os.path.exists(matched_path):
                     if not all:
                         return matched_path
@@ -132,7 +147,7 @@ class DashComponentFinder(BaseFinder):
 
     # pylint: disable=inconsistent-return-statements, no-self-use
     def find_location(self, path):
-        'Return location, if it exists'
+        "Return location, if it exists"
         if os.path.exists(path):
             return path
 
@@ -142,8 +157,9 @@ class DashComponentFinder(BaseFinder):
             for path in get_files(storage, ignore_patterns + self.ignore_patterns):
                 yield path, storage
 
+
 class DashAppDirectoryFinder(BaseFinder):
-    'Find static fies in application subdirectories'
+    "Find static files in application subdirectories"
 
     def __init__(self):
         # get all registered apps
@@ -151,14 +167,15 @@ class DashAppDirectoryFinder(BaseFinder):
         self.locations = []
         self.storages = OrderedDict()
 
-        self.ignore_patterns = ["*.py", "*.pyc",]
+        self.ignore_patterns = [
+            "*.py",
+            "*.pyc",
+        ]
 
         for app_config in apps.get_app_configs():
-
-            path_directory = os.path.join(app_config.path, 'assets')
+            path_directory = os.path.join(app_config.path, "assets")
 
             if os.path.isdir(path_directory):
-
                 storage = FileSystemStorage(location=path_directory)
 
                 storage.prefix = full_asset_path(app_config.name, "")
@@ -168,8 +185,8 @@ class DashAppDirectoryFinder(BaseFinder):
 
         super().__init__()
 
-    #pylint: disable=redefined-builtin
-    def find(self, path, all=False):
+    # pylint: disable=redefined-builtin
+    def find(self, path, all=False, **kwargs):
         return []
 
     def list(self, ignore_patterns):
@@ -180,12 +197,11 @@ class DashAppDirectoryFinder(BaseFinder):
 
 
 class DashAssetFinder(BaseFinder):
-    'Find static files in asset directories'
+    "Find static files in asset directories"
 
-    #pylint: disable=unused-import, unused-variable, no-name-in-module, import-error, abstract-method
+    # pylint: disable=unused-import, unused-variable, no-name-in-module, import-error, abstract-method
 
     def __init__(self):
-
         # Ensure urls are loaded
         root_urls = settings.ROOT_URLCONF
         importlib.import_module(root_urls)
@@ -197,12 +213,14 @@ class DashAssetFinder(BaseFinder):
         self.locations = []
         self.storages = OrderedDict()
 
-        self.ignore_patterns = ["*.py", "*.pyc",]
+        self.ignore_patterns = [
+            "*.py",
+            "*.pyc",
+        ]
 
         added_locations = {}
 
         for app_slug, obj in self.apps.items():
-
             caller_module = obj.caller_module
             location = obj.caller_module_location
             subdir = obj.assets_folder
@@ -210,10 +228,9 @@ class DashAssetFinder(BaseFinder):
             path_directory = os.path.join(os.path.dirname(location), subdir)
 
             if os.path.isdir(path_directory):
-
                 component_name = app_slug
                 storage = FileSystemStorage(location=path_directory)
-                path = full_asset_path(obj.caller_module.__name__,"")
+                path = full_asset_path(obj.caller_module.__name__, "")
                 storage.prefix = path
 
                 self.locations.append(component_name)
@@ -221,8 +238,8 @@ class DashAssetFinder(BaseFinder):
 
         super().__init__()
 
-    #pylint: disable=redefined-builtin
-    def find(self, path, all=False):
+    # pylint: disable=redefined-builtin
+    def find(self, path, all=False, **kwargs):
         return []
 
     def list(self, ignore_patterns):
@@ -230,4 +247,3 @@ class DashAssetFinder(BaseFinder):
             storage = self.storages[component_name]
             for path in get_files(storage, ignore_patterns + self.ignore_patterns):
                 yield path, storage
-
