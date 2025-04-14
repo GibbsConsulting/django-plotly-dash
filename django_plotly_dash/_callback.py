@@ -51,6 +51,15 @@ def register_callback(
         insert_output = flatten_grouping(output)
         multi = True
 
+    running = _kwargs.get("running")
+    if running is not None:
+        if not isinstance(running[0], (list, tuple)):
+            running = [running]
+        running = {
+            "running": {str(r[0]): r[1] for r in running},
+            "runningOff": {str(r[0]): r[2] for r in running},
+        }
+
     output_indices = make_grouping_by_index(output, list(range(grouping_len(output))))
     callback_id = insert_callback(
         callback_list,
@@ -62,6 +71,7 @@ def register_callback(
         flat_state,
         inputs_state_indices,
         prevent_initial_call,
+        running=running,
     )
 
     # pylint: disable=too-many-locals
