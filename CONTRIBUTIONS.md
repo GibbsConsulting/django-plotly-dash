@@ -65,3 +65,5 @@ Thanks to the following people:
 [nicolasstelter](https://github.com/nicolasstelter)
 
 [JHSaunders](https://github.com/JHSaunders)
+
+[Mariatta](https://github.com/Mariatta)
