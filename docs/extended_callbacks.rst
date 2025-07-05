@@ -41,7 +41,7 @@ For example, the ``plotly_apps.py`` example contains this dash application:
 
 The additional arguments, which are reported as the ``kwargs`` content in this example, include
 
-:callback_context: The ``Dash`` callback context. See the `documentation <https://dash.plotly.com/advanced-callbacks`_ on the content of
+:callback_context: The ``Dash`` callback context. See the `documentation <https://dash.plotly.com/advanced-callbacks>`_ on the content of
                    this variable. This variable is provided as an argument to the callback as well as
                    the ``dash.callback_context`` global variable.
 :dash_app: For stateful applications, the ``DashApp`` model instance
