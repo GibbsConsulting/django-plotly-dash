@@ -26,6 +26,7 @@ import os
 import importlib
 
 from collections import OrderedDict
+from pathlib import Path
 
 from django.contrib.staticfiles.finders import BaseFinder
 from django.contrib.staticfiles.utils import get_files
@@ -132,7 +133,8 @@ class DashComponentFinder(BaseFinder):
             storage = self.storages[component_name]
             location = storage.location  # dir on disc
 
-            component_path = "dash/component/%s" % component_name
+            component_path = str(Path("dash/component/%s" % component_name))
+
             if (
                 len(path) > len(component_path)
                 and path[: len(component_path)] == component_path
