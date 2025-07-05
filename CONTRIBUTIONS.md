@@ -63,3 +63,5 @@ Thanks to the following people:
 [funkyrailroad](https://github.com/funkyrailroad)
 
 [nicolasstelter](https://github.com/nicolasstelter)
+
+[Mariatta](https://github.com/Mariatta)
