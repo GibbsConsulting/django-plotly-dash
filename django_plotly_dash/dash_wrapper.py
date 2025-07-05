@@ -223,7 +223,7 @@ class DjangoDash:
         module_name = self.caller_module.__name__
         return static_asset_path(module_name, asset_path)
 
-    def as_dash_instance(self, cache_id=None):
+    def as_dash_instance(self, cache_id=None, can_ignore_initial_state=False):
         '''
         Form a dash instance, for stateless use of this app
         '''
