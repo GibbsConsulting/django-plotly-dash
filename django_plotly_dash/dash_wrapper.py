@@ -430,6 +430,7 @@ class WrappedDash(Dash):
 
         kwargs['url_base_pathname'] = self._base_pathname
         kwargs['server'] = self._notflask
+        #kwargs['use_async'] = False
 
         #xkwargs['DEBUG'] = kwargs.get('DEBUG', False)
 
@@ -819,3 +820,12 @@ class WrappedDash(Dash):
     def exit_embedded(self):
         'Exit the embedded section after processing a view'
         self._return_embedded = False
+
+    def __call__(self, *args, **kwargs):
+        """Implement a no-op __call__ method.
+
+        This is needed as dash v3.1.0 adds a __call__ method to the underlying Dash
+        class, and this interferes with the operation of Django templates.
+        """
+        return self
+

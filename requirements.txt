@@ -1,4 +1,4 @@
-dash>=2.0,<3.0
+dash>=3.0
 plotly
 dpd-components
 
