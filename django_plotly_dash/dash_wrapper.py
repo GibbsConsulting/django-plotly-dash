@@ -115,6 +115,9 @@ def get_local_stateless_by_name(name):
     '''
     Locate a registered dash app by name, and return a DjangoDash instance encapsulating the app.
     '''
+    if not name:
+        raise ValueError("Unable to find stateless DjangoApp. Name is required")
+    
     sa = usable_apps.get(name, None)
 
     if not sa:
@@ -152,7 +155,9 @@ class DjangoDash:
     To use, construct an instance of DjangoDash() in place of a Dash() one.
     '''
     #pylint: disable=too-many-instance-attributes
-    def __init__(self, name=None, serve_locally=None,
+    def __init__(self, 
+                 name=None, 
+                 serve_locally=None,
                  add_bootstrap_links=False,
                  suppress_callback_exceptions=False,
                  external_stylesheets=None,
@@ -419,7 +424,10 @@ class WrappedDash(Dash):
     'Wrapper around the Plotly Dash application instance'
     # pylint: disable=too-many-arguments, too-many-instance-attributes
     def __init__(self,
-                 base_pathname=None, replacements=None, ndid=None, serve_locally=False,
+                 base_pathname=None, 
+                 replacements=None, 
+                 ndid=None, 
+                 serve_locally=False,
                  **kwargs):
 
         self._uid = ndid
