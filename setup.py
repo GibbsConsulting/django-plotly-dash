@@ -42,9 +42,9 @@ setup(
     },
     install_requires = ['plotly',
                         'dash>=2.0',
-                        'dpd-components',
+                        'dpd-components>=0.2.0',
 
-                        'dash-bootstrap-components>=0.2.0',
+                        'dash-bootstrap-components',
 
                         'channels>=4.0',
                         'Django>=4.0.0',
