@@ -188,10 +188,13 @@ class DashApp(models.Model):
             setattr(self, '_current_state_hydrated_changed', False)
         return c_state
 
-    def as_dash_instance(self, cache_id=None):
+    def as_dash_instance(self, cache_id=None, can_ignore_initial_state=False):
         'Return a dash application instance for this model instance'
         dash_app = self.stateless_app.as_dash_app() # pylint: disable=no-member
-        base = self.current_state()
+        if can_ignore_initial_state:
+            base = None
+        else:
+            base = self.current_state()
         return dash_app.do_form_dash_instance(replacements=base,
                                               specific_identifier=self.slug,
                                               cache_id=cache_id)
@@ -220,7 +223,7 @@ class DashApp(models.Model):
         self.base_state = json.dumps(obj)
 
     @staticmethod
-    def locate_item(ident, stateless=False, cache_id=None):
+    def locate_item(ident, stateless=False, cache_id=None, can_ignore_initial_state=False):
         '''Locate a dash application, given either the
         slug of an instance or the name for a stateless app'''
         if stateless:
@@ -228,7 +231,7 @@ class DashApp(models.Model):
         else:
             dash_app = get_object_or_404(DashApp, slug=ident)
 
-        app = dash_app.as_dash_instance(cache_id=cache_id)
+        app = dash_app.as_dash_instance(cache_id=cache_id, can_ignore_initial_state=can_ignore_initial_state)
         return dash_app, app
 
 class DashAppAdmin(admin.ModelAdmin):
