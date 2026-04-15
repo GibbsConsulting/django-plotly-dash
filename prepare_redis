@@ -6,5 +6,5 @@
 # Also, the use of redis is driven by the configuration of the channels project; changing the CHANNEL_LAYERS
 # setting will directly impact and even remove the need for redis
 #
-docker pull redis:4
-docker run -p 6379:6379 -d redis
+
+docker run --rm --pull missing -p 6379:6379 -d redis:latest
