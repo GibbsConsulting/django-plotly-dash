@@ -67,3 +67,5 @@ Thanks to the following people:
 [JHSaunders](https://github.com/JHSaunders)
 
 [Mariatta](https://github.com/Mariatta)
+
+[olegrimko-etg](https://github.com/olegrimko-etg)
