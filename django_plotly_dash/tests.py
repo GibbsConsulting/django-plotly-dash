@@ -292,7 +292,8 @@ def test_local_serving(settings):
     'Test local serve settings'
 
     from django_plotly_dash.util import serve_locally, static_asset_root, full_asset_path
-    assert serve_locally() == settings.DEBUG
+    # Now default to serving all files locally
+    assert serve_locally() == True
     assert static_asset_root() == 'dpd/assets'
     assert full_asset_path('fred.jim', 'harry') == 'dpd/assets/fred/jim/harry'
 

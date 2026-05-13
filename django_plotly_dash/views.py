@@ -78,7 +78,7 @@ def update(request, ident, stateless=False, **kwargs):
 
 def _update(request, ident, stateless=False, **kwargs):
     'Generate update json response'
-    dash_app, app = DashApp.locate_item(ident, stateless)
+    dash_app, app = DashApp.locate_item(ident, stateless, can_ignore_initial_state=True)
 
     try:
         request_body = json.loads(request.body.decode('utf-8'))
@@ -191,4 +191,3 @@ def add_stateless_apps(request, **kwargs):
     """Check all registered stateless apps and create ORM entries that are missing"""
     check_stateless_loaded()
     return redirect('admin:django_plotly_dash_statelessapp_changelist')
-
