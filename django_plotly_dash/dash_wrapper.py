@@ -33,6 +33,7 @@ from typing import Dict, List, Callable
 import dash
 from dash import Dash, dependencies
 from dash._utils import split_callback_id, inputs_to_dict
+from django.conf import settings
 from django.urls import reverse
 from django.utils.text import slugify
 from flask import Flask
@@ -379,7 +380,8 @@ class DjangoDash:
 class PseudoFlask(Flask):
     'Dummy implementation of a Flask instance, providing stub functionality'
     def __init__(self):
-        self.config = {'DEBUG': False}
+        # Use a consistent signing key across wrapped instances and workers.
+        self.config = {'DEBUG': False, 'SECRET_KEY': settings.SECRET_KEY}
         self.endpoints = {}
         self.name = "PseudoFlaskDummyName"
         self.blueprints = {}
