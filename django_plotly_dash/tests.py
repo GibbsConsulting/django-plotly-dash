@@ -32,6 +32,7 @@ from unittest.mock import patch
 
 import pytest
 # pylint: disable=bare-except
+from dash import html
 from dash.dependencies import Input, State, Output
 from django.urls import reverse
 
@@ -295,6 +296,19 @@ def test_local_serving(settings):
     assert serve_locally() == settings.DEBUG
     assert static_asset_root() == 'dpd/assets'
     assert full_asset_path('fred.jim', 'harry') == 'dpd/assets/fred/jim/harry'
+
+
+def test_dash_index_signing_key(settings):
+    'Check page generation uses the Django secret key for Dash signing'
+
+    settings.SECRET_KEY = 'dash-index-test-key'
+    ddash = DjangoDash(name="DashIndexSigningKey")
+    ddash.layout = html.Div("Test page")
+
+    for _ in range(2):
+        dash = ddash.as_dash_instance()
+        assert 'id="_dash-config"' in dash.index()
+        assert dash.server.secret_key == settings.SECRET_KEY
 
 
 @pytest.mark.django_db
